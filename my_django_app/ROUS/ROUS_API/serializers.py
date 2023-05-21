@@ -1,35 +1,22 @@
 from rest_framework import serializers
-from ROUS_API.models import User, Base, Aircraft, catNum, engine_current_time
+from ROUS_API.models import Maintenance_Data, Plane_Data, Calender, User
 
-class CatNumSerializer(serializers.ModelSerializer):
+class MaintenanceSerializer(serializers.ModelSerializer):
     class Meta:
-        model: catNum
-        fields = ['catnum']
+        model = Maintenance_Data
+        fields = ['maintenance_SN', 'catNum', 'currentTime', 'timeRemain', 'dueTime', 'freq', 'maintenanceType', 'specification']
 
-class EngineCurrentTimeSerializer(serializers.ModelSerializer):
+class PlaneSerializer(serializers.ModelSerializer):
     class Meta:
-        model: engine_current_time
-        fields =['engine_current_time']
+        model = Plane_Data
+        fields = ['EQP_ID', 'WUC_LCN', 'aircraft_SN', 'maintenance', 'basename', 'aircraftname', 'tailnumber']
 
-class AircraftSerializer(serializers.ModelSerializer):
-    catNumList = CatNumSerializer(many=True, read_only=True)
-    engine_current_time_list  = EngineCurrentTimeSerializer(many=True, read_only=True)
+class CalenderSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Aircraft
-        fields = ['tailnumber', 'aircraft_type', 'EQP_ID', 'EQP_SN', 'catNumList', 'aircraft_SN', 'engine_current_time_list', 'aircraft_current_time', 'position', 'status']
-
-class BaseSerializer(serializers.ModelSerializer):
-    aircrafts = AircraftSerializer(many=True, read_only=True)
-    class Meta:
-        model =  Base
-        fields = ['basename', 'aircrafts']
+        model = Calender
+        fields = ['Date', 'aircraft', 'Reason']
 
 class UserSerializer(serializers.ModelSerializer):
-    bases = BaseSerializer(many=True, read_only=True)
     class Meta:
         model = User
-        fields = ['firstname', 'lastname', 'username', 'password', 'bases']
-
-
-
-
+        fields = ['firstname', 'lastname', 'username', 'password']

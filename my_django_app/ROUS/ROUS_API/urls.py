@@ -17,7 +17,7 @@ Including another URLconf
 # from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
-from ROUS_API.views import UserView, BaseView, AircraftView, CatNumView, EngineCurrentTimeView
+from ROUS_API.views import PlaneView, MaintenanceView, CalenderView
 from rest_framework.urlpatterns import format_suffix_patterns
 
 # router = routers.SimpleRouter()
@@ -30,9 +30,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 urlpatterns = [
     # path('admin/', admin.site.urls),
     # path('', include(router.urls)),
-    path('user/', UserView),
-    path('base/', BaseView),
-    path('aircraft/', AircraftView),
+    path('plane/', PlaneView),
+    path('maintenance/', MaintenanceView),
+    path('calender/', CalenderView),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
