@@ -8,23 +8,27 @@
 python -m venv env
 ```
 
-2. activate on environment Windows
+2. activate on environment Windows (PS: check env file becuase Scrips folder can be named as bin instead of Scrips)
 
 ```bash
+env\Scripts\Activate.ps1   (powershell- used in VS Code)
 env\Scripts\activate.bat    (cmd)
-env\Scripts\Activate.ps1   (powershell)
 ```
 
-3. install django in the virtual environment
+3. install django in the virtual environment.
 
 ```bash
 pip install django
 ```
 
-4. install all the dependencies and packages.
+4. install all the packages and used to update to new packages installed.
 
 ```bash
 pip install -r requirements.txt
+```
+other: after installing new packages please update the requirements.txt shown below.
+```bash
+pip freeze > requirements.txt
 ```
 
 # For API,

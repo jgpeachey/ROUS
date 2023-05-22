@@ -14,9 +14,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# from django.contrib import admin
+from django.contrib import admin
 from django.urls import include, path
 from ROUS_API import views
+from . import views
 
 # router = routers.DefaultRouter()
 # router.register('user', UserView, basename='userModel')
@@ -28,11 +29,12 @@ from ROUS_API import views
 # urlpatterns = router.urls
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
-    path('user/', views.UserView),
-    path('plane/', views.PlaneView),
-    path('maintenance/', views.MaintenanceView),
-    path('calender/', views.CalenderView),
+    path("admin/", admin.site.urls),
+    path('', views.home, name='home'),
+    path("user/", views.UserView),
+    path("plane/", views.PlaneView),
+    path("maintenance/", views.MaintenanceView),
+    path("calender/", views.CalenderView),
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)
