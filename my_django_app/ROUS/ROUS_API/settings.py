@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'ROUS_API.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'rous',
+        'USER': 'g6rous',
+        'PASSWORD': 'Cop4935rous',
+        'HOST': 'rous-db.ccdahppv4dze.us-east-2.rds.amazonaws.com',
+        'PORT': 3306,
     }
 }
 

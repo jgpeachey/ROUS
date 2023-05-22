@@ -15,10 +15,12 @@ def MaintenanceView(request):
         serializerClass = MaintenanceSerializer(queryset, many=True)
         return JsonResponse(serializerClass.data, safe=False)
     if request.method == 'POST':
-        serializerClass = MaintenanceSerializer(data=request.data)
+        data = JSONParser().parse(request)
+        serializerClass = MaintenanceSerializer(data=data)
         if serializerClass.is_valid():
             serializerClass.save()
-            return Response(serializerClass.data, status=status.HTTP_201_CREATED)
+            return Response(serializerClass.data, status=201)
+        return JsonResponse(serializer.errors, statud=300)
 
 @api_view(['GET', 'POST'])
 def PlaneView(request):
@@ -27,7 +29,8 @@ def PlaneView(request):
         serializerClass = PlaneSerializer(queryset, many=True)
         return JsonResponse(serializerClass.data, safe=False)
     if request.method == 'POST':
-        serializerClass = PlaneSerializer(data=request.data)
+        data = JSONParser().parse(request)
+        serializerClass = PlaneSerializer(data=data)
         if serializerClass.is_valid():
             serializerClass.save()
             return Response(serializerClass.data, status=status.HTTP_201_CREATED)
@@ -39,18 +42,21 @@ def CalenderView(request):
         serializerClass = CalenderSerializer(queryset, many=True)
         return JsonResponse(serializerClass.data, safe=False)
     if request.method == 'POST':
-        serializerClass = CalenderSerializer(data=request.data)
+        data = JSONParser().parse(request)
+        serializerClass = CalenderSerializer(data=data)
         if serializerClass.is_valid():
             serializerClass.save()
             return Response(serializerClass.data, status=status.HTTP_201_CREATED)
 
+@api_view(['GET', 'POST'])
 def UserView(request):
     if request.method == 'GET':
         queryset = User.objects.all()
         serializerClass = UserSerializer(queryset, many=True)
         return JsonResponse(serializerClass.data, safe=False)
     if request.method == 'POST':
-        serializerClass = UserSerializer(data=request.data)
+        data = JSONParser().parse(request)
+        serializerClass = UserSerializer(data=data)
         if serializerClass.is_valid():
             serializerClass.save()
             return Response(serializerClass.data, status=status.HTTP_201_CREATED)
