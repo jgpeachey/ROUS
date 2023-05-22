@@ -21,14 +21,13 @@ class Plane_Data(models.Model):
     EQP_ID = models.CharField(max_length = 10)
     WUC_LCN = models.CharField(max_length = 10)
     aircraft_SN = models.CharField(max_length = 10)
-    maintenance = models.ManyToManyField(Maintenance_Data)
     basename = models.CharField(max_length = 10)
     aircraftname = models.CharField(max_length = 10)
-    tailnumber = models.IntegerField()
+    tailnumber = models.CharField(max_length = 10)
 
 class Calender(models.Model):
     Date = models.DateField()
-    aircraft = models.ManyToManyField(Plane_Data)
+    tailnumber = models.CharField(max_length = 10)
     Reason = models.CharField(max_length= 200)
 
 class User(models.Model):

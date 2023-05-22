@@ -16,23 +16,23 @@ Including another URLconf
 """
 # from django.contrib import admin
 from django.urls import include, path
-from rest_framework import routers
-from ROUS_API.views import PlaneView, MaintenanceView, CalenderView
-from rest_framework.urlpatterns import format_suffix_patterns
+from ROUS_API import views
 
-# router = routers.SimpleRouter()
+# router = routers.DefaultRouter()
 # router.register('user', UserView, basename='userModel')
 # router.register('base', BaseView, basename='baseModel')
 # router.register('aircraft', AircraftView, basename='aircraftModel')
 # router.register('catnum', CatNumView, basename='catNumModel')
 # router.register('engCurrentTime', EngineCurrentTimeView, basename='engineTimeModel')
 
+# urlpatterns = router.urls
+
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    # path('', include(router.urls)),
-    path('plane/', PlaneView),
-    path('maintenance/', MaintenanceView),
-    path('calender/', CalenderView),
+    path('user/', views.UserView),
+    path('plane/', views.PlaneView),
+    path('maintenance/', views.MaintenanceView),
+    path('calender/', views.CalenderView),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns)

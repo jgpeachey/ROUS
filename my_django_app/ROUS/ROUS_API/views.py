@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from ROUS_API.serializers import MaintenanceSerializer, PlaneSerializer, CalenderSerializer
-from ROUS_API.models import Maintenance_Data, Plane_Data, Calender
+from ROUS_API.serializers import MaintenanceSerializer, PlaneSerializer, CalenderSerializer, UserSerializer
+from ROUS_API.models import Maintenance_Data, Plane_Data, Calender, User
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
@@ -40,6 +40,17 @@ def CalenderView(request):
         return JsonResponse(serializerClass.data, safe=False)
     if request.method == 'POST':
         serializerClass = CalenderSerializer(data=request.data)
+        if serializerClass.is_valid():
+            serializerClass.save()
+            return Response(serializerClass.data, status=status.HTTP_201_CREATED)
+
+def UserView(request):
+    if request.method == 'GET':
+        queryset = User.objects.all()
+        serializerClass = UserSerializer(queryset, many=True)
+        return JsonResponse(serializerClass.data, safe=False)
+    if request.method == 'POST':
+        serializerClass = UserSerializer(data=request.data)
         if serializerClass.is_valid():
             serializerClass.save()
             return Response(serializerClass.data, status=status.HTTP_201_CREATED)
