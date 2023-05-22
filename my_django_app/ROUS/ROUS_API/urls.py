@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import include, path
 from ROUS_API import views
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 # router = routers.DefaultRouter()
 # router.register('user', UserView, basename='userModel')
@@ -35,6 +37,7 @@ urlpatterns = [
     path("plane/", views.PlaneView),
     path("maintenance/", views.MaintenanceView),
     path("calender/", views.CalenderView),
-]
+    
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # urlpatterns = format_suffix_patterns(urlpatterns)

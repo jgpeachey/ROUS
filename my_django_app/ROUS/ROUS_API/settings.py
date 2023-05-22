@@ -72,15 +72,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ROUS_API.wsgi.application"
 
+# Images
+# setup file path to media folder
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+<<<<<<< Updated upstream
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+=======
+
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+>>>>>>> Stashed changes
     }
+
+    
+    
 }
 
 
