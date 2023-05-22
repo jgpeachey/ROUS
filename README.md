@@ -12,7 +12,7 @@ python -m venv env
 
 ```bash
 env\Scripts\activate.bat    (cmd)
-venv\Scripts\Activate.ps1   (powershell)
+env\Scripts\Activate.ps1   (powershell)
 ```
 
 3. install django in the virtual environment
