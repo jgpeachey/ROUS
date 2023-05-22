@@ -1,12 +1,7 @@
 from rest_framework import viewsets
 from django.shortcuts import render
 
-from ROUS_API.serializers import (
-    MaintenanceSerializer,
-    PlaneSerializer,
-    CalenderSerializer,
-    UserSerializer,
-)
+from ROUS_API.serializers import MaintenanceSerializer, PlaneSerializer, CalenderSerializer, UserSerializer
 from ROUS_API.models import Maintenance_Data, Plane_Data, Calender, User
 
 from django.http import JsonResponse
