@@ -72,10 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ROUS_API.wsgi.application"
 
-# Images
-# setup file path to media folder
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+
 
 
 # Database
