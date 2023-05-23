@@ -46,8 +46,8 @@ class MaintenanceView(APIView):
 class MaintenanceInfo(APIView):
     def get(self, request,id):
         try:
-            obj = Maintenance.objects.get(id=id)
-        except Maintenance.DoesNotExist:
+            obj = Maintenance_Data.objects.get(id=id)
+        except Maintenance_Data.DoesNotExist:
             msg = {"msg":"not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         
@@ -56,8 +56,8 @@ class MaintenanceInfo(APIView):
     
     def put(self, request, id):
         try:
-            obj = Maintenance.objects.get(id=id)
-        except Maintenance.DoesNotExist:
+            obj = Maintenance_Data.objects.get(id=id)
+        except Maintenance_Data.DoesNotExist:
             msg = {"msg":"not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         
@@ -65,13 +65,13 @@ class MaintenanceInfo(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_205_RESER_CONTENT)
+            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, id):
         try:
-            obj = Maintenance.objects.get(id=id)
-        except Maintenance.DoesNotExist:
+            obj = Maintenance_Data.objects.get(id=id)
+        except Maintenance_Data.DoesNotExist:
             msg = {"msg":"not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         
@@ -79,13 +79,13 @@ class MaintenanceInfo(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_205_RESER_CONTENT)
+            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
         try:
-            obj = Maintenance.objects.get(id=id)
-        except Maintenance.DoesNotExist:
+            obj = Maintenance_Data.objects.get(id=id)
+        except Maintenance_Data.DoesNotExist:
             msg = {"msg": "it aint showin up bud'"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         obj.delete()
@@ -105,10 +105,59 @@ class PlaneView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
+# individual planes
+class PlaneInfo(APIView):
+    def get(self, request,id):
+        try:
+            obj = Plane_Data.objects.get(id=id)
+        except Plane_Data.DoesNotExist:
+            msg = {"msg":"not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = PlaneSerializer(obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, id):
+        try:
+            obj = Plane_Data.objects.get(id=id)
+        except Plane_Data.DoesNotExist:
+            msg = {"msg":"not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = PlaneSerializer(obj, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, id):
+        try:
+            obj = Plane_Data.objects.get(id=id)
+        except Plane_Data.DoesNotExist:
+            msg = {"msg":"not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = PlaneSerializer(obj, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        try:
+            obj = Plane_Data.objects.get(id=id)
+        except Plane_Data.DoesNotExist:
+            msg = {"msg": "it aint showin up bud'"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        obj.delete()
+        return Response({"msg":"it's deleted"}, status=status.HTTP_204_NO_CONTENT)
+
 # list of calenders
 class CalenderView(APIView):
     def get(self, request):
-        obj = Calender_Data.objects.all()
+        obj = Calender.objects.all()
         serializer = CalenderSerializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
@@ -119,10 +168,59 @@ class CalenderView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
+# individual calenders
+class CalenderInfo(APIView):
+    def get(self, request,id):
+        try:
+            obj = Calender.objects.get(id=id)
+        except Calender.DoesNotExist:
+            msg = {"msg":"not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = CalenderSerializer(obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, id):
+        try:
+            obj = Calender.objects.get(id=id)
+        except Calender.DoesNotExist:
+            msg = {"msg":"not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = CalenderSerializer(obj, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, id):
+        try:
+            obj = Calender.objects.get(id=id)
+        except Calender.DoesNotExist:
+            msg = {"msg":"not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = CalenderSerializer(obj, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        try:
+            obj = Calender.objects.get(id=id)
+        except Calender.DoesNotExist:
+            msg = {"msg": "it aint showin up bud'"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        obj.delete()
+        return Response({"msg":"it's deleted"}, status=status.HTTP_204_NO_CONTENT)
+
 # list of users
 class UserView(APIView):
     def get(self, request):
-        obj = User_Data.objects.all()
+        obj = User.objects.all()
         serializer = UserSerializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
@@ -133,3 +231,51 @@ class UserView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
+# individual users
+class UserInfo(APIView):
+    def get(self, request,id):
+        try:
+            obj = User.objects.get(id=id)
+        except User_Data.DoesNotExist:
+            msg = {"msg":"not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = UserSerializer(obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, id):
+        try:
+            obj = User.objects.get(id=id)
+        except User.DoesNotExist:
+            msg = {"msg":"not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = UserSerializer(obj, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, id):
+        try:
+            obj = User.objects.get(id=id)
+        except User_Data.DoesNotExist:
+            msg = {"msg":"not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = UserSerializer(obj, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        try:
+            obj = User.objects.get(id=id)
+        except User.DoesNotExist:
+            msg = {"msg": "it aint showin up bud'"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        obj.delete()
+        return Response({"msg":"it's deleted"}, status=status.HTTP_204_NO_CONTENT)

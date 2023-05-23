@@ -31,11 +31,14 @@ from . import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', views.home, name='home'),
-    path("user/", views.UserView.as_view()),
-    path("plane/", views.PlaneView.as_view()),
+    path("user/", views.UserView.as_view(), name='users'),
+    path("user/<int:id>/", views.UserInfo.as_view(), name='user details'),
+    path("plane/", views.PlaneView.as_view(), name='planes'),
+    path("plane/<int:id>/", views.PlaneInfo.as_view(), name='plane details'),
     path("maintenance/", views.MaintenanceView.as_view(), name='maintenance'),
     path("maintenance/<int:id>/", views.MaintenanceInfo.as_view(), name='maintenance details'),
-    path("calender/", views.CalenderView.as_view()),
+    path("calender/", views.CalenderView.as_view(), name='calender'),
+    path("calender/<int:id>/", views.CalenderInfo.as_view(), name='calender details'),
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)
