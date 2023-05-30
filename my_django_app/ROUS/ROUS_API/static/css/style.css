@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'ethnocentric';
+    src: url('../fonts/ethnocentric.ttf') format('truetype');
+}
+
+.logostyle {
+    font-family: 'ethnocentric', sans-serif;
+    letter-spacing: .3rem;
+    position: relative;
+    font-size: 16px;
+}
