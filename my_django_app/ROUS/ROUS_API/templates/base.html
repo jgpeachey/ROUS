@@ -13,6 +13,9 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.8/index.global.min.js'></script>
+
+
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -21,10 +24,41 @@
                 themeSystem: 'bootstrap5',
                 initialView: 'dayGridMonth',
                 headerToolbar: {
-                    left: 'prev,next',
+                    left: 'prev,next,addEventButton',
                     center: 'title',
-                    right: 'dayGridMonth,dayGridWeek,dayGridDay'
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
+                customButtons: {
+                    addEventButton: {
+                        text: 'add event...',
+                        click: function () {
+                            var dateStr = prompt('Enter a date in YYYY-MM-DD format');
+                            var date = new Date(dateStr + 'T00:00:00'); // will be in local time
+
+                            if (!isNaN(date.valueOf())) { // valid?
+                                calendar.addEvent({
+                                    title: 'dynamic event',
+                                    start: date,
+                                    allDay: true
+                                });
+                                alert('Great. Now, update your database...');
+                            } else {
+                                alert('Invalid date.');
+                            }
+                        }
+                    }
+                },
+                views: {
+                    timeGridWeek: {
+                        type: 'timeGrid',
+                        duration: { days: 7 },
+                        buttonText: 'Week'
+                    },
+                    timeGridDay: {
+                        type: 'timeGrid',
+                        duration: { days: 1 }
+                    }
+                }
             });
             calendar.render();
         });
@@ -33,11 +67,31 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">{% load static %}<img src="{%static '/images/TesseractLogo.ico'%}"
-                alt="Logo"></a>
+    <header class="header">
+        <div class="logostyle">{% load static %}<img src="{% static '/images/TesseractLogo.ico' %}" alt="Logo">
+            <span>TESSERACT</span>
+        </div>
+        <!--
+        <a class="logo" href="/">
+            {% load static %}<img src="{% static '/images/TesseractLogo.ico' %}" alt="Logo">
+        </a>
         <h1 class="logostyle">TESSERACT</h1>
+             -->
+
+        <nav class="nav-links">
+            <a href="#" class="current">Calendar</a>
+            <a href="#">Import</a>
+        </nav>
+    </header>
+    <!--<nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                {% load static %}<img src="{%static '/images/TesseractLogo.ico'%}" alt="Logo">
+            </a>
+            <h1 class="logostyle">TESSERACT</h1>
+        </div>
     </nav>
+     -->
     <!--
     <div class="container mt-4">
         {% block content %}
@@ -46,6 +100,20 @@
     </div>
     -->
     <div id='calendar'></div>
+
+    <footer class="footer">
+        {% load static %}<img src="{% static '/images/AirForceLogoBlack.png' %}" alt="Air Force Logo">
+
+        <div class="social-icons">
+            <a href="https://www.Linkedin.com">{% load static %}<img src="{% static '/images/Linkedin.png' %}"
+                    alt="Linkedin"></a>
+            <a href="#">{% load static %}<img src="{% static '/images/Envelope.png' %}" alt="Email"></a>
+            <a href="https://www.facebook.com">{% load static %}<img src="{% static '/images/Facebook.png' %}"
+                    alt="Facebook"></a>
+            <a href="https://www.twitter.com">{% load static %}<img src="{% static '/images/Twitter.png' %}"
+                    alt="Twitter"></a>
+        </div>
+    </footer>
 
     {% bootstrap_javascript %}
 </body>
