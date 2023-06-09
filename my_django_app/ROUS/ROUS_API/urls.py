@@ -33,6 +33,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', views.home, name='home'),
+    path('docupload.html', views.docupload, name='docupload'),
     path("user/", views.UserView),
     path("plane/", views.PlaneView),
     path("maintenance/", views.MaintenanceView),

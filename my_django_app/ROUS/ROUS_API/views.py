@@ -17,6 +17,9 @@ from rest_framework import status
 def home(request):
     return render(request, 'home.html')
 
+def docupload(request):
+    return render(request, 'docupload.html')
+
 @api_view(["GET", "POST"])
 def MaintenanceView(request):
     if request.method == "GET":

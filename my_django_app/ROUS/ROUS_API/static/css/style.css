@@ -74,7 +74,36 @@
     margin-left: 10px;
 }
 
-#calendar {
+#outer-wrapper {
+    background-color: #242435;
+    /* Replace with your desired background color */
+    padding: 40px;
+}
+
+#calendar-wrapper {
+    background-color: #fafafa;
+    /* Replace with your desired background color */
     max-width: 1200px;
     margin: 40px auto;
+    padding: 20px;
+}
+
+#calendar {
+    width: 100%;
+}
+
+body {
+    display: flex;
+
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    background-color: #f1f1f7;
+    justify-content: center;
+    align-items: center;
 }

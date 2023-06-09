@@ -4,37 +4,33 @@
 <html lang="en">
 
 <head>
-    <title>{% block title %}{% endblock %}</title>
+    <title>Import</title>
     {% bootstrap_css %}
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.8/index.global.min.js'></script>
-    <script src="{% static 'js/main.js' %}"></script>
-
 </head>
 
 <body>
+
     <header class="header">
         <div class="logostyle">{% load static %}<img src="{% static '/images/TesseractLogo.ico' %}" alt="Logo">
             <span>TESSERACT</span>
         </div>
-
-
         <nav class="nav-links">
-            <a href="#" class="current">Calendar</a>
+            <a href="/" class="current">Calendar</a>
             <a href="docupload.html">Import</a>
         </nav>
     </header>
 
-    <div id="outer-wrapper">
-        <div id="calendar-wrapper">
-            <div id="calendar"></div>
-        </div>
+    <div class="content">
+        <form action="import_excel" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="excel_file" accept=".xlsx, .xls">
+            <button type="submit">Import</button>
+        </form>
     </div>
 
     <footer class="footer">
