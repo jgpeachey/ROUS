@@ -21,18 +21,18 @@ class PlaneListView(APIView):
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class IndividualPlaneData(APIView):
-    def get(self, request, pk):
+    def get(self, request, pk1, pk2):
         try:
-            obj = PlaneData.objects.get(PlaneSN=pk)
+            obj = PlaneData.objects.get(PlaneSN=pk1, MDS=pk2)
         except PlaneData.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         serializer = PlaneDataSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def patch(self, request, pk):
+    def patch(self, request, pk1, pk2):
         try:
-            obj = PlaneData.objects.get(PlaneSN=pk)
+            obj = PlaneData.objects.get(PlaneSN=pk1, MDS=pk2)
         except PlaneData.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -43,9 +43,9 @@ class IndividualPlaneData(APIView):
             return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
+    def delete(self, request, pk1, pk2):
         try:
-            obj = PlaneData.objects.get(PlaneSN=pk)
+            obj = PlaneData.objects.get(PlaneSN=pk1, MDS=pk2)
         except PlaneData.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -91,18 +91,18 @@ class PlaneMaintenanceListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class IndividualPlaneMaintenanceView(APIView):
-    def get(self, request, pk):
+    def get(self, request, pk1, pk2, pk3):
         try:
-            obj = PlaneMaintenance.objects.get(MDS=pk)
+            obj = PlaneMaintenance.objects.get(PlaneSN=pk1, MDS=pk2, JST=pk3)
         except PlaneMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         serializer = PlaneMaintenanceSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def patch(self, request, pk):
+    def patch(self, request, pk1, pk2, pk3):
         try:
-            obj = PlaneMaintenance.objects.get(MDS=pk)
+            obj = PlaneMaintenance.objects.get(PlaneSN=pk1, MDS=pk2, JST=pk3)
         except PlaneMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -113,9 +113,9 @@ class IndividualPlaneMaintenanceView(APIView):
             return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
+    def delete(self, request, pk1, pk2, pk3):
         try:
-            obj = PlaneMaintenance.objects.get(MDS=pk)
+            obj = PlaneMaintenance.objects.get(PlaneSN=pk1, MDS=pk2, JST=pk3)
         except PlaneMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -123,18 +123,18 @@ class IndividualPlaneMaintenanceView(APIView):
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 class PlaneMaintenanceAircraftView(APIView):
-    def delete(self, request, pk):
+    def delete(self, request, pk1, pk2):
         try:
-            obj = PlaneMaintenance.objects.get(PlaneSN=pk)
+            obj = PlaneMaintenance.objects.get(PlaneSN=pk1, MDS=pk2)
         except PlaneMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         obj.delete()
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
-    def get(self, request, pk):
+    def get(self, request, pk1, pk2):
         try:
-            obj = PlaneMaintenance.objects.get(PlaneSN=pk)
+            obj = PlaneMaintenance.objects.get(PlaneSN=pk1, MDS=pk2)
         except PlaneMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -157,18 +157,18 @@ class PartMaintenanceListView(APIView):
 
 # MDS or EQP_ID?
 class IndividualPartMaintenanceView(APIView):
-    def get(self, request, pk):
+    def get(self, request, pk1, pk2, pk3, pk4, pk5):
         try:
-            obj = PartMaintenance.objects.get(MDS=pk)
+            obj = PartMaintenance.objects.get(PlaneSN=pk1, MDS=pk2, EQP_ID=pk3, PartSN=pk4, PartNum=pk5)
         except PartMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         serializer = PartMaintenanceSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def patch(self, request, pk):
+    def patch(self, request, pk, pk1, pk2, pk3, pk4, pk5):
         try:
-            obj = PartMaintenance.objects.get(MDS=pk)
+            obj = PartMaintenance.objects.get(PlaneSN=pk1, MDS=pk2, EQP_ID=pk3, PartSN=pk4, PartNum=pk5)
         except PartMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -179,9 +179,9 @@ class IndividualPartMaintenanceView(APIView):
             return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
+    def delete(self, request, pk1, pk2, pk3, pk4, pk5):
         try:
-            obj = PartMaintenance.objects.get(MDS=pk)
+            obj = PartMaintenance.objects.get(PlaneSN=pk1, MDS=pk2, EQP_ID=pk3, PartSN=pk4, PartNum=pk5)
         except PartMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -189,18 +189,18 @@ class IndividualPartMaintenanceView(APIView):
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 class PartMaintenanceAircraftView(APIView):
-    def delete(self, request, pk):
+    def delete(self, request, pk1, pk2):
         try:
-            obj = PartMaintenance.objects.get(PlaneSN=pk)
+            obj = PartMaintenance.objects.get(PlaneSN=pk1, MDS=pk2)
         except PartMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         obj.delete()
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
-    def get(self, request, pk):
+    def get(self, request, pk1, pk2):
         try:
-            obj = PartMaintenance.objects.get(PlaneSN=pk)
+            obj = PartMaintenance.objects.get(PlaneSN=pk1, MDS=pk2)
         except PartMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
