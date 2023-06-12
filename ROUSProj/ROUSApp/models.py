@@ -1,4 +1,6 @@
 from django.db import models
+from datetime import datetime
+
 
 # Create your models here.
 class PlaneData(models.Model):
@@ -32,10 +34,10 @@ class PlaneMaintenance(models.Model):
     PlaneSN = models.CharField(max_length=10, primary_key=True)
     MDS = models.CharField(max_length=10)
     Narrative = models.TextField
-    CRNTTime = models.FloatField(null=True, blank=True, default=0.0)
+    CrntTime = models.FloatField(null=True, blank=True, default=0.0)
     TimeRemain = models.FloatField(null=True, blank=True, default=0.0)
     DueTime = models.FloatField(null=True, blank=True, default=0.0)
-    DueDate = models.DateField()
+    DueDate = models.DateField(default=datetime.now)
     Freq = models.SmallIntegerField
     Type = models.CharField(max_length=1)
     JST = models.IntegerField
@@ -58,7 +60,7 @@ class PartMaintenance(models.Model):
     CrntTime = models.FloatField
     TimeRemain = models.FloatField
     DueTime = models.FloatField
-    DueDate = models.DateField()
+    DueDate = models.DateField(default=datetime.now)
     Freq = models.SmallIntegerField
     Type = models.CharField(max_length=1)
     JST = models.IntegerField
