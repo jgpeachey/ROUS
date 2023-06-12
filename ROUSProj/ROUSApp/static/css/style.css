@@ -1,0 +1,109 @@
+@font-face {
+    font-family: 'ethnocentric';
+    src: url('../fonts/ethnocentric.ttf') format('truetype');
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+}
+
+.logo {
+    margin-right: 10px;
+}
+
+.logostyle {
+    font-family: 'ethnocentric', sans-serif;
+    letter-spacing: .3rem;
+    font-size: 16px;
+    position: relative;
+    margin: 0;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.logostyle img {
+    margin-right: 5px;
+    /* Adjust the value to create the desired gap */
+}
+
+.nav-links {
+    display: flex;
+}
+
+.nav-links a {
+    margin-left: 10px;
+    display: inline-block;
+    padding: 8px 12px;
+    text-decoration: none;
+    background-color: #eee;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.nav-links a.current {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.footer {
+    background-color: #f5f5f5;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer img {
+    max-width: 100px;
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 10px;
+}
+
+.social-icons {
+    text-align: right;
+    padding-top: 10px;
+}
+
+.social-icons a {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+#outer-wrapper {
+    background-color: #242435;
+    /* Replace with your desired background color */
+    padding: 40px;
+}
+
+#calendar-wrapper {
+    background-color: #fafafa;
+    /* Replace with your desired background color */
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+#calendar {
+    width: 100%;
+}
+
+body {
+    display: flex;
+
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    background-color: #f1f1f7;
+    justify-content: center;
+    align-items: center;
+}

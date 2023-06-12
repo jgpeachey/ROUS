@@ -7,6 +7,12 @@ from .models import *
 from rest_framework import status
 from rest_framework.views import APIView
 
+def home(request):
+    return render(request, 'home.html')
+
+def fileupload(request):
+    return render(request, 'fileupload.html')
+
 class PlaneListView(APIView):
     def get(self, request):
         obj = PlaneData.objects.all()
