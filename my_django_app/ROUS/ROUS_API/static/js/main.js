@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var calendar = new FullCalendar.Calendar(calendarEl, {
         themeSystem: 'bootstrap5',
         initialView: 'dayGridMonth',
+        editable: true,
+        droppable: true,
         headerToolbar: {
             left: 'prev,next,addEventButton',
             center: 'title',
