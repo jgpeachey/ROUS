@@ -87,9 +87,6 @@ DATABASES = {
         'PASSWORD': 'Cop4935rous',
         'HOST': 'rous-db.ccdahppv4dze.us-east-2.rds.amazonaws.com',
         'PORT': 3306,
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES"
-        }
     }
 }
 
