@@ -25,12 +25,22 @@
         </nav>
     </header>
 
+
+
     <div class="content">
+
         <form action="import_excel" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="file" name="excel_file" accept=".xlsx, .xls">
-            <button type="submit">Import</button>
-
+            <div class="message-container">
+                <p class="message-text">Please only insert Excel documents</p>
+            </div>
+            <div class="input-container">
+                <label for="excel_file" class="custom-file-upload">
+                    Choose an Excel file
+                    <input type="file" id="excel_file" name="excel_file" accept=".xlsx, .xls">
+                </label>
+                <button class="inputbut" type="submit">Import</button>
+            </div>
         </form>
     </div>
 
