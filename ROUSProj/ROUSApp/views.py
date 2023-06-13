@@ -172,7 +172,7 @@ class IndividualPartMaintenanceView(APIView):
         serializer = PartMaintenanceSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def patch(self, request, pk, pk1, pk2, pk3, pk4, pk5):
+    def patch(self, request, pk1, pk2, pk3, pk4, pk5):
         try:
             obj = PartMaintenance.objects.get(PlaneSN=pk1, MDS=pk2, EQP_ID=pk3, PartSN=pk4, PartNum=pk5)
         except PartMaintenance.DoesNotExist:

@@ -86,7 +86,7 @@ DATABASES = {
         'USER': 'g6rous',
         'PASSWORD': 'Cop4935rous',
         'HOST': 'rous-db.ccdahppv4dze.us-east-2.rds.amazonaws.com',
-        'PORT': 3306
+        'PORT': 3306,
     }
 }
 
