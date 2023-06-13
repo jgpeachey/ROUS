@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
         editable: true,
         droppable: true,
         headerToolbar: {
-            left: 'prev,next,addEventButton',
+            left: 'prev,next, addEventButton',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
