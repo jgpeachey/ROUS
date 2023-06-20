@@ -1,14 +1,10 @@
 
 
 from django.urls import path
-from ROUSApp import views
 from . import views
-
 
 from django.urls import path, register_converter
 from datetime import date
-from django.conf import settings
-from django.conf.urls.static import static
 
 class DateConverter:
     regex = r'\d{4}-\d{2}-\d{2}'
@@ -21,8 +17,6 @@ class DateConverter:
 register_converter(DateConverter, 'date')
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('fileupload.html', views.fileupload, name='fileupload'),
     path("plane-data/", views.PlaneListView.as_view(), name='planes'),
     path("plane-data/<str:pk1>/<str:pk2>/", views.IndividualPlaneData.as_view(), name='plane details'),
     path("calendar/", views.CalendarListView.as_view(), name='calendars'),
@@ -33,4 +27,4 @@ urlpatterns = [
     path("part-maintenance/", views.PartMaintenanceListView.as_view(), name='part maintenance'),
     path("part-maintenance/<str:pk1>/<str:pk2>/<str:pk3>/<str:pk4>/<str:pk5>/", views.IndividualPartMaintenanceView.as_view(), name='part main details'),
     path("part-maintenance/<str:pk>/", views.PartMaintenanceAircraftView.as_view(), name='part main aircraft details'),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
