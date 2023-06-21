@@ -18,14 +18,29 @@ class PlaneData(models.Model):
         return f'{self.PlaneSN}..{self.GeoLoc}'
 
 class Calendar(models.Model):
-    Start = models.DateField()
-    End = models.DateField()
+    start = models.DateField()
+    end = models.DateField()
     Aircraft = models.CharField(max_length=20, primary_key=True)
-    Title = models.TextField(blank=True)
+    title = models.TextField(blank=True)
     EHours = models.FloatField(null=True, blank=True, default=0.0)
     FHours = models.FloatField(null=True, blank=True, default=0.0)
     GeoLoc = models.CharField(max_length=10)
-    # objects = models.Manager()
+    # ... other fields and methods
+
+    def aircraft_instance(self):
+        mds = self.Aircraft[:10]  # Extract MDS from the concatenated field
+        tail_number = self.Aircraft[10:]  # Extract TailNumber from the concatenated field
+        try:
+            return PlaneData.objects.get(MDS=mds, TailNumber=tail_number)
+        except PlaneData.DoesNotExist:
+            return None
+
+    def __str__(self):
+        aircraft = self.aircraft_instance()
+        if aircraft:
+            return f"Start: {self.start}, End: {self.end}, Aircraft: {self.Aircraft}, PlaneSN: {aircraft.PlaneSN}, GeoLoc: {aircraft.GeoLoc}, WUC_LCN: {aircraft.WUC_LCN}, EQP_ID: {aircraft.EQP_ID}"
+        else:
+            return f"Start: {self.start}, End: {self.end}, Aircraft: {self.Aircraft}, (No associated PlaneData)"
 
 class PlaneMaintenance(models.Model):
     class Meta:

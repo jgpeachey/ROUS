@@ -75,12 +75,22 @@ class CalendarListView(APIView):
 class IndividualDateCalendar(APIView):
     def get(self, request, pk):
         try:
-            obj = Calendar.objects.get(StartDate=pk)
+            obj = Calendar.objects.get(start=pk)
         except Calendar.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         serializer = CalendarSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
+        try:
+            obj = Calendar.objects.get(Start=pk)
+        except Calendar.DoesNotExist:
+            msg = {"msg": "not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        obj.delete()
+        return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
+
 
 class PlaneMaintenanceListView(APIView):
     def get(self, request):
