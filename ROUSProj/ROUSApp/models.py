@@ -25,8 +25,7 @@ class Calendar(models.Model):
     title = models.TextField(blank=True)
     EHours = models.FloatField(null=True, blank=True, default=0.0)
     FHours = models.FloatField(null=True, blank=True, default=0.0)
-    GeoLoc = models.CharField(max_length=10)
-    # ... other fields and methods
+    GeoLoc = models.CharField(max_length=10)    # ... other fields and methods
 
 class PlaneMaintenance(models.Model):
     class Meta:
