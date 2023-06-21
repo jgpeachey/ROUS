@@ -40,7 +40,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                 },
+                eventDrop: function (info) {
+                    alert(info.event.title + " was dropped on " + info.event.start.toISOString());
 
+                    if (!confirm("Are you sure about this change?")) {
+                        info.revert();
+                    }
+                },
             });
             calendar.render();
         });
