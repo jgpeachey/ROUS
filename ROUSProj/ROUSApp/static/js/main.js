@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 droppable: true,
                 multiMonthMaxColumns: 1,
                 headerToolbar: {
-                    left: 'prev,next, addEventButton',
+                    left: 'prev,next addEventButton today',
                     center: 'title',
                     right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay',
                 },
