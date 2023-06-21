@@ -20,6 +20,7 @@ class PlaneData(models.Model):
 class Calendar(models.Model):
     start = models.DateField()
     end = models.DateField()
+    JulianDate = models.IntegerField(default=0)
     Aircraft = models.CharField(max_length=20, primary_key=True)
     title = models.TextField(blank=True)
     EHours = models.FloatField(null=True, blank=True, default=0.0)
