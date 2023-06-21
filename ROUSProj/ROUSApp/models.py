@@ -13,9 +13,9 @@ class PlaneData(models.Model):
     WUC_LCN = models.CharField(max_length=14)
     EQP_ID = models.CharField(max_length=5)
     TailNumber = models.CharField(max_length=10)
-    # objects = models.Manager()
-    def __str__(self):
-        return f'{self.PlaneSN}..{self.GeoLoc}'
+
+    # def __str__(self):
+    #     return f'{self.PlaneSN}..{self.GeoLoc}'
 
 class Calendar(models.Model):
     start = models.DateField()
@@ -27,24 +27,9 @@ class Calendar(models.Model):
     GeoLoc = models.CharField(max_length=10)
     # ... other fields and methods
 
-    def aircraft_instance(self):
-        mds = self.Aircraft[:10]  # Extract MDS from the concatenated field
-        tail_number = self.Aircraft[10:]  # Extract TailNumber from the concatenated field
-        try:
-            return PlaneData.objects.get(MDS=mds, TailNumber=tail_number)
-        except PlaneData.DoesNotExist:
-            return None
-
-    def __str__(self):
-        aircraft = self.aircraft_instance()
-        if aircraft:
-            return f"Start: {self.start}, End: {self.end}, Aircraft: {self.Aircraft}, PlaneSN: {aircraft.PlaneSN}, GeoLoc: {aircraft.GeoLoc}, WUC_LCN: {aircraft.WUC_LCN}, EQP_ID: {aircraft.EQP_ID}"
-        else:
-            return f"Start: {self.start}, End: {self.end}, Aircraft: {self.Aircraft}, (No associated PlaneData)"
-
 class PlaneMaintenance(models.Model):
     class Meta:
-        unique_together = (('PlaneSN', 'MDS'),)
+        unique_together = (('PlaneSN', 'MDS', 'JST'),)
     PlaneSN = models.CharField(max_length=10, primary_key=True)
     # MDS = models.ForeignKey(PlaneData, related_name='Plane Data MDS', on_delete=models.CASCADE)
     MDS = models.CharField(max_length=10)
