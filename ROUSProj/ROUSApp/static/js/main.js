@@ -14,10 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 editable: true,
                 eventResourceEditable: true,
                 droppable: true,
+                multiMonthMaxColumns: 1,
                 headerToolbar: {
                     left: 'prev,next, addEventButton',
                     center: 'title',
-                    right: 'dayGridMonth,dayGridWeek,resourceTimelineWeek',
+                    right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay',
                 },
                 customButtons: {
                     addEventButton: {
