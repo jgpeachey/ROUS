@@ -72,10 +72,10 @@ class CalendarListView(APIView):
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class IndividualDateCalendar(APIView):
+class IndividualAircraftCalendar(APIView):
     def get(self, request, pk):
         try:
-            obj = Calendar.objects.get(start=pk)
+            obj = Calendar.objects.get(Aircraft=pk)
         except Calendar.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -84,13 +84,33 @@ class IndividualDateCalendar(APIView):
 
     def delete(self, request, pk):
         try:
-            obj = Calendar.objects.get(Start=pk)
+            obj = Calendar.objects.get(Aircraft=pk)
         except Calendar.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         obj.delete()
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
+class IndividualDateCalendarEdit(APIView):
+    def get(self, request, pk1, pk2):
+        try:
+            obj = Calendar.objects.get(Aircraft=pk1, start=pk2)
+        except Calendar.DoesNotExist:
+            msg = {"msg": "not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        serializer = CalendarSerializer(obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    def patch(self, request, pk1, pk2):
+        try:
+            obj = Calendar.objects.get(Aircraft=pk1, start=pk2)
+        except Calendar.DoesNotExist:
+            msg = {"msg": "not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        serializer = CalendarSerializer(obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PlaneMaintenanceListView(APIView):
     def get(self, request):

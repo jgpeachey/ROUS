@@ -2,7 +2,6 @@ from django.db import models
 from datetime import datetime
 
 # thinking of adding a plane Maintenance and part maintenance to Calendar and then connecting aircraft (calendar) to plane data. then
-
 # Create your models here.
 class PlaneData(models.Model):
     class Meta:
@@ -13,7 +12,6 @@ class PlaneData(models.Model):
     WUC_LCN = models.CharField(max_length=14)
     EQP_ID = models.CharField(max_length=5)
     TailNumber = models.CharField(max_length=10)
-
     # def __str__(self):
     #     return f'{self.PlaneSN}..{self.GeoLoc}'
 
@@ -45,7 +43,6 @@ class PlaneMaintenance(models.Model):
     E_F = models.CharField(max_length=1)
     # objects = models.Manager()
 
-
 class PartMaintenance(models.Model):
     class Meta:
         unique_together = (('PlaneSN', 'MDS', 'EQP_ID', 'PartSN', 'PartNum'),)
@@ -67,4 +64,3 @@ class PartMaintenance(models.Model):
     JST = models.IntegerField(default=0)
     TFrame = models.SmallIntegerField(default=0)
     E_F = models.CharField(max_length=1)
-    # objects = models.Manager()

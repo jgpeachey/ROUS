@@ -17,12 +17,13 @@ class DateConverter:
 register_converter(DateConverter, 'date')
 
 urlpatterns = [
-     path('', views.home, name='home'),
+    path('', views.home, name='home'),
     path('fileupload.html', views.fileupload, name='fileupload'),
     path("plane-data/", views.PlaneListView.as_view(), name='planes'),
     path("plane-data/<str:pk1>/<str:pk2>/", views.IndividualPlaneData.as_view(), name='plane details'),
     path("calendar/", views.CalendarListView.as_view(), name='calendars'),
-    path("calendar/<date:pk>/", views.IndividualDateCalendar.as_view(), name='calendar date details'),
+    path("calendar/<str:pk1>/<date:pk2>/", views.IndividualDateCalendarEdit.as_view(), name='calendar date details'),
+    path("calendar/<date:pk>/", views.IndividualAircraftCalendar.as_view(), name='calendar edit details'),
     path("plane-maintenance/", views.PlaneMaintenanceListView.as_view(), name='plane maintenance'),
     path("plane-maintenance/<str:pk1>/<str:pk2>/<int:pk3>/", views.IndividualPlaneMaintenanceView.as_view(), name='plane main details'),
     path("plane-maintenance/<str:pk1>/<str:pk2>/", views.PlaneMaintenanceAircraftView.as_view(), name='plane main aircraft detail'),
