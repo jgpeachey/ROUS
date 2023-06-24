@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
             starttime = info.event.start.toISOString().substring(0, 10);
         },
         eventResize: function (info) {
-            alert(info.event.title + " end is now " + info.event.end.toISOString());
+            alert(info.event.title + " end is now " + info.event.end.toISOString().substring(0, 10));
 
             if (!confirm("is this okay?")) {
                 info.revert();
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         eventDrop: function (info) {
 
-            alert(info.event.title + " was dropped on " + info.event.start.toISOString());
+            alert(info.event.title + " was dropped on " + info.event.start.toISOString().substring(0, 10));
 
             if (!confirm("Are you sure about this change?")) {
                 info.revert();
@@ -104,7 +104,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback) {
                     // ... and so on
                 };
             });
-            console.log(events);
+
             // Call the successCallback with the retrieved events
             successCallback(events);
         })
