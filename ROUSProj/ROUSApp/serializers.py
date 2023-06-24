@@ -12,7 +12,6 @@ class PlaneDataSerializer(serializers.ModelSerializer):
             return PlaneMaintenanceSerializer(plane_maintenance_instance).data
         else:
             return {}
-
     def get_part_maintenance(self, obj):
         planesn = obj.PlaneSN
         mds = obj.MDS

@@ -103,9 +103,10 @@ class IndividualDateCalendarEdit(APIView):
     def patch(self, request, pk1, pk2):
         try:
             obj = Calendar.objects.get(Aircraft=pk1, start=pk2)
-        except Calendar.DoesNotExist:
+        except PlaneMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
+
         serializer = CalendarSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
