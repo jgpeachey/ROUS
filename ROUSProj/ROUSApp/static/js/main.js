@@ -1,53 +1,175 @@
+let starttime;
+let baseUrl = 'http://127.0.0.1:8000/';
+
+
 document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
-    fetch('http://127.0.0.1:8000/calendar/')
-        .then(function (response) {
-            console.log(response.json());
-            return response;
-        })
-        .then(function (events) {
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                timeZone: 'local',
-                events: events,
-                themeSystem: 'bootstrap5',
-                initialView: 'dayGridMonth',
-                editable: true,
-                eventResourceEditable: true,
-                droppable: true,
-                multiMonthMaxColumns: 1,
-                headerToolbar: {
-                    left: 'prev,next addEventButton today',
-                    center: 'title',
-                    right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay',
-                },
-                customButtons: {
-                    addEventButton: {
-                        text: 'add event...',
-                        click: function () {
-                            var dateStr = prompt('Enter a date in YYYY-MM-DD format');
-                            var date = new Date(dateStr + 'T00:00:00'); // will be in local time
 
-                            if (!isNaN(date.valueOf())) { // valid?
-                                calendar.addEvent({
-                                    title: 'dynamic event',
-                                    start: date,
-                                    allDay: true
-                                });
-                                alert('Great. Now, update your database...');
-                            } else {
-                                alert('Invalid date.');
-                            }
-                        }
-                    }
-                },
-                eventDrop: function (info) {
-                    alert(info.event.title + " was dropped on " + info.event.start.toISOString());
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        timeZone: 'local',
+        events: function (fetchInfo, successCallback, failureCallback) {
+            callCalendar(fetchInfo, successCallback, failureCallback);
 
-                    if (!confirm("Are you sure about this change?")) {
-                        info.revert();
+        },
+        themeSystem: 'bootstrap5',
+        initialView: 'dayGridMonth',
+        editable: true,
+        eventResourceEditable: true,
+        droppable: true,
+        multiMonthMaxColumns: 1,
+        headerToolbar: {
+            left: 'prev,next addEventButton today',
+            center: 'title',
+            right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay',
+        },
+        customButtons: {
+            addEventButton: {
+                text: 'add event...',
+                click: function () {
+                    var dateStr = prompt('Enter a date in YYYY-MM-DD format');
+                    var date = new Date(dateStr + 'T00:00:00'); // will be in local time
+
+                    if (!isNaN(date.valueOf())) { // valid?
+                        calendar.addEvent({
+                            title: 'dynamic event',
+                            start: date,
+                            allDay: true
+                        });
+                        alert('Great. Now, update your database...');
+                    } else {
+                        alert('Invalid date.');
                     }
-                },
-            });
-            calendar.render();
-        });
+                }
+            }
+        },
+        eventResizeStart: function (info) {
+            starttime = info.event.start.toISOString().substring(0, 10);
+        },
+        eventResize: function (info) {
+            alert(info.event.title + " end is now " + info.event.end.toISOString());
+
+            if (!confirm("is this okay?")) {
+                info.revert();
+            }
+            else {
+                resizeEvent(info);
+            }
+
+        },
+        eventDragStart: function (info) {
+            starttime = info.event.start.toISOString().substring(0, 10);
+        },
+        eventDrop: function (info) {
+
+            alert(info.event.title + " was dropped on " + info.event.start.toISOString());
+
+            if (!confirm("Are you sure about this change?")) {
+                info.revert();
+            }
+            else {
+                dropEvent(info);
+            }
+
+        },
+
+    });
+
+    calendar.render();
 });
+
+
+function callCalendar(fetchInfo, successCallback, failureCallback) {
+    // Make an API call to retrieve the events
+    // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint URL
+    fetch(baseUrl + 'calendar/')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            // Process the API response and transform it into FullCalendar event format
+            var events = data.map(function (apiEvent) {
+                return {
+                    title: apiEvent.title,
+                    start: apiEvent.start,
+                    end: apiEvent.end,
+                    // Include additional data beyond basic event properties
+                    // You can store any custom data as additional properties
+                    // For example:
+                    Aircraft: apiEvent.Aircraft,
+                    JulianDate: apiEvent.JulianDate,
+                    EHours: apiEvent.EHours,
+                    FHours: apiEvent.FHours,
+                    aircraft: apiEvent.aircraft,
+
+                    // ... and so on
+                };
+            });
+            console.log(events);
+            // Call the successCallback with the retrieved events
+            successCallback(events);
+        })
+        .catch(function (error) {
+            // Call the failureCallback in case of error
+            failureCallback(error);
+        });
+}
+
+function dropEvent(info) {
+    // Retrieve the updated event details
+    var eventId = info.event.extendedProps.Aircraft;
+    var newStart = info.event.start.toISOString().substring(0, 10);
+    var newEnd = info.event.end.toISOString().substring(0, 10);
+
+    fetch(baseUrl + 'calendar/' + eventId + '/' + starttime + '/', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            start: newStart,
+            end: newEnd
+        })
+    })
+        .then(function (response) {
+            // Check if the update was successful
+            if (response.ok) {
+                console.log('Event updated in the database.');
+            } else {
+                console.error('Failed to update event in the database.');
+            }
+        })
+        .catch(function (error) {
+            console.error('Error updating event:', error);
+        });
+
+}
+
+function resizeEvent(info) {
+    // Retrieve the updated event details
+    var eventId = info.event.extendedProps.Aircraft;
+    var newStart = info.event.start.toISOString().substring(0, 10);
+    var newEnd = info.event.end.toISOString().substring(0, 10);
+
+
+    fetch(baseUrl + 'calendar/' + eventId + '/' + starttime + '/', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            start: newStart,
+            end: newEnd
+        })
+    })
+        .then(function (response) {
+            // Check if the update was successful
+            if (response.ok) {
+                console.log('Event updated in the database.');
+            } else {
+                console.error('Failed to update event in the database.');
+            }
+        })
+        .catch(function (error) {
+            console.error('Error updating event:', error);
+        });
+}
