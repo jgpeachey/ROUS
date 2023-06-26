@@ -71,6 +71,36 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
         },
+        eventClick: function (info) {
+            alert('Event: ' + info.event.title);
+        },
+        eventMouseEnter: function (info) {
+            if (info.event) {
+                var tooltipContent = '<div><strong>' + info.event.extendedProps.aircraft.TailNumber + '</strong></div>';
+                tooltipContent += '<div>Plane Serial Number: ' + info.event.extendedProps.aircraft.PlaneSN + '</div>';
+                tooltipContent += '<div>MDS: ' + info.event.extendedProps.aircraft.MDS + '</div>';
+                tooltipContent += '<div>Geo Location: ' + info.event.extendedProps.aircraft.GeoLoc + '</div>';
+                tooltipContent += '<div>Equipment ID: ' + info.event.extendedProps.aircraft.EQP_ID + '</div>';
+                tooltipContent += '<div>Work Unit Code/Logistics Control Number: ' + info.event.extendedProps.aircraft.WUC_LCN + '</div>';
+
+                var tooltipInstance = new bootstrap.Tooltip(info.el, {
+                    title: tooltipContent,
+                    html: true,
+                    placement: 'top',
+                    trigger: 'hover',
+                    container: 'body'
+                });
+
+                tooltipInstance.show();
+            }
+        },
+        eventMouseLeave: function (info) {
+            var tooltipInstance = bootstrap.Tooltip.getInstance(info.el);
+            if (tooltipInstance) {
+                tooltipInstance.dispose();
+            }
+
+        },
 
     });
 
