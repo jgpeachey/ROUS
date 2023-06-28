@@ -46,33 +46,50 @@ document.addEventListener('DOMContentLoaded', function () {
             starttime = info.event.start.toISOString().substring(0, 10);
         },
         eventResize: function (info) {
-            alert(info.event.title + " end is now " + info.event.end.toISOString().substring(0, 10));
-
-            if (!confirm("is this okay?")) {
-                info.revert();
-            }
-            else {
-                resizeEvent(info);
-            }
+            Swal.fire({
+                title: info.event.title + ' end is now ' + info.event.end.toISOString().substring(0, 10),
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                customClass: {
+                    title: 'swal-title' // Custom class for the title
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    resizeEvent(info);
+                    Swal.fire('Success', 'Event resized.', 'success');
+                } else {
+                    info.revert();
+                }
+            });
 
         },
         eventDragStart: function (info) {
             starttime = info.event.start.toISOString().substring(0, 10);
         },
         eventDrop: function (info) {
-
-            alert(info.event.title + " was dropped on " + info.event.start.toISOString().substring(0, 10));
-
-            if (!confirm("Are you sure about this change?")) {
-                info.revert();
-            }
-            else {
-                dropEvent(info);
-            }
+            Swal.fire({
+                title: info.event.title + ' was dropped on ' + info.event.start.toISOString().substring(0, 10),
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                customClass: {
+                    title: 'swal-title'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dropEvent(info);
+                    Swal.fire('Success', 'Event dropped.', 'success');
+                } else {
+                    info.revert();
+                }
+            });
 
         },
         eventClick: function (info) {
-            alert('Event: ' + info.event.title);
+            handleEventClick(info);
         },
         eventMouseEnter: function (info) {
             if (info.event) {
@@ -98,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var tooltipInstance = bootstrap.Tooltip.getInstance(info.el);
             if (tooltipInstance) {
                 tooltipInstance.dispose();
+                tooltipInstance.hide();
             }
 
         },
