@@ -50,8 +50,8 @@ class PlaneData(models.Model):
     WUC_LCN = models.CharField(max_length=14)
     EQP_ID = models.CharField(max_length=5)
     TailNumber = models.CharField(max_length=10)
-    plane_maintenance = models.OneToOneField(PlaneMaintenance, on_delete=models.CASCADE, related_name='PlaneMaintenance', null=True)
-    part_maintenance = models.OneToOneField(PartMaintenance, on_delete=models.CASCADE, related_name='PartMaintenance', null=True)
+    # plane_maintenance = models.OneToOneField(PlaneMaintenance, on_delete=models.CASCADE, related_name='PlaneMaintenance', null=True)
+    # part_maintenance = models.OneToOneField(PartMaintenance, on_delete=models.CASCADE, related_name='PartMaintenance', null=True)
     # def __str__(self):
     #     return f'{self.PlaneSN}..{self.GeoLoc}'
 
@@ -64,5 +64,7 @@ class Calendar(models.Model):
     EHours = models.FloatField(null=True, blank=True, default=0.0)
     FHours = models.FloatField(null=True, blank=True, default=0.0)
     GeoLoc = models.CharField(max_length=10)
-    aircraft = models.OneToOneField(PlaneData, on_delete=models.CASCADE, related_name='aircraft', null=True)
+    # aircraft = models.OneToOneField(PlaneData, on_delete=models.CASCADE, related_name='aircraft', null=True)
 
+class Location(models.Model):
+    GeoLoc = models.CharField(max_length=10)

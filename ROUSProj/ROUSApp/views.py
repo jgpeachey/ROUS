@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import *
 from .models import *
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.views import APIView
 
 def home(request):
@@ -243,3 +243,37 @@ class PartMaintenanceAircraftView(APIView):
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         serializer = PartMaintenanceSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class LocationList(APIView):
+    def get(self, request):
+        obj = Location.objects.all()
+        serializer = LocationSerializer(obj, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    def post(self, request):
+        serializer = LocationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LocationDetail(APIView):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+    lookup_field = 'GeoLoc'
+    def delete(self, request, pk):
+        try:
+            obj = Location.objects.get(GeoLoc=pk)
+        except Calendar.DoesNotExist:
+            msg = {"msg": "not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        obj.delete()
+        return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
+
+class CalendarListByGeoLoc(generics.ListAPIView):
+    serializer_class = CalendarSerializer
+
+    def get_queryset(self):
+        geoloc = self.kwargs['GeoLoc']
+        return Calendar.objects.filter(GeoLoc=geoloc)

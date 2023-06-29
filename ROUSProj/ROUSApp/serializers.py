@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from .models import *
 
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = '__all__'
+
 class PlaneDataSerializer(serializers.ModelSerializer):
     plane_maintenance = serializers.SerializerMethodField()
     part_maintenance = serializers.SerializerMethodField()
