@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
+        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
         timeZone: 'local',
         events: function (fetchInfo, successCallback, failureCallback) {
             callCalendar(fetchInfo, successCallback, failureCallback);
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         headerToolbar: {
             left: 'prev,next addEventButton today',
             center: 'title',
-            right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay',
+            right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay,resourceTimelineWeek',
         },
         customButtons: {
             addEventButton: {
@@ -103,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var tooltipInstance = new bootstrap.Tooltip(info.el, {
                     title: tooltipContent,
                     html: true,
-                    placement: 'top',
+                    placement: 'auto',
                     trigger: 'hover',
                     container: 'body'
                 });
@@ -220,4 +221,36 @@ function resizeEvent(info) {
         .catch(function (error) {
             console.error('Error updating event:', error);
         });
+}
+
+function handleEventClick(info) {
+    var event = info.event;
+
+    // Populate event details in the modal
+    document.getElementById('eventTitle').innerHTML = event.title;
+    document.getElementById('eventStart').innerHTML = 'Start: ' + event.start;
+    document.getElementById('eventEnd').innerHTML = 'End: ' + event.end;
+
+    // Show the modal
+    var modal = document.getElementById('eventModal');
+    modal.style.display = 'block';
+
+    // Handle edit button click
+    var editButton = document.getElementById('editButton');
+    editButton.addEventListener('click', function () {
+        // Handle editing functionality
+        var newTitle = prompt('Enter a new title', event.title);
+        if (newTitle) {
+            event.setProp('title', newTitle);
+            // Update the displayed title in the modal
+            document.getElementById('eventTitle').innerHTML = newTitle;
+            // You can also update other properties and their display here if needed
+        }
+    });
+
+    // Close the modal when the close button is clicked
+    var closeBtn = document.getElementsByClassName('close')[0];
+    closeBtn.addEventListener('click', function () {
+        modal.style.display = 'none';
+    });
 }
