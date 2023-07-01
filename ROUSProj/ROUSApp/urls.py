@@ -1,5 +1,3 @@
-
-
 from django.urls import path
 from . import views
 
@@ -19,18 +17,42 @@ register_converter(DateConverter, 'date')
 urlpatterns = [
     path('', views.home, name='home'),
     path('fileupload.html', views.fileupload, name='fileupload'),
+
+    # get and post plane data list
     path("plane-data/", views.PlaneListView.as_view(), name='planes'),
-    path("plane-data/<str:pk1>/<str:pk2>/", views.IndividualPlaneData.as_view(), name='plane details'),
+    # get and post to calendar list
     path("calendar/", views.CalendarListView.as_view(), name='calendars'),
-    path("calendar/<str:pk1>/<date:pk2>/", views.IndividualDateCalendarEdit.as_view(), name='calendar date details'),
-    path("calendar/aircraft/<str:pk>/", views.IndividualAircraftCalendar.as_view(), name='calendar-edit-details'),
+    # get and post to plane maintenance list
     path("plane-maintenance/", views.PlaneMaintenanceListView.as_view(), name='plane maintenance'),
-    path("plane-maintenance/<str:pk1>/<str:pk2>/<int:pk3>/", views.IndividualPlaneMaintenanceView.as_view(), name='plane main details'),
-    path("plane-maintenance/<str:pk1>/<str:pk2>/", views.PlaneMaintenanceAircraftView.as_view(), name='plane main aircraft detail'),
+    # get and post to part maintenance list
     path("part-maintenance/", views.PartMaintenanceListView.as_view(), name='part maintenance'),
-    path("part-maintenance/<str:pk1>/<str:pk2>/<str:pk3>/<str:pk4>/<str:pk5>/", views.IndividualPartMaintenanceView.as_view(), name='part main details'),
-    path("part-maintenance/<str:pk>/", views.PartMaintenanceAircraftView.as_view(), name='part main aircraft details'),
+    # get and post to location list
     path('loc/', views.LocationList.as_view(), name='location-list'),
+
+    # allows get, patch and delete based on PlaneSN and MDS in plane data
+    path("plane-data/<str:pk1>/<str:pk2>/", views.IndividualPlaneData.as_view(), name='plane details'),
+
+    # allows get and patch based on Aircraft str and start in Calendar
+    path("calendar/<str:pk1>/<date:pk2>/", views.IndividualDateCalendarEdit.as_view(), name='calendar date details'),
+
+    # allows get and delete based on Aircraft str, in Calendar
+    path("calendar/aircraft/<str:pk>/", views.IndividualAircraftCalendar.as_view(), name='calendar-edit-details'),
+
+    # allows get, patch and delete based on PlaneSN, MDS and JST, in plane maintenance
+    path("plane-maintenance/<str:pk1>/<str:pk2>/<int:pk3>/", views.IndividualPlaneMaintenanceView.as_view(), name='plane main details'),
+
+    # allows delete and get based on PlaneSN and MDS, in plane maintenance
+    path("plane-maintenance/<str:pk1>/<str:pk2>/", views.PlaneMaintenanceAircraftView.as_view(), name='plane main aircraft detail'),
+
+    # allows get, patch and delete based on PlaneSN, MDS, EQP_ID, PartSN and PartNum,in part maintenance
+    path("part-maintenance/<str:pk1>/<str:pk2>/<str:pk3>/<str:pk4>/<str:pk5>/", views.IndividualPartMaintenanceView.as_view(), name='part main details'),
+
+    # allows get and delete based on PlaneSN and MDS, in part maintenance
+    path("part-maintenance/<str:pk>/", views.PartMaintenanceAircraftView.as_view(), name='part main aircraft details'),
+
+    # allows delete based on GeoLoc in Location
     path('loc/<str:pk>/', views.LocationDetail.as_view(), name='location-detail'),
+
+    # allows get based on GeoLoc in Calendar
     path('calendar/geoloc/<str:GeoLoc>/', views.CalendarListByGeoLoc.as_view(), name='calendar-list-by-geoloc'),
 ]
