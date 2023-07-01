@@ -265,7 +265,7 @@ class LocationDetail(APIView):
     def delete(self, request, pk):
         try:
             obj = Location.objects.get(GeoLoc=pk)
-        except Calendar.DoesNotExist:
+        except Location.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         obj.delete()

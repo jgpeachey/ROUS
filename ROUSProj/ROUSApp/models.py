@@ -11,7 +11,7 @@ class Location(models.Model):
 class PlaneMaintenance(models.Model):
     # class Meta:
     #     unique_together = (('PlaneSN', 'MDS', 'JST'),)
-    PlaneMaintenanceID = models.AutoField(primary_key=True, default=1)
+    PlaneMaintenanceID = models.AutoField(primary_key=True)
     PlaneSN = models.CharField(max_length=10)
     MDS = models.CharField(max_length=10)
     Narrative = models.TextField(default="", blank=False)
@@ -33,7 +33,7 @@ class PlaneMaintenance(models.Model):
 class PartMaintenance(models.Model):
     # class Meta:
     #     unique_together = (('PlaneSN', 'MDS', 'EQP_ID', 'PartSN', 'PartNum'),)
-    PartMaintenanceID = models.AutoField(primary_key=True, default=1)
+    PartMaintenanceID = models.AutoField(primary_key=True)
     PlaneSN = models.CharField(max_length=10)
     MDS = models.CharField(max_length=10)
     EQP_ID = models.CharField(max_length=5)
@@ -71,8 +71,9 @@ class PlaneData(models.Model):
 class Calendar(models.Model):
     start = models.DateField()
     end = models.DateField()
+    CalendarID = models.AutoField(primary_key=True)
     JulianDate = models.IntegerField(default=0)
-    Aircraft = models.CharField(max_length=20, primary_key=True)
+    Aircraft = models.CharField(max_length=20)
     title = models.TextField(blank=True)
     EHours = models.FloatField(null=True, blank=True, default=0.0)
     FHours = models.FloatField(null=True, blank=True, default=0.0)
