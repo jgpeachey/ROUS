@@ -20,6 +20,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <!-- Full Calendar  -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
     <!-- Sweet Alert  -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.min.css" rel="stylesheet">
@@ -41,9 +42,20 @@
         </nav>
     </header>
 
+
     <div id="outer-wrapper">
         <div id="calendar-wrapper">
             <div id="calendar"></div>
+        </div>
+    </div>
+    <!-- Modal Dialog -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="eventTitle"></h3>
+            <p id="eventStart"></p>
+            <p id="eventEnd"></p>
+            <button id="editButton">Edit</button>
         </div>
     </div>
 
