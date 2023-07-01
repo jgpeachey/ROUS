@@ -18,6 +18,8 @@ register_converter(DateConverter, 'date')
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('location.html', views.location, name='location'),
+    path('calendar.html', views.calendar, name='calendar'),
     path('fileupload.html', views.fileupload, name='fileupload'),
     path("plane-data/", views.PlaneListView.as_view(), name='planes'),
     path("plane-data/<str:pk1>/<str:pk2>/", views.IndividualPlaneData.as_view(), name='plane details'),

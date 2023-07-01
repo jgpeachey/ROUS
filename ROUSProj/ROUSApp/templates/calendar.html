@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Import</title>
+    <title>ROUS Calendar</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,43 +18,53 @@
     <!-- CSS File -->
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <!-- Full Calendar  -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
+    <!-- Sweet Alert  -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- JavaScript File -->
+    <script src="{% static 'js/main.js' %}"></script>
+
 </head>
 
 <body>
-
     <header class="header">
         <div class="logostyle">{% load static %}<img src="{% static '/images/TesseractLogo.ico' %}" alt="Logo">
             <span>TESSERACT</span>
         </div>
+
+
         <nav class="nav-links">
-            <a href="calendar.html">Calendar</a>
-            <a href="fileupload.html" class="current">Import</a>
+            <a href="calendar.html" class="current">Calendar</a>
+            <a href="fileupload.html">Import</a>
         </nav>
     </header>
 
 
-
-    <div class="content">
-
-        <form action="import_excel" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="message-container">
-                <p class="message-text">Please only insert Excel documents</p>
-            </div>
-            <div class="input-container">
-                <label for="excel_file" class="custom-file-upload">
-                    Choose an Excel file
-                    <input type="file" id="excel_file" name="excel_file" accept=".xlsx, .xls">
-                </label>
-                <button class="inputbut" type="submit">Import</button>
-            </div>
-        </form>
+    <div id="outer-wrapper">
+        <div id="calendar-wrapper">
+            <div id="calendar"></div>
+        </div>
+    </div>
+    <!-- Modal Dialog -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="eventTitle"></h3>
+            <p id="eventStart"></p>
+            <p id="eventEnd"></p>
+            <button id="editButton">Edit</button>
+        </div>
     </div>
 
     <footer class="footer">
-        {% load static %}<img src="{% static '/images/AirForceLogoBlack.png' %}" alt="Air Force Logo">
-
         <div class="social-icons">
+            <a href="https://www.AirForce.com"></a>{% load static %}<img
+                src="{% static '/images/AirForceLogoBlack.png' %}" alt="Air Force Logo"></a>
+
+
             <a href="https://www.Linkedin.com">{% load static %}<img src="{% static '/images/Linkedin.png' %}"
                     alt="Linkedin"></a>
             <a href="#">{% load static %}<img src="{% static '/images/Envelope.png' %}" alt="Email"></a>
@@ -64,7 +74,6 @@
                     alt="Twitter"></a>
         </div>
     </footer>
-
     <!-- Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

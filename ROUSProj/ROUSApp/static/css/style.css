@@ -27,7 +27,7 @@
 
 .logostyle img {
     margin-right: 5px;
-    /* Adjust the value to create the desired gap */
+    pointer-events: none;
 }
 
 .nav-links {
@@ -200,4 +200,61 @@ body {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.submitbut {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: #5882FD;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin-left: 110px;
+}
+
+.submitbut:hover {
+    background-color: #5175e4;
+}
+
+.submitbut:active {
+    background-color: #405eb8;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.formlocation {
+    display: flex;
+    align-items: center;
+}
+
+input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+}
+
+input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #5882FD;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #5175e4;
 }

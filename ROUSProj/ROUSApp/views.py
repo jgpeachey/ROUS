@@ -13,6 +13,12 @@ def home(request):
 def fileupload(request):
     return render(request, 'fileupload.html')
 
+def calendar(request):
+    return render(request, 'calendar.html')
+
+def location(request):
+    return render(request, 'location.html')
+
 class PlaneListView(APIView):
     def get(self, request):
         obj = PlaneData.objects.all()
