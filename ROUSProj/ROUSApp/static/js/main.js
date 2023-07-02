@@ -8,11 +8,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('calendar')) {
         var calendarEl = document.getElementById('calendar');
 
+        // Retrieve the selected GeoLoc from the URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedGeoLoc = urlParams.get('geoloc');
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
             timeZone: 'local',
             events: function (fetchInfo, successCallback, failureCallback) {
-                callCalendar(fetchInfo, successCallback, failureCallback);
+                callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
 
             },
             themeSystem: 'bootstrap5',
@@ -131,11 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-function callCalendar(fetchInfo, successCallback, failureCallback) {
-    // Retrieve the selected GeoLoc from the URL parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedGeoLoc = urlParams.get('geoloc');
-
+function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
     // Make an API call to retrieve the events
     // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint URL
     fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc))
