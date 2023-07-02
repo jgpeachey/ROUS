@@ -102,14 +102,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (info.event) {
                     console.log(info.event);
                     var tooltipContent = '<div><strong>' + info.event.extendedProps.maintenance.TailNumber + '</strong></div>';
-                    tooltipContent += '<div>Plane Serial Number: ' + info.event.extendedProps.maintenance.PlaneSN + '</div>';
-                    tooltipContent += '<div>MDS: ' + info.event.extendedProps.maintenance.MDS + '</div>';
+                    tooltipContent += '<div>Title: ' + info.event.title + '</div>';
+                    tooltipContent += '<div>Narrative: ' + info.event.extendedProps.maintenance.Narrative + '</div>';
+                    tooltipContent += '<div>Type: ' + info.event.extendedProps.maintenance.Type + '</div>';
                     if (info.event.extendedProps.PlaneMaintenanceID == 0) {
-                        tooltipContent += '<div>Equipment ID: ' + info.event.extendedProps.maintenance.EQP_ID + '</div>';
-                        tooltipContent += '<div>Work Unit Code/Logistics Control Number: ' + info.event.extendedProps.maintenance.WUC_LCN + '</div>';
+                        tooltipContent += '<div>CatNum: ' + info.event.extendedProps.maintenance.CatNum + '</div>';
                     }
                     else {
-
+                        tooltipContent += '<div>JST: ' + info.event.extendedProps.maintenance.JST + '</div>';
                     }
 
                     var tooltipInstance = new bootstrap.Tooltip(info.el, {
