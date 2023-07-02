@@ -2,17 +2,20 @@ let starttime;
 let dropdown;
 let baseUrl = 'http://127.0.0.1:8000/';
 const container = document.getElementById('dropdownContainer');
-console.log(dropdown);
 
 document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('calendar')) {
         var calendarEl = document.getElementById('calendar');
 
+        // Retrieve the selected GeoLoc from the URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedGeoLoc = urlParams.get('geoloc');
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
             timeZone: 'local',
             events: function (fetchInfo, successCallback, failureCallback) {
-                callCalendar(fetchInfo, successCallback, failureCallback);
+                callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
 
             },
             themeSystem: 'bootstrap5',
@@ -97,12 +100,17 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             eventMouseEnter: function (info) {
                 if (info.event) {
-                    var tooltipContent = '<div><strong>' + info.event.extendedProps.aircraft.TailNumber + '</strong></div>';
-                    tooltipContent += '<div>Plane Serial Number: ' + info.event.extendedProps.aircraft.PlaneSN + '</div>';
-                    tooltipContent += '<div>MDS: ' + info.event.extendedProps.aircraft.MDS + '</div>';
-                    tooltipContent += '<div>Geo Location: ' + info.event.extendedProps.aircraft.GeoLoc + '</div>';
-                    tooltipContent += '<div>Equipment ID: ' + info.event.extendedProps.aircraft.EQP_ID + '</div>';
-                    tooltipContent += '<div>Work Unit Code/Logistics Control Number: ' + info.event.extendedProps.aircraft.WUC_LCN + '</div>';
+                    console.log(info.event);
+                    var tooltipContent = '<div><strong>' + info.event.extendedProps.maintenance.TailNumber + '</strong></div>';
+                    tooltipContent += '<div>Title: ' + info.event.title + '</div>';
+                    tooltipContent += '<div>Narrative: ' + info.event.extendedProps.maintenance.Narrative + '</div>';
+                    tooltipContent += '<div>Type: ' + info.event.extendedProps.maintenance.Type + '</div>';
+                    if (info.event.extendedProps.PlaneMaintenanceID == 0) {
+                        tooltipContent += '<div>CatNum: ' + info.event.extendedProps.maintenance.CatNum + '</div>';
+                    }
+                    else {
+                        tooltipContent += '<div>JST: ' + info.event.extendedProps.maintenance.JST + '</div>';
+                    }
 
                     var tooltipInstance = new bootstrap.Tooltip(info.el, {
                         title: tooltipContent,
@@ -131,11 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-function callCalendar(fetchInfo, successCallback, failureCallback) {
-    // Retrieve the selected GeoLoc from the URL parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedGeoLoc = urlParams.get('geoloc');
-
+function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
     // Make an API call to retrieve the events
     // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint URL
     fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc))
@@ -143,6 +147,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback) {
             return response.json();
         })
         .then(function (data) {
+            console.log(data);
             // Process the API response and transform it into FullCalendar event format
             var events = data.map(function (apiEvent) {
                 return {
@@ -156,12 +161,15 @@ function callCalendar(fetchInfo, successCallback, failureCallback) {
                     JulianDate: apiEvent.JulianDate,
                     EHours: apiEvent.EHours,
                     FHours: apiEvent.FHours,
-                    aircraft: apiEvent.aircraft,
+                    maintenance: apiEvent.maintenance,
+                    PartMaintenanceID: apiEvent.PartMaintenanceID,
+                    PlaneMaintenanceID: apiEvent.PlaneMaintenanceID,
+                    GeoLoc: apiEvent.GeoLoc,
 
-                    // ... and so on
                 };
             });
 
+            console.log(events);
             // Call the successCallback with the retrieved events
             successCallback(events);
         })
