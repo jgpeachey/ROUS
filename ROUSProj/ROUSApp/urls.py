@@ -50,7 +50,7 @@ urlpatterns = [
     path("part-maintenance/<str:pk1>/<str:pk2>/<str:pk3>/<str:pk4>/<str:pk5>/", views.IndividualPartMaintenanceView.as_view(), name='part main details'),
 
     # allows get and delete based on PlaneSN and MDS, in part maintenance
-    path("part-maintenance/<str:pk>/", views.PartMaintenanceAircraftView.as_view(), name='part main aircraft details'),
+    path("part-maintenance/<str:pk1>/<str:pk2>/", views.PartMaintenanceAircraftView.as_view(), name='part main aircraft details'),
 
     # allows delete based on GeoLoc in Location
     path('loc/<str:pk>/', views.LocationDetail.as_view(), name='location-detail'),

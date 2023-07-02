@@ -176,13 +176,12 @@ class PlaneMaintenanceAircraftView(APIView):
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
     def get(self, request, pk1, pk2):
-        try:
-            obj = PlaneMaintenance.objects.get(PlaneSN=pk1, MDS=pk2)
-        except PlaneMaintenance.DoesNotExist:
+        objs = PlaneMaintenance.objects.filter(PlaneSN=pk1, MDS=pk2)
+        if not objs:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
-        obj = obj.objects.all().order_by('TimeRemain')
-        serializer = PlaneMaintenanceSerializer(obj)
+        objs = objs.order_by('TimeRemain')
+        serializer = PlaneMaintenanceSerializer(objs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class PartMaintenanceListView(APIView):
@@ -243,13 +242,12 @@ class PartMaintenanceAircraftView(APIView):
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
     def get(self, request, pk1, pk2):
-        try:
-            obj = PartMaintenance.objects.get(PlaneSN=pk1, MDS=pk2)
-        except PartMaintenance.DoesNotExist:
+        objs = PartMaintenance.objects.filter(PlaneSN=pk1, MDS=pk2)
+        if not objs:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
-        obj = obj.objects.all().order_by('TimeRemain')
-        serializer = PartMaintenanceSerializer(obj)
+        objs = objs.order_by('TimeRemain')
+        serializer = PartMaintenanceSerializer(objs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LocationList(APIView):
