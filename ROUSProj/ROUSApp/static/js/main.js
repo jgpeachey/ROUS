@@ -2,7 +2,6 @@ let starttime;
 let dropdown;
 let baseUrl = 'http://127.0.0.1:8000/';
 const container = document.getElementById('dropdownContainer');
-console.log(dropdown);
 
 document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('calendar')) {
@@ -101,12 +100,17 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             eventMouseEnter: function (info) {
                 if (info.event) {
-                    var tooltipContent = '<div><strong>' + info.event.extendedProps.aircraft.TailNumber + '</strong></div>';
-                    tooltipContent += '<div>Plane Serial Number: ' + info.event.extendedProps.aircraft.PlaneSN + '</div>';
-                    tooltipContent += '<div>MDS: ' + info.event.extendedProps.aircraft.MDS + '</div>';
-                    tooltipContent += '<div>Geo Location: ' + info.event.extendedProps.aircraft.GeoLoc + '</div>';
-                    tooltipContent += '<div>Equipment ID: ' + info.event.extendedProps.aircraft.EQP_ID + '</div>';
-                    tooltipContent += '<div>Work Unit Code/Logistics Control Number: ' + info.event.extendedProps.aircraft.WUC_LCN + '</div>';
+                    console.log(info.event);
+                    var tooltipContent = '<div><strong>' + info.event.extendedProps.maintenance.TailNumber + '</strong></div>';
+                    tooltipContent += '<div>Plane Serial Number: ' + info.event.extendedProps.maintenance.PlaneSN + '</div>';
+                    tooltipContent += '<div>MDS: ' + info.event.extendedProps.maintenance.MDS + '</div>';
+                    if (info.event.extendedProps.PlaneMaintenanceID == 0) {
+                        tooltipContent += '<div>Equipment ID: ' + info.event.extendedProps.maintenance.EQP_ID + '</div>';
+                        tooltipContent += '<div>Work Unit Code/Logistics Control Number: ' + info.event.extendedProps.maintenance.WUC_LCN + '</div>';
+                    }
+                    else {
+
+                    }
 
                     var tooltipInstance = new bootstrap.Tooltip(info.el, {
                         title: tooltipContent,
@@ -143,6 +147,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
             return response.json();
         })
         .then(function (data) {
+            console.log(data);
             // Process the API response and transform it into FullCalendar event format
             var events = data.map(function (apiEvent) {
                 return {
@@ -156,12 +161,15 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
                     JulianDate: apiEvent.JulianDate,
                     EHours: apiEvent.EHours,
                     FHours: apiEvent.FHours,
-                    aircraft: apiEvent.aircraft,
+                    maintenance: apiEvent.maintenance,
+                    PartMaintenanceID: apiEvent.PartMaintenanceID,
+                    PlaneMaintenanceID: apiEvent.PlaneMaintenanceID,
+                    GeoLoc: apiEvent.GeoLoc,
 
-                    // ... and so on
                 };
             });
 
+            console.log(events);
             // Call the successCallback with the retrieved events
             successCallback(events);
         })
