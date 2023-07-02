@@ -98,17 +98,17 @@ class IndividualAircraftCalendar(APIView):
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 class IndividualDateCalendarEdit(APIView):
-    def get(self, request, pk1, pk2):
+    def get(self, request, pk1):
         try:
-            obj = Calendar.objects.get(Aircraft=pk1, start=pk2)
+            obj = Calendar.objects.get(CalendarID=pk1)
         except Calendar.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         serializer = CalendarSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    def patch(self, request, pk1, pk2):
+    def patch(self, request, pk1):
         try:
-            obj = Calendar.objects.get(Aircraft=pk1, start=pk2)
+            obj = Calendar.objects.get(CalendarID=pk1)
         except PlaneMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -249,6 +249,19 @@ class PartMaintenanceAircraftView(APIView):
         objs = objs.order_by('TimeRemain')
         serializer = PartMaintenanceSerializer(objs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+# class MaintenanceAircraftView(APIView):
+#     def get(self, request, pk1, pk2):
+#         plane_objs = PlaneMaintenance.objects.filter(PlaneSN=pk1, MDS=pk2)
+#         part_objs = PartMaintenance.objects.filter(PlaneSN=pk1, MDS=pk2)
+#
+#         objs = list(plane_objs) + list(part_objs)
+#         if not objs:
+#             msg = {"msg": "not found"}
+#             return Response(msg, status=status.HTTP_404_NOT_FOUND)
+#         objs.sort(key=lambda x: x.TimeRemain)
+#         serializer = CombinedMaintenanceSerializer(objs, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LocationList(APIView):
     def get(self, request):

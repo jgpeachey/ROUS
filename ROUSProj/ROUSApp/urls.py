@@ -34,8 +34,8 @@ urlpatterns = [
     # allows get, patch and delete based on PlaneSN and MDS in plane data
     path("plane-data/<str:pk1>/<str:pk2>/", views.IndividualPlaneData.as_view(), name='plane details'),
 
-    # allows get and patch based on Aircraft str and start in Calendar
-    path("calendar/<str:pk1>/<date:pk2>/", views.IndividualDateCalendarEdit.as_view(), name='calendar date details'),
+    # allows get and patch based on CalendarID in Calendar
+    path("calendar/<str:pk1>", views.IndividualDateCalendarEdit.as_view(), name='calendar date details'),
 
     # allows get and delete based on Aircraft str, in Calendar
     path("calendar/aircraft/<str:pk>/", views.IndividualAircraftCalendar.as_view(), name='calendar-edit-details'),
@@ -51,6 +51,9 @@ urlpatterns = [
 
     # allows get and delete based on PlaneSN and MDS, in part maintenance
     path("part-maintenance/<str:pk1>/<str:pk2>/", views.PartMaintenanceAircraftView.as_view(), name='part main aircraft details'),
+
+    # allows get based on PlaneSN and MDS in part and plane maintenance
+    # path("maintenance/<str:pk1>/<str:pk2>/", views.MaintenanceAircraftView.as_view(), name='maintenance details'),
 
     # allows delete based on GeoLoc in Location
     path('loc/<str:pk>/', views.LocationDetail.as_view(), name='location-detail'),

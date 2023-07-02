@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b479b856-6fd2-4578-9cc0-2130c6cb4313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/views.py" afterDir="false" />
     </list>
@@ -19,6 +21,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectId" id="2R7Mk3B8uRWWAqoMIBOOa3YdHx9" />
   <component name="ProjectViewState">

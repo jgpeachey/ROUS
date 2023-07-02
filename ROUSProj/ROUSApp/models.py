@@ -1,12 +1,15 @@
 from django.db import models
-from datetime import datetime
-import uuid
+# from datetime import datetime
+# import uuid
+
+# from .views import MaintenanceAircraftView
+
 
 # thinking of adding a plane Maintenance and part maintenance to Calendar and then connecting aircraft (calendar) to plane data. then
 # Create your models here.
 
 class Location(models.Model):
-    GeoLoc = models.CharField(primary_key= True, max_length=10)
+    GeoLoc = models.CharField(primary_key=True, max_length=10)
 
 class PlaneMaintenance(models.Model):
     # class Meta:
@@ -66,6 +69,11 @@ class PlaneData(models.Model):
     WUC_LCN = models.CharField(max_length=14)
     EQP_ID = models.CharField(max_length=5)
     TailNumber = models.CharField(max_length=10)
+
+    # @property
+    # def maintenances(self):
+    #     view = MaintenanceAircraftView()
+    #     return view.get_combined_maintenances(self.PlaneSN, self.MDS)
 
 # a single maintenance that matches the title
 class Calendar(models.Model):
