@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         async function fetchOptions() {
             try {
-                const response = await fetch(baseUrl + '/loc/');
+                const response = await fetch(baseUrl + 'loc/');
                 const data = await response.json();
 
                 dropdown = document.getElementById('select');
