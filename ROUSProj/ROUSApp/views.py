@@ -181,6 +181,7 @@ class PlaneMaintenanceAircraftView(APIView):
         except PlaneMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        obj = obj.objects.all().order_by('TimeRemain')
         serializer = PlaneMaintenanceSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -247,6 +248,7 @@ class PartMaintenanceAircraftView(APIView):
         except PartMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        obj = obj.objects.all().order_by('TimeRemain')
         serializer = PartMaintenanceSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
