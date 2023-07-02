@@ -1,4 +1,7 @@
 from django.db import models
+# from rest_framework import serializers
+# from .serializers import CombinedMaintenanceSerializer
+
 # from datetime import datetime
 # import uuid
 
@@ -70,10 +73,6 @@ class PlaneData(models.Model):
     EQP_ID = models.CharField(max_length=5)
     TailNumber = models.CharField(max_length=10)
 
-    # @property
-    # def maintenances(self):
-    #     view = MaintenanceAircraftView()
-    #     return view.get_combined_maintenances(self.PlaneSN, self.MDS)
 
 # a single maintenance that matches the title
 class Calendar(models.Model):
