@@ -132,9 +132,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 function callCalendar(fetchInfo, successCallback, failureCallback) {
+    // Retrieve the selected GeoLoc from the URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedGeoLoc = urlParams.get('geoloc');
+
     // Make an API call to retrieve the events
     // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint URL
-    fetch(baseUrl + 'calendar/')
+    fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc))
         .then(function (response) {
             return response.json();
         })
