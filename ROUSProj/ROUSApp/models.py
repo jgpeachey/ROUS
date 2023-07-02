@@ -24,7 +24,7 @@ class PlaneMaintenance(models.Model):
     JST = models.IntegerField(default=0)
     TFrame = models.SmallIntegerField(default=0)
     E_F = models.CharField(max_length=1)
-    title = models.TextField(blank=True)
+    Title = models.TextField(blank=True)
 
     class Meta:
         unique_together = (('PlaneSN', 'MDS', 'title'),)
@@ -51,7 +51,7 @@ class PartMaintenance(models.Model):
     JST = models.IntegerField(default=0)
     TFrame = models.SmallIntegerField(default=0)
     E_F = models.CharField(max_length=1)
-    title = models.TextField(blank=True)
+    Title = models.TextField(blank=True)
     class Meta:
         unique_together = (('PlaneSN', 'MDS', 'title'),)
 
@@ -69,12 +69,12 @@ class PlaneData(models.Model):
 
 # a single maintenance that matches the title
 class Calendar(models.Model):
-    start = models.DateField()
-    end = models.DateField()
+    Start = models.DateField()
+    End = models.DateField()
     CalendarID = models.AutoField(primary_key=True)
     JulianDate = models.IntegerField(default=0)
     Aircraft = models.CharField(max_length=20)
-    title = models.TextField(blank=True)
+    Title = models.TextField(blank=True)
     EHours = models.FloatField(null=True, blank=True, default=0.0)
     FHours = models.FloatField(null=True, blank=True, default=0.0)
     GeoLoc = models.CharField(max_length=10)
