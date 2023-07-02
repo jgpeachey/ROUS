@@ -18,6 +18,8 @@
     <!-- CSS File -->
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <!-- JavaScript File -->
+    <script src="{% static 'js/main.js' %}"></script>
 </head>
 
 <body>
@@ -27,8 +29,8 @@
             <span>TESSERACT</span>
         </div>
         <nav class="nav-links">
-            <a href="calendar.html">Calendar</a>
-            <a href="fileupload.html" class="current">Import</a>
+            <a onclick="passgeoloc1('calendar.html')">Calendar</a>
+            <a onclick="passgeoloc2('fileupload.html')" class="current">Import</a>
         </nav>
     </header>
 

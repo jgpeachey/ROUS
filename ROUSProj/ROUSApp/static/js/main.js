@@ -3,6 +3,7 @@ let dropdown;
 let baseUrl = 'http://127.0.0.1:8000/';
 const container = document.getElementById('dropdownContainer');
 
+
 document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('calendar')) {
         var calendarEl = document.getElementById('calendar');
@@ -10,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Retrieve the selected GeoLoc from the URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         const selectedGeoLoc = urlParams.get('geoloc');
+
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -100,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             eventMouseEnter: function (info) {
                 if (info.event) {
-                    console.log(info.event);
                     var tooltipContent = '<div><strong>' + info.event.extendedProps.maintenance.TailNumber + '</strong></div>';
                     tooltipContent += '<div>Title: ' + info.event.title + '</div>';
                     tooltipContent += '<div>Narrative: ' + info.event.extendedProps.maintenance.Narrative + '</div>';
@@ -165,6 +166,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
                     PartMaintenanceID: apiEvent.PartMaintenanceID,
                     PlaneMaintenanceID: apiEvent.PlaneMaintenanceID,
                     GeoLoc: apiEvent.GeoLoc,
+                    CalendarID: apiEvent.CalendarID,
 
                 };
             });
@@ -181,11 +183,11 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
 
 function dropEvent(info) {
     // Retrieve the updated event details
-    var eventId = info.event.extendedProps.Aircraft;
+    var eventId = info.event.extendedProps.CalendarID;
     var newStart = info.event.start.toISOString().substring(0, 10);
     var newEnd = info.event.end.toISOString().substring(0, 10);
 
-    fetch(baseUrl + 'calendar/' + eventId + '/' + starttime + '/', {
+    fetch(baseUrl + 'calendar/' + eventId, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -211,12 +213,12 @@ function dropEvent(info) {
 
 function resizeEvent(info) {
     // Retrieve the updated event details
-    var eventId = info.event.extendedProps.Aircraft;
+    var eventId = info.event.extendedProps.CalendarID;
     var newStart = info.event.start.toISOString().substring(0, 10);
     var newEnd = info.event.end.toISOString().substring(0, 10);
 
 
-    fetch(baseUrl + 'calendar/' + eventId + '/' + starttime + '/', {
+    fetch(baseUrl + 'calendar/' + eventId, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -302,6 +304,8 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.addEventListener('click', function () {
             const selectedOption = dropdown.options[dropdown.selectedIndex]; // Get the selected option element
             const selectedGeoLoc = selectedOption.getAttribute('data-geoloc'); // Retrieve the GeoLoc value
+
+            saveSelectedGeoLoc(selectedGeoLoc);
             // Redirect to the calendar page based on the selected GeoLoc
             window.location.href = `calendar.html?geoloc=${encodeURIComponent(selectedGeoLoc)}`;
         });
@@ -352,4 +356,20 @@ function addlocation() {
                 });
         }
     });
+}
+function saveSelectedGeoLoc(selectedGeoLoc) {
+    sessionStorage.setItem('selectedGeoLoc', selectedGeoLoc);
+}
+// Retrieve selected GeoLoc from session storage
+function getSelectedGeoLoc() {
+    return sessionStorage.getItem('selectedGeoLoc');
+}
+function passgeoloc1(filename) {
+    const selectedGeoLoc = getSelectedGeoLoc();
+    window.location.href = baseUrl + filename + '?geoloc=' + encodeURIComponent(selectedGeoLoc);
+}
+
+function passgeoloc2(filename) {
+    const selectedGeoLoc = getSelectedGeoLoc();
+    window.location.href = baseUrl + filename + '?geoloc=' + encodeURIComponent(selectedGeoLoc);
 }
