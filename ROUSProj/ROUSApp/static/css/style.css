@@ -245,7 +245,7 @@ input[type="text"] {
     border-radius: 4px 0 0 4px;
 }
 
-input[type="submit"] {
+.submitloc {
     padding: 10px 20px;
     background-color: #5882FD;
     color: white;
@@ -255,6 +255,6 @@ input[type="submit"] {
     cursor: pointer;
 }
 
-input[type="submit"]:hover {
+.submitloc:hover {
     background-color: #5175e4;
 }

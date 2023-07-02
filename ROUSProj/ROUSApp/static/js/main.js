@@ -296,17 +296,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-
-document.getElementById("location-form").addEventListener("click", function (event) {
-    event.preventDefault(); // Prevents the form from submitting and refreshing the page
-
+function addlocation() {
     // Grab the location value from the input field
     var location = document.getElementById("location-input").value;
 
     // Use Swal to confirm before submitting
     Swal.fire({
         title: "Submit Location",
-        text: "Are you sure you want to submit this location?",
+        text: "Are you sure you want to submit this " + location + "?",
         icon: "question",
         showCancelButton: true,
         confirmButtonText: "Yes",
@@ -318,14 +315,17 @@ document.getElementById("location-form").addEventListener("click", function (eve
             // You can use AJAX, Fetch, or any other method to make the API call
 
             // Example using Fetch API
-            fetch('API_CALL_URL', {
+            fetch(baseUrl + 'loc/', {
                 method: 'POST',
-                body: JSON.stringify({ location: location })
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ GeoLoc: location })
             })
                 .then(response => {
                     if (response.ok) {
                         // Redirect to another page after successful API call
-                        window.location.href = "another-page.html";
+                        window.location.href = "/";
                     } else {
                         throw new Error('API call failed');
                     }
@@ -340,4 +340,4 @@ document.getElementById("location-form").addEventListener("click", function (eve
                 });
         }
     });
-});
+}
