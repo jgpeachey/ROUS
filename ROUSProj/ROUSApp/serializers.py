@@ -61,10 +61,13 @@ class CalendarSerializer(serializers.ModelSerializer):
                 return {}
 
     def get_plane_data(self, obj):
-        aircraft = obj.Aircraft
-        mds = aircraft[:4]
-        tail_number = aircraft[4:]
-        plane_data_instance = PlaneData.objects.filter(MDS=mds, TailNumber=tail_number).first()
+        # aircraft = obj.Aircraft
+        # mds = aircraft[:4]
+        # tail_number = aircraft[4:]
+        mds = obj.MDS
+        tail_number = obj.TailNumber
+        geoloc= obj.GeoLoc
+        plane_data_instance = PlaneData.objects.filter(MDS=mds, TailNumber=tail_number, GeoLoc=geoloc).first()
         if plane_data_instance is not None:
             return PlaneDataSerializer(plane_data_instance, exclude_maintenances=True).data
         else:
