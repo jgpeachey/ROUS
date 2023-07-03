@@ -161,7 +161,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
                     // For example:
                     // Aircraft: apiEvent.Aircraft,
                     MDS: apiEvent.MDS,
-                    TailNumber: apiEvent.TailNumber
+                    TailNumber: apiEvent.TailNumber,
                     JulianDate: apiEvent.JulianDate,
                     EHours: apiEvent.EHours,
                     FHours: apiEvent.FHours,
