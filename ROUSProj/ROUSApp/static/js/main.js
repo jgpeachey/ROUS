@@ -159,6 +159,9 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
                     // Include additional data beyond basic event properties
                     // You can store any custom data as additional properties
                     // For example:
+                    // Aircraft: apiEvent.Aircraft,
+                    MDS: apiEvent.MDS,
+                    TailNumber: apiEvent.TailNumber
                     JulianDate: apiEvent.JulianDate,
                     EHours: apiEvent.EHours,
                     FHours: apiEvent.FHours,

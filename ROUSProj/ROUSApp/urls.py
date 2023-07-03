@@ -38,20 +38,20 @@ urlpatterns = [
     # allows get and patch based on CalendarID in Calendar
     path("calendar/<str:pk1>", views.IndividualDateCalendarEdit.as_view(), name='calendar date details'),
 
-    # allows get and delete based on Aircraft str, in Calendar
-    path("calendar/aircraft/<str:pk>/", views.IndividualAircraftCalendar.as_view(), name='calendar-edit-details'),
+    # allows get and delete based on MDS and TailNumber str, in Calendar
+    path("calendar/aircraft/<str:pk1>/<str:pk2>/", views.IndividualAircraftCalendar.as_view(), name='calendar-edit-details'),
 
     # allows get, patch and delete based on PlaneSN, MDS and JST, in plane maintenance
     path("plane-maintenance/<str:pk1>/<str:pk2>/<int:pk3>/", views.IndividualPlaneMaintenanceView.as_view(), name='plane main details'),
 
     # allows delete and get based on PlaneSN and MDS, in plane maintenance
-    path("plane-maintenance/<str:pk1>/<str:pk2>/", views.PlaneMaintenanceAircraftView.as_view(), name='plane main aircraft detail'),
+    # path("plane-maintenance/<str:pk1>/<str:pk2>/", views.PlaneMaintenanceAircraftView.as_view(), name='plane main aircraft detail'),
 
     # allows get, patch and delete based on PlaneSN, MDS, EQP_ID, PartSN and PartNum,in part maintenance
     path("part-maintenance/<str:pk1>/<str:pk2>/<str:pk3>/<str:pk4>/<str:pk5>/", views.IndividualPartMaintenanceView.as_view(), name='part main details'),
 
     # allows get and delete based on PlaneSN and MDS, in part maintenance
-    path("part-maintenance/<str:pk1>/<str:pk2>/", views.PartMaintenanceAircraftView.as_view(), name='part main aircraft details'),
+    # path("part-maintenance/<str:pk1>/<str:pk2>/", views.PartMaintenanceAircraftView.as_view(), name='part main aircraft details'),
 
     # allows get based on PlaneSN and MDS in part and plane maintenance
     # path("maintenance/<str:pk1>/<str:pk2>/", views.MaintenanceAircraftView.as_view(), name='maintenance details'),
