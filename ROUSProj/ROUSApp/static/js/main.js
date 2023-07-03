@@ -1,6 +1,7 @@
 let starttime;
 let dropdown;
-let baseUrl = 'http://127.0.0.1:8000/';
+let baseUrl = 'rousapp.com'; //'http://127.0.0.1:8000/';
+
 const container = document.getElementById('dropdownContainer');
 
 function fetchLicenseKey() {
@@ -183,7 +184,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
                     // Include additional data beyond basic event properties
                     // You can store any custom data as additional properties
                     // For example:
-//                    Aircraft: apiEvent.Aircraft,
+                    // Aircraft: apiEvent.Aircraft,
                     MDS: apiEvent.MDS,
                     TailNumber: apiEvent.TailNumber
                     JulianDate: apiEvent.JulianDate,
@@ -392,12 +393,7 @@ function saveSelectedGeoLoc(selectedGeoLoc) {
 function getSelectedGeoLoc() {
     return sessionStorage.getItem('selectedGeoLoc');
 }
-function passgeoloc1(filename) {
-    const selectedGeoLoc = getSelectedGeoLoc();
-    window.location.href = baseUrl + filename + '?geoloc=' + encodeURIComponent(selectedGeoLoc);
-}
-
-function passgeoloc2(filename) {
+function passgeoloc(filename) {
     const selectedGeoLoc = getSelectedGeoLoc();
     window.location.href = baseUrl + filename + '?geoloc=' + encodeURIComponent(selectedGeoLoc);
 }
