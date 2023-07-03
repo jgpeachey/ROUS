@@ -32,6 +32,7 @@ class PlaneDataSerializer(serializers.ModelSerializer):
             elif isinstance(maintenance, PartMaintenance):
                 maintenances_data.append(PartMaintenanceSerializer(maintenance).data)
         return maintenances_data
+
     def __init__(self, *args, **kwargs):
         exclude_maintenances = kwargs.pop('exclude_maintenances', False)
         super().__init__(*args, **kwargs)

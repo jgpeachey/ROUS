@@ -250,9 +250,9 @@ function handleEventClick(info) {
 
     // Populate event details in the modal
     document.getElementById('eventTitle').innerHTML = event.title;
-    document.getElementById('eventStart').innerHTML = 'Start: ' + event.start;
-    document.getElementById('eventEnd').innerHTML = 'End: ' + event.end;
-//    document.getElementById('eventMaintenance').innerHTML = 'CalendarID: ' + event.extendedProps.maintenance.PlaneMaintenanceID;
+    document.getElementById('eventStart').innerHTML = 'Start: ' + event.start.toDateString();
+    document.getElementById('eventEnd').innerHTML = 'End: ' + event.end.toDateString();
+
     if (event.extendedProps.PartMaintenanceID == 0) {
         document.getElementById('eventMaintenance').innerHTML =
             'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
@@ -263,8 +263,7 @@ function handleEventClick(info) {
             'Type:' + event.extendedProps.maintenance.Type + '<br>' +
             'Justification:' + event.extendedProps.maintenance.JST + '<br>' +
             'Time Frame:' + event.extendedProps.maintenance.TFrame;
-    }
-    else {
+    } else {
         document.getElementById('eventMaintenance').innerHTML =
             'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
             'MDS:' + event.extendedProps.maintenance.MDS + '<br>' +
@@ -279,6 +278,7 @@ function handleEventClick(info) {
             'Part Number:' + event.extendedProps.maintenance.PartNum + '<br>' +
             'Work Unit Code/ Logistics Control Number:' + event.extendedProps.maintenance.WUC_LCN;
     }
+
     // Show the modal
     var modal = document.getElementById('eventModal');
     modal.style.display = 'block';
@@ -290,10 +290,94 @@ function handleEventClick(info) {
         var newTitle = prompt('Enter a new title', event.title);
         if (newTitle) {
             event.setProp('title', newTitle);
-            // Update the displayed title in the modal
             document.getElementById('eventTitle').innerHTML = newTitle;
-            // You can also update other properties and their display here if needed
         }
+
+//        if (event.extendedProps.PartMaintenanceID == 0) {
+//            var newNarrative = prompt('Enter a new narrative', event.extendedProps.maintenance.Narrative);
+//            if (newNarrative) {
+//                event.extendedProps.maintenance.Narrative = newNarrative;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newTimeRemain = prompt('Enter a new time remaining', event.extendedProps.maintenance.TimeRemain);
+//            if (newTimeRemain) {
+//                event.extendedProps.maintenance.TimeRemain = newTimeRemain;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newFreq = prompt('Enter a new frequency', event.extendedProps.maintenance.Freq);
+//            if (newFreq) {
+//                event.extendedProps.maintenance.Freq = newFreq;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newType = prompt('Enter a new type', event.extendedProps.maintenance.Type);
+//            if (newType) {
+//                event.extendedProps.maintenance.Type = newType;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newTFrame = prompt('Enter a new time frame', event.extendedProps.maintenance.TFrame);
+//            if (newTFrame) {
+//                event.extendedProps.maintenance.TFrame = newTFrame;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//        } else {
+//            var newNarrative = prompt('Enter a new narrative', event.extendedProps.maintenance.Narrative);
+//            if (newNarrative) {
+//                event.extendedProps.maintenance.Narrative = newNarrative;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newTimeRemain = prompt('Enter a new time remaining', event.extendedProps.maintenance.TimeRemain);
+//            if (newTimeRemain) {
+//                event.extendedProps.maintenance.TimeRemain = newTimeRemain;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newFreq = prompt('Enter a new frequency', event.extendedProps.maintenance.Freq);
+//            if (newFreq) {
+//                event.extendedProps.maintenance.Freq = newFreq;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newType = prompt('Enter a new type', event.extendedProps.maintenance.Type);
+//            if (newType) {
+//                event.extendedProps.maintenance.Type = newType;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newTFrame = prompt('Enter a new time frame', event.extendedProps.maintenance.TFrame);
+//            if (newTFrame) {
+//                event.extendedProps.maintenance.TFrame = newTFrame;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newEQPID = prompt('Enter a new Equipment ID', event.extendedProps.maintenance.EQP_ID);
+//            if (newEQPID) {
+//                event.extendedProps.maintenance.EQP_ID = newEQPID;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newPartSN = prompt('Enter a new Part Serial Number', event.extendedProps.maintenance.PartSN);
+//            if (newPartSN) {
+//                event.extendedProps.maintenance.PartSN = newPartSN;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newPartNum = prompt('Enter a new Part Number', event.extendedProps.maintenance.PartNum);
+//            if (newPartNum) {
+//                event.extendedProps.maintenance.PartNum = newPartNum;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//
+//            var newWUC_LCN = prompt('Enter a new Work Unit Code/Logistics Control Number', event.extendedProps.maintenance.WUC_LCN);
+//            if (newWUC_LCN) {
+//                event.extendedProps.maintenance.WUC_LCN = newWUC_LCN;
+//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
+//            }
+//        }
     });
 
     // Close the modal when the close button is clicked
@@ -302,6 +386,21 @@ function handleEventClick(info) {
         modal.style.display = 'none';
     });
 }
+
+//function updateMaintenanceText(maintenance) {
+//    return 'Plane Serial Number: ' + maintenance.PlaneSN + '<br>' +
+//            'MDS:' + maintenance.MDS + '<br>' +
+//            'Narrative:' + maintenance.Narrative + '<br>' +
+//            'Time Remaining:' + maintenance.TimeRemain + '<br>' +
+//            'Frequency:' + maintenance.Freq + '<br>' +
+//            'Type:' + maintenance.Type + '<br>' +
+//            'Justification:' + maintenance.JST + '<br>' +
+//            'Time Frame:' + maintenance.TFrame + '<br>' +
+//            'Equipment ID:' + maintenance.EQP_ID + '<br>' +
+//            'Part Serial Number:' + maintenance.PartSN + '<br>' +
+//            'Part Number:' + maintenance.PartNum + '<br>' +
+//            'Work Unit Code/ Logistics Control Number:' + maintenance.WUC_LCN;
+//}
 
 document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('dropdownContainer')) {
