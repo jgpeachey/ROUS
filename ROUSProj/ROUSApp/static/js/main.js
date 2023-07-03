@@ -1,6 +1,6 @@
 let starttime;
 let dropdown;
-let baseUrl = 'http://127.0.0.1:8000/';
+let baseUrl = 'rousapp.com';
 const container = document.getElementById('dropdownContainer');
 
 function fetchLicenseKey() {
