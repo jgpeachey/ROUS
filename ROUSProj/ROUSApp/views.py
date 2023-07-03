@@ -4,12 +4,8 @@ from .serializers import *
 from .models import *
 from rest_framework import status, generics
 from rest_framework.views import APIView
-from django.http import JsonResponse
-# views.py
 
-def get_license_key(request):
-    license_key = 'GPL-My-Project-Is-Open-Source'
-    return JsonResponse({'license_key': license_key})
+# views.py
 
 def home(request):
     return render(request, 'home.html')

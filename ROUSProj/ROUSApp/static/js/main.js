@@ -1,35 +1,11 @@
 let starttime;
 let dropdown;
-let baseUrl = 'rousapp.com'; //'http://127.0.0.1:8000/';
+let baseUrl = 'http://127.0.0.1:8000/'; //'rousapp.com';
 
 const container = document.getElementById('dropdownContainer');
 
-function fetchLicenseKey() {
-    return fetch('license-key/')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('License key request failed');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const licenseKey = data.license_key;
-            // Use the license key as needed
-            console.log(licenseKey);
-            // Further processing with the license key
-            // ...
-
-            return licenseKey; // Return the license key for future use
-        })
-        .catch(error => {
-            console.error('Error fetching license key:', error);
-            // Handle the error appropriately
-            throw error; // Re-throw the error to propagate it to the caller
-        });
-}
 
 document.addEventListener('DOMContentLoaded', function () {
-    const licenseKey = await fetchLicenseKey();
     if (document.getElementById('calendar')) {
         var calendarEl = document.getElementById('calendar');
 
@@ -39,8 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
-//            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-            schedulerLicenseKey: licenseKey,
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
             timeZone: 'local',
             events: function (fetchInfo, successCallback, failureCallback) {
                 callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
