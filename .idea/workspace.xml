@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b479b856-6fd2-4578-9cc0-2130c6cb4313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/static/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/static/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

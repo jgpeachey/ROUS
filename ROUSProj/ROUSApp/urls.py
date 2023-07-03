@@ -15,6 +15,7 @@ class DateConverter:
 register_converter(DateConverter, 'date')
 
 urlpatterns = [
+    path('license-key/', views.get_license_key, name='license-key'),
     path('', views.home, name='home'),
     path('location.html', views.location, name='location'),
     path('calendar.html', views.calendar, name='calendar'),
