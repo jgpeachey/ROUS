@@ -252,7 +252,33 @@ function handleEventClick(info) {
     document.getElementById('eventTitle').innerHTML = event.title;
     document.getElementById('eventStart').innerHTML = 'Start: ' + event.start;
     document.getElementById('eventEnd').innerHTML = 'End: ' + event.end;
-
+//    document.getElementById('eventMaintenance').innerHTML = 'CalendarID: ' + event.extendedProps.maintenance.PlaneMaintenanceID;
+    if (event.extendedProps.PartMaintenanceID == 0) {
+        document.getElementById('eventMaintenance').innerHTML =
+            'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
+            'MDS:' + event.extendedProps.maintenance.MDS + '<br>' +
+            'Narrative:' + event.extendedProps.maintenance.Narrative + '<br>' +
+            'Time Remaining:' + event.extendedProps.maintenance.TimeRemain + '<br>' +
+            'Frequency:' + event.extendedProps.maintenance.Freq + '<br>' +
+            'Type:' + event.extendedProps.maintenance.Type + '<br>' +
+            'Justification:' + event.extendedProps.maintenance.JST + '<br>' +
+            'Time Frame:' + event.extendedProps.maintenance.TFrame;
+    }
+    else {
+        document.getElementById('eventMaintenance').innerHTML =
+            'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
+            'MDS:' + event.extendedProps.maintenance.MDS + '<br>' +
+            'Narrative:' + event.extendedProps.maintenance.Narrative + '<br>' +
+            'Time Remaining:' + event.extendedProps.maintenance.TimeRemain + '<br>' +
+            'Frequency:' + event.extendedProps.maintenance.Freq + '<br>' +
+            'Type:' + event.extendedProps.maintenance.Type + '<br>' +
+            'Justification:' + event.extendedProps.maintenance.JST + '<br>' +
+            'Time Frame:' + event.extendedProps.maintenance.TFrame + '<br>' +
+            'Equipment ID:' + event.extendedProps.maintenance.EQP_ID + '<br>' +
+            'Part Serial Number:' + event.extendedProps.maintenance.PartSN + '<br>' +
+            'Part Number:' + event.extendedProps.maintenance.PartNum + '<br>' +
+            'Work Unit Code/ Logistics Control Number:' + event.extendedProps.maintenance.WUC_LCN;
+    }
     // Show the modal
     var modal = document.getElementById('eventModal');
     modal.style.display = 'block';
