@@ -1,8 +1,11 @@
 from django.urls import path
+from ROUSApp import views
 from . import views
 
 from django.urls import path, register_converter
 from datetime import date
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 class DateConverter:
@@ -61,4 +64,4 @@ urlpatterns = [
 
     # allows get based on GeoLoc in Calendar
     path('calendar/geoloc/<str:GeoLoc>/', views.CalendarListByGeoLoc.as_view(), name='calendar-list-by-geoloc'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

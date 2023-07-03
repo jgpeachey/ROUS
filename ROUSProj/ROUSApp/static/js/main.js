@@ -1,6 +1,6 @@
 let starttime;
 let dropdown;
-let baseUrl = 'http://127.0.0.1:8000/'; //'rousapp.com';
+let baseUrl = 'http://127.0.0.1:8000/';
 
 const container = document.getElementById('dropdownContainer');
 
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
     // Make an API call to retrieve the events
     // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint URL
-    fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc))
+    fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
         .then(function (response) {
             return response.json();
         })
