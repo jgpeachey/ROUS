@@ -39,7 +39,7 @@ urlpatterns = [
     path("plane-data/<str:pk1>/<str:pk2>/", views.IndividualPlaneData.as_view(), name='plane details'),
 
     # allows get and patch based on CalendarID in Calendar
-    path("calendar/<str:pk1>", views.IndividualDateCalendarEdit.as_view(), name='calendar date details'),
+    path("calendar/<str:pk1>/", views.IndividualDateCalendarEdit.as_view(), name='calendar date details'),
 
     # allows get and delete based on MDS and TailNumber str, in Calendar
     path("calendar/aircraft/<str:pk1>/<str:pk2>/", views.IndividualAircraftCalendar.as_view(), name='calendar-edit-details'),
