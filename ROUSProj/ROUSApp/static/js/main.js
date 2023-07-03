@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             eventMouseEnter: function (info) {
                 if (info.event) {
-                    var tooltipContent = '<div><strong>' + info.event.extendedProps.maintenance.TailNumber + '</strong></div>';
+                    var tooltipContent = '<div><strong>' + info.event.extendedProps.planeData.TailNumber + '</strong></div>';
                     tooltipContent += '<div>Title: ' + info.event.title + '</div>';
                     tooltipContent += '<div>Narrative: ' + info.event.extendedProps.maintenance.Narrative + '</div>';
                     tooltipContent += '<div>Type: ' + info.event.extendedProps.maintenance.Type + '</div>';
@@ -167,6 +167,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
                     PlaneMaintenanceID: apiEvent.PlaneMaintenanceID,
                     GeoLoc: apiEvent.GeoLoc,
                     CalendarID: apiEvent.CalendarID,
+                    planeData: apiEvent.plane_data,
 
                 };
             });
