@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
     {% load static %}
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static '/images/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static '/images/favicon-16x16.png' %}">
-    <link rel="mask-icon" href="{% static '/images/safari-pinned-tab.svg' %}" color="#5bbad5">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon-16x16.png">
+    <link rel="mask-icon" href="../static/images/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     <!-- Jquery -->
@@ -22,9 +22,9 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <!-- CSS File -->
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
     <!-- JavaScript File -->
-    <script src="{% static 'js/main.js' %}"></script>
+    <script src="../static/js/main.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -41,7 +41,7 @@
 <body>
 
     <header class="header">
-        <div class="logostyle">{% load static %}<img src="{% static '/images/TesseractLogo.ico' %}" alt="Logo">
+        <div class="logostyle">{% load static %}<img src="../static/images/TesseractLogo.ico" alt="Logo">
             <span>TESSERACT</span>
         </div>
 
@@ -63,17 +63,8 @@
     </div>
 
     <footer class="footer">
-        {% load static %}<img src="{% static '/images/AirForceLogoBlack.png' %}" alt="Air Force Logo">
+        {% load static %}<img src="../static/images/AirForceLogoBlack.png" alt="Air Force Logo">
 
-        <div class="social-icons">
-            <a href="https://www.Linkedin.com">{% load static %}<img src="{% static '/images/Linkedin.png' %}"
-                    alt="Linkedin"></a>
-            <a href="#">{% load static %}<img src="{% static '/images/Envelope.png' %}" alt="Email"></a>
-            <a href="https://www.facebook.com">{% load static %}<img src="{% static '/images/Facebook.png' %}"
-                    alt="Facebook"></a>
-            <a href="https://www.twitter.com">{% load static %}<img src="{% static '/images/Twitter.png' %}"
-                    alt="Twitter"></a>
-        </div>
     </footer>
 
     <!-- Bootstrap JavaScript -->
