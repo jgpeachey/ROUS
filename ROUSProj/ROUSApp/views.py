@@ -32,6 +32,7 @@ class PlaneListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class IndividualPlaneData(APIView):
     def get(self, request, pk1, pk2):
         try:
@@ -189,7 +190,6 @@ class PartMaintenanceListView(APIView):
         obj = PartMaintenance.objects.all()
         serializer = PartMaintenanceSerializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
     def post(self, request):
         serializer = PartMaintenanceSerializer(data=request.data)
         if serializer.is_valid():
@@ -198,7 +198,6 @@ class PartMaintenanceListView(APIView):
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# MDS or EQP_ID?
 class IndividualPartMaintenanceView(APIView):
     def get(self, request, pk1, pk2, pk3, pk4, pk5):
         try:
@@ -250,19 +249,6 @@ class PartMaintenanceAircraftView(APIView):
         serializer = PartMaintenanceSerializer(objs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-# class MaintenanceAircraftView(APIView):
-#     def get(self, request, pk1, pk2):
-#         plane_objs = PlaneMaintenance.objects.filter(PlaneSN=pk1, MDS=pk2)
-#         part_objs = PartMaintenance.objects.filter(PlaneSN=pk1, MDS=pk2)
-#
-#         objs = list(plane_objs) + list(part_objs)
-#         if not objs:
-#             msg = {"msg": "not found"}
-#             return Response(msg, status=status.HTTP_404_NOT_FOUND)
-#         objs.sort(key=lambda x: x.TimeRemain)
-#         serializer = CombinedMaintenanceSerializer(objs, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
 class LocationList(APIView):
     def get(self, request):
         obj = Location.objects.all()
@@ -275,7 +261,6 @@ class LocationList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class LocationDetail(APIView):
     queryset = Location.objects.all()

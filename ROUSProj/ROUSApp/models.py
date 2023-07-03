@@ -1,12 +1,4 @@
 from django.db import models
-# from rest_framework import serializers
-# from .serializers import CombinedMaintenanceSerializer
-
-# from datetime import datetime
-# import uuid
-
-# from .views import MaintenanceAircraftView
-
 
 # thinking of adding a plane Maintenance and part maintenance to Calendar and then connecting aircraft (calendar) to plane data. then
 # Create your models here.

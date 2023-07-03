@@ -1,51 +1,23 @@
 from rest_framework import serializers
 from .models import *
 
-# from .views import MaintenanceAircraftView
-
-
 class LocationSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Location
         fields = '__all__'
 
 class PlaneMaintenanceSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = PlaneMaintenance
         fields = '__all__'
-
-    # def validate(self, attrs):
-    #     return attrs
-
 
 class PartMaintenanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = PartMaintenance
         fields = '__all__'
 
-    # def validate(self, attrs):
-    #     return attrs
-
-# class CombinedMaintenanceSerializer(serializers.Serializer):
-#     def to_representation(self, instance):
-#         if isinstance(instance, PlaneMaintenance):
-#             serializer = PlaneMaintenanceSerializer(instance)
-#         elif isinstance(instance, PartMaintenance):
-#             serializer = PartMaintenanceSerializer(instance)
-#         else:
-#             return None
-#         return serializer.data
-
-# class PlaneDataSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = PlaneData
-#         fields = '__all__'
 class PlaneDataSerializer(serializers.ModelSerializer):
     maintenances = serializers.SerializerMethodField()
-
     def get_maintenances(self, obj):
         plane_maintenances = PlaneMaintenance.objects.filter(PlaneSN=obj.PlaneSN, MDS=obj.MDS)
         part_maintenances = PartMaintenance.objects.filter(PlaneSN=obj.PlaneSN, MDS=obj.MDS)
@@ -59,18 +31,16 @@ class PlaneDataSerializer(serializers.ModelSerializer):
                 maintenances_data.append(PlaneMaintenanceSerializer(maintenance).data)
             elif isinstance(maintenance, PartMaintenance):
                 maintenances_data.append(PartMaintenanceSerializer(maintenance).data)
-
         return maintenances_data
-
-    class Meta:
-        model = PlaneData
-        fields = '__all__'
-
     def __init__(self, *args, **kwargs):
         exclude_maintenances = kwargs.pop('exclude_maintenances', False)
         super().__init__(*args, **kwargs)
         if exclude_maintenances:
             self.fields.pop('maintenances')
+
+    class Meta:
+        model = PlaneData
+        fields = '__all__'
 
 
 
@@ -78,8 +48,6 @@ class CalendarSerializer(serializers.ModelSerializer):
     maintenance = serializers.SerializerMethodField()
     plane_data = serializers.SerializerMethodField()
     def get_maintenance(self, obj):
-        # planesn = obj.PlaneSN
-        # mds = obj.MDS
         PlaneMaintenanceID = obj.PlaneMaintenanceID
         PartMaintenanceID = obj.PartMaintenanceID
         plane_maintenance_instance = PlaneMaintenance.objects.filter(PlaneMaintenanceID=PlaneMaintenanceID).first()
@@ -104,4 +72,3 @@ class CalendarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Calendar
         fields = '__all__'
-
