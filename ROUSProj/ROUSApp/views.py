@@ -8,16 +8,6 @@ from rest_framework import status, generics
 from rest_framework.views import APIView
 
 # views.py
-
-from django.http import JsonResponse
-
-
-def get_license_key(request):
-    license_key = 'GPL-My-Project-Is-Open-Source'
-
-    return JsonResponse({'license_key': license_key})
-
-
 def home(request):
     return render(request, 'home.html')
 

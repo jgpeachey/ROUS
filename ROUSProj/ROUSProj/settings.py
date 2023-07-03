@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-emd))y2lt!3q^5zupnhbknc_a)zx6ct2s!8&cwy&=n@(#8isoh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['rousapp.com']
+ALLOWED_HOSTS = ['rousapp.com','127.0.0.1']
 
 
 # Application definition
