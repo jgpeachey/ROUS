@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const selectedGeoLoc = urlParams.get('geoloc');
 
-
     var calendar = new FullCalendar.Calendar(calendarEl, {
       schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
       timeZone: 'local',
@@ -30,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
       headerToolbar: {
         left: 'prev,next addEventButton today',
         center: 'title',
-        right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay,resourceTimelineWeek',
+        right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay,resourceTimelineMonth',
       },
       customButtons: {
         addEventButton: {
