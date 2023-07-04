@@ -270,13 +270,11 @@ function resizeEvent(info) {
 function handleEventClick(info) {
   var event = info.event;
 
-  // Populate event details in the modal
-  document.getElementById('eventTitle').innerHTML = event.title;
-  document.getElementById('eventStart').innerHTML = 'Start: ' + event.start.toDateString();
-  document.getElementById('eventEnd').innerHTML = 'End: ' + event.end.toDateString();
-
   if (event.extendedProps.PartMaintenanceID == 0) {
+    document.getElementById('eventTitle').innerHTML = event.title;
     document.getElementById('eventMaintenance').innerHTML =
+      'Start: ' + event.start.toDateString() + '<br>' +
+      'End: ' + event.end.toDateString() + '<br>' +
       'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
       'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
       'Narrative: ' + event.extendedProps.maintenance.Narrative + '<br>' +
@@ -286,7 +284,10 @@ function handleEventClick(info) {
       'Justification: ' + event.extendedProps.maintenance.JST + '<br>' +
       'Time Frame: ' + event.extendedProps.maintenance.TFrame;
   } else {
+    document.getElementById('eventTitle').innerHTML = event.title;
     document.getElementById('eventMaintenance').innerHTML =
+      'Start: ' + event.start.toDateString() + '<br>' +
+      'End: ' + event.end.toDateString() + '<br>' +
       'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
       'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
       'Narrative: ' + event.extendedProps.maintenance.Narrative + '<br>' +
