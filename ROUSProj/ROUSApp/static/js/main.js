@@ -1,9 +1,6 @@
 let starttime;
 let dropdown;
-let baseUrl = 'http://127.0.0.1:8000/'; //'rousapp.com';
-
-const container = document.getElementById('dropdownContainer');
-
+let baseUrl = 'http://127.0.0.1:8000/';
 
 document.addEventListener('DOMContentLoaded', function () {
   if (document.getElementById('calendar')) {
