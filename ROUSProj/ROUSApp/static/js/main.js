@@ -19,23 +19,15 @@ document.addEventListener('DOMContentLoaded', function () {
         var calendar = new FullCalendar.Calendar(calendarEl, {
           schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
           timeZone: 'local',
+          resources: function (fetchInfo, successCallback, failureCallback) {
+            callResources(fetchInfo, successCallback, failureCallback);
+          },
           events: function (fetchInfo, successCallback, failureCallback) {
             callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
           },
           themeSystem: 'bootstrap5',
           initialView: 'dayGridMonth',
-          resources: function (fetchInfo, successCallback, failureCallback) {
-            callResources(fetchInfo, successCallback, failureCallback);
-          },
-          resourceAreaColumns: [
-            {
-              field: 'title',
-              headerContent: 'Tail Number',
-              render: function (resource) {
-                return resource.title;
-              }
-            },
-          ],
+
           editable: true,
           eventResourceEditable: true,
           droppable: true,
