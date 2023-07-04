@@ -6,104 +6,120 @@ const container = document.getElementById('dropdownContainer');
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    if (document.getElementById('calendar')) {
-        var calendarEl = document.getElementById('calendar');
+  if (document.getElementById('calendar')) {
+    var calendarEl = document.getElementById('calendar');
 
-        // Retrieve the selected GeoLoc from the URL parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const selectedGeoLoc = urlParams.get('geoloc');
+    // Retrieve the selected GeoLoc from the URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedGeoLoc = urlParams.get('geoloc');
 
+    // Fetch the tail numbers from the Plane data model
+    fetch(baseUrl + 'plane-data/')
+      .then(response => response.json())
+      .then(data => {
+        var tailNumbers = data.map(PlaneData => PlaneData.TailNumber);
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-            timeZone: 'local',
-            events: function (fetchInfo, successCallback, failureCallback) {
-                callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
-
+          schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+          timeZone: 'local',
+          events: function (fetchInfo, successCallback, failureCallback) {
+            callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
+          },
+          themeSystem: 'bootstrap5',
+          initialView: 'dayGridMonth',
+          resources: tailNumbers.map(tailNumber => ({
+            id: tailNumber,
+            title: tailNumber
+          })),
+          resourceAreaColumns: [
+            {
+              field: 'title',
+              headerContent: 'Tail Number',
+              render: function (resource) {
+                return resource.title;
+              }
             },
-            themeSystem: 'bootstrap5',
-            initialView: 'dayGridMonth',
-            editable: true,
-            eventResourceEditable: true,
-            droppable: true,
-            multiMonthMaxColumns: 1,
-            headerToolbar: {
-                left: 'prev,next addEventButton today',
-                center: 'title',
-                right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay,resourceTimelineWeek',
-            },
-            customButtons: {
-                addEventButton: {
-                    text: 'add event...',
-                    click: function () {
-                        var dateStr = prompt('Enter a date in YYYY-MM-DD format');
-                        var date = new Date(dateStr + 'T00:00:00'); // will be in local time
+          ],
+          editable: true,
+          eventResourceEditable: true,
+          droppable: true,
+          multiMonthMaxColumns: 1,
+          headerToolbar: {
+            left: 'prev,next addEventButton today',
+            center: 'title',
+            right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay,resourceTimelineWeek',
+          },
+          customButtons: {
+            addEventButton: {
+              text: 'add event...',
+              click: function () {
+                var dateStr = prompt('Enter a date in YYYY-MM-DD format');
+                var date = new Date(dateStr + 'T00:00:00'); // will be in local time
 
-                        if (!isNaN(date.valueOf())) { // valid?
-                            calendar.addEvent({
-                                title: 'dynamic event',
-                                start: date,
-                                allDay: true
-                            });
-                            alert('Great. Now, update your database...');
-                        } else {
-                            alert('Invalid date.');
-                        }
-                    }
+                if (!isNaN(date.valueOf())) { // valid?
+                  calendar.addEvent({
+                    title: 'dynamic event',
+                    start: date,
+                    allDay: true
+                  });
+                  alert('Great. Now, update your database...');
+                } else {
+                  alert('Invalid date.');
                 }
-            },
-            eventResizeStart: function (info) {
-                starttime = info.event.start.toISOString().substring(0, 10);
-            },
-            eventResize: function (info) {
-                Swal.fire({
-                    title: info.event.title + ' end is now ' + info.event.end.toISOString().substring(0, 10),
-                    icon: 'info',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: 'No',
-                    customClass: {
-                        title: 'swal-title' // Custom class for the title
-                    },
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        resizeEvent(info);
-                        Swal.fire('Success', 'Event resized.', 'success');
-                    } else {
-                        info.revert();
-                    }
-                });
+              }
+            }
+          },
+          eventResizeStart: function (info) {
+            starttime = info.event.start.toISOString().substring(0, 10);
+          },
+          eventResize: function (info) {
+            Swal.fire({
+              title: info.event.title + ' end is now ' + info.event.end.toISOString().substring(0, 10),
+              icon: 'info',
+              showCancelButton: true,
+              confirmButtonText: 'Yes',
+              cancelButtonText: 'No',
+              customClass: {
+                title: 'swal-title' // Custom class for the title
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                resizeEvent(info);
+                Swal.fire('Success', 'Event resized.', 'success');
+              } else {
+                info.revert();
+              }
+            });
 
-            },
-            eventDragStart: function (info) {
-                starttime = info.event.start.toISOString().substring(0, 10);
-            },
-            eventDrop: function (info) {
-                Swal.fire({
-                    title: info.event.title + ' was dropped on ' + info.event.start.toISOString().substring(0, 10),
-                    icon: 'info',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: 'No',
-                    customClass: {
-                        title: 'swal-title'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        dropEvent(info);
-                        Swal.fire('Success', 'Event dropped.', 'success');
-                    } else {
-                        info.revert();
-                    }
-                });
-
-            },
-            eventClick: function (info) {
-                handleEventClick(info);
-            },
-            eventMouseEnter: function (info) {
-                if (info.event) {
-                    var tooltipContent = '<div><strong>' + info.event.extendedProps.planeData.TailNumber + '</strong></div>';
+          },
+          eventDragStart: function (info) {
+            starttime = info.event.start.toISOString().substring(0, 10);
+          },
+          eventDrop: function (info) {
+            Swal.fire({
+              title: info.event.title + ' was dropped on ' + info.event.start.toISOString().substring(0, 10),
+              icon: 'info',
+              showCancelButton: true,
+              confirmButtonText: 'Yes',
+              cancelButtonText: 'No',
+              customClass: {
+                title: 'swal-title' // Custom class for the title
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                moveEvent(info);
+                Swal.fire('Success', 'Event moved.', 'success');
+              } else {
+                info.revert();
+              }
+            });
+          },
+          eventClick: function (info) {
+            handleEventClick(info);
+           },
+          eventMouseEnter: function (info) {
+            if (info.event) {
+                var tooltipContent = '<div><strong>' + info.event.extendedProps.planeData.TailNumber + '</strong></div>';
                     tooltipContent += '<div>Title: ' + info.event.title + '</div>';
                     tooltipContent += '<div>Narrative: ' + info.event.extendedProps.maintenance.Narrative + '</div>';
                     tooltipContent += '<div>Type: ' + info.event.extendedProps.maintenance.Type + '</div>';
@@ -133,11 +149,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
             },
-
         });
 
         calendar.render();
-    }
+      });
+  }
 });
 
 
@@ -256,27 +272,27 @@ function handleEventClick(info) {
     if (event.extendedProps.PartMaintenanceID == 0) {
         document.getElementById('eventMaintenance').innerHTML =
             'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
-            'MDS:' + event.extendedProps.maintenance.MDS + '<br>' +
-            'Narrative:' + event.extendedProps.maintenance.Narrative + '<br>' +
-            'Time Remaining:' + event.extendedProps.maintenance.TimeRemain + '<br>' +
-            'Frequency:' + event.extendedProps.maintenance.Freq + '<br>' +
-            'Type:' + event.extendedProps.maintenance.Type + '<br>' +
-            'Justification:' + event.extendedProps.maintenance.JST + '<br>' +
-            'Time Frame:' + event.extendedProps.maintenance.TFrame;
+            'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
+            'Narrative: ' + event.extendedProps.maintenance.Narrative + '<br>' +
+            'Time Remaining: ' + event.extendedProps.maintenance.TimeRemain + '<br>' +
+            'Frequency: ' + event.extendedProps.maintenance.Freq + '<br>' +
+            'Type: ' + event.extendedProps.maintenance.Type + '<br>' +
+            'Justification: ' + event.extendedProps.maintenance.JST + '<br>' +
+            'Time Frame: ' + event.extendedProps.maintenance.TFrame;
     } else {
         document.getElementById('eventMaintenance').innerHTML =
             'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
-            'MDS:' + event.extendedProps.maintenance.MDS + '<br>' +
-            'Narrative:' + event.extendedProps.maintenance.Narrative + '<br>' +
-            'Time Remaining:' + event.extendedProps.maintenance.TimeRemain + '<br>' +
-            'Frequency:' + event.extendedProps.maintenance.Freq + '<br>' +
-            'Type:' + event.extendedProps.maintenance.Type + '<br>' +
-            'Justification:' + event.extendedProps.maintenance.JST + '<br>' +
-            'Time Frame:' + event.extendedProps.maintenance.TFrame + '<br>' +
-            'Equipment ID:' + event.extendedProps.maintenance.EQP_ID + '<br>' +
-            'Part Serial Number:' + event.extendedProps.maintenance.PartSN + '<br>' +
-            'Part Number:' + event.extendedProps.maintenance.PartNum + '<br>' +
-            'Work Unit Code/ Logistics Control Number:' + event.extendedProps.maintenance.WUC_LCN;
+            'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
+            'Narrative: ' + event.extendedProps.maintenance.Narrative + '<br>' +
+            'Time Remaining: ' + event.extendedProps.maintenance.TimeRemain + '<br>' +
+            'Frequency: ' + event.extendedProps.maintenance.Freq + '<br>' +
+            'Type: ' + event.extendedProps.maintenance.Type + '<br>' +
+            'Justification: ' + event.extendedProps.maintenance.JST + '<br>' +
+            'Time Frame: ' + event.extendedProps.maintenance.TFrame + '<br>' +
+            'Equipment ID: ' + event.extendedProps.maintenance.EQP_ID + '<br>' +
+            'Part Serial Number: ' + event.extendedProps.maintenance.PartSN + '<br>' +
+            'Part Number: ' + event.extendedProps.maintenance.PartNum + '<br>' +
+            'Work Unit Code/ Logistics Control Number: ' + event.extendedProps.maintenance.WUC_LCN;
     }
 
     // Show the modal
@@ -292,92 +308,6 @@ function handleEventClick(info) {
             event.setProp('title', newTitle);
             document.getElementById('eventTitle').innerHTML = newTitle;
         }
-
-//        if (event.extendedProps.PartMaintenanceID == 0) {
-//            var newNarrative = prompt('Enter a new narrative', event.extendedProps.maintenance.Narrative);
-//            if (newNarrative) {
-//                event.extendedProps.maintenance.Narrative = newNarrative;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newTimeRemain = prompt('Enter a new time remaining', event.extendedProps.maintenance.TimeRemain);
-//            if (newTimeRemain) {
-//                event.extendedProps.maintenance.TimeRemain = newTimeRemain;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newFreq = prompt('Enter a new frequency', event.extendedProps.maintenance.Freq);
-//            if (newFreq) {
-//                event.extendedProps.maintenance.Freq = newFreq;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newType = prompt('Enter a new type', event.extendedProps.maintenance.Type);
-//            if (newType) {
-//                event.extendedProps.maintenance.Type = newType;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newTFrame = prompt('Enter a new time frame', event.extendedProps.maintenance.TFrame);
-//            if (newTFrame) {
-//                event.extendedProps.maintenance.TFrame = newTFrame;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//        } else {
-//            var newNarrative = prompt('Enter a new narrative', event.extendedProps.maintenance.Narrative);
-//            if (newNarrative) {
-//                event.extendedProps.maintenance.Narrative = newNarrative;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newTimeRemain = prompt('Enter a new time remaining', event.extendedProps.maintenance.TimeRemain);
-//            if (newTimeRemain) {
-//                event.extendedProps.maintenance.TimeRemain = newTimeRemain;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newFreq = prompt('Enter a new frequency', event.extendedProps.maintenance.Freq);
-//            if (newFreq) {
-//                event.extendedProps.maintenance.Freq = newFreq;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newType = prompt('Enter a new type', event.extendedProps.maintenance.Type);
-//            if (newType) {
-//                event.extendedProps.maintenance.Type = newType;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newTFrame = prompt('Enter a new time frame', event.extendedProps.maintenance.TFrame);
-//            if (newTFrame) {
-//                event.extendedProps.maintenance.TFrame = newTFrame;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newEQPID = prompt('Enter a new Equipment ID', event.extendedProps.maintenance.EQP_ID);
-//            if (newEQPID) {
-//                event.extendedProps.maintenance.EQP_ID = newEQPID;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newPartSN = prompt('Enter a new Part Serial Number', event.extendedProps.maintenance.PartSN);
-//            if (newPartSN) {
-//                event.extendedProps.maintenance.PartSN = newPartSN;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newPartNum = prompt('Enter a new Part Number', event.extendedProps.maintenance.PartNum);
-//            if (newPartNum) {
-//                event.extendedProps.maintenance.PartNum = newPartNum;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//
-//            var newWUC_LCN = prompt('Enter a new Work Unit Code/Logistics Control Number', event.extendedProps.maintenance.WUC_LCN);
-//            if (newWUC_LCN) {
-//                event.extendedProps.maintenance.WUC_LCN = newWUC_LCN;
-//                document.getElementById('eventMaintenance').innerHTML = updateMaintenanceText(event.extendedProps.maintenance);
-//            }
-//        }
     });
 
     // Close the modal when the close button is clicked
@@ -386,21 +316,6 @@ function handleEventClick(info) {
         modal.style.display = 'none';
     });
 }
-
-//function updateMaintenanceText(maintenance) {
-//    return 'Plane Serial Number: ' + maintenance.PlaneSN + '<br>' +
-//            'MDS:' + maintenance.MDS + '<br>' +
-//            'Narrative:' + maintenance.Narrative + '<br>' +
-//            'Time Remaining:' + maintenance.TimeRemain + '<br>' +
-//            'Frequency:' + maintenance.Freq + '<br>' +
-//            'Type:' + maintenance.Type + '<br>' +
-//            'Justification:' + maintenance.JST + '<br>' +
-//            'Time Frame:' + maintenance.TFrame + '<br>' +
-//            'Equipment ID:' + maintenance.EQP_ID + '<br>' +
-//            'Part Serial Number:' + maintenance.PartSN + '<br>' +
-//            'Part Number:' + maintenance.PartNum + '<br>' +
-//            'Work Unit Code/ Logistics Control Number:' + maintenance.WUC_LCN;
-//}
 
 document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('dropdownContainer')) {
