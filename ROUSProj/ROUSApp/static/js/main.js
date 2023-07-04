@@ -13,11 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const selectedGeoLoc = urlParams.get('geoloc');
 
-    // Fetch the tail numbers from the Plane data model
-    fetch(baseUrl + 'plane-data/')
-      .then(response => response.json())
-      .then(data => {
-        var tailNumbers = data.map(PlaneData => PlaneData.TailNumber);
+    // Retrieves the selec
+
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
           schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -27,10 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
           },
           themeSystem: 'bootstrap5',
           initialView: 'dayGridMonth',
-          resources: tailNumbers.map(tailNumber => ({
-            id: tailNumber,
-            title: tailNumber
-          })),
+          resources: function (fetchInfo, successCallback, failureCallback) {
+            callResources(fetchInfo, successCallback, failureCallback);
+          },
           resourceAreaColumns: [
             {
               field: 'title',
@@ -152,10 +148,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         calendar.render();
-      });
-  }
+      }
 });
-
 
 function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
     // Make an API call to retrieve the events
@@ -188,7 +182,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
                     CalendarID: apiEvent.CalendarID,
                     planeData: apiEvent.plane_data,
 
-                };
+                }
             });
 
             console.log(events);
@@ -200,6 +194,32 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
             failureCallback(error);
         });
 }
+
+function callResources(fetchInfo, successCallback, failureCallback) {
+// Fetch the tail numbers from the Plane data model
+    fetch(baseUrl + 'plane-data/')
+        .then(function (response){
+            return response.json();
+      })
+      .then(function (data) {
+            console.log(data);
+            // Process the API response and transform it into FullCalendar event format
+            var resources = data.map(function (apiEvent) {
+                return {
+                    title: apiEvent.TailNumber,
+                }
+            });
+            console.log(resources);
+            // Call the successCallback with the retrieved events
+            successCallback(resources);
+        })
+        .catch(function (error) {
+            // Call the failureCallback in case of error
+            failureCallback(error);
+        });
+}
+
+
 
 function dropEvent(info) {
     // Retrieve the updated event details
