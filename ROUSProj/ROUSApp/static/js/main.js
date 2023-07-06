@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       themeSystem: 'bootstrap5',
       initialView: 'dayGridMonth',
-
       editable: true,
       eventResourceEditable: true,
       droppable: true,
@@ -89,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
           },
         }).then((result) => {
           if (result.isConfirmed) {
-            moveEvent(info);
+            dropEvent(info);
             Swal.fire('Success', 'Event moved.', 'success');
           } else {
             info.revert();
@@ -98,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       eventClick: function (info) {
         handleEventClick(info);
+        calendar.refetchEvents();
       },
       eventMouseEnter: function (info) {
         if (info.event) {
@@ -213,7 +213,7 @@ function dropEvent(info) {
   var newStart = info.event.start.toISOString().substring(0, 10);
   var newEnd = info.event.end.toISOString().substring(0, 10);
 
-  fetch(baseUrl + 'calendar/' + eventId, {
+  fetch(baseUrl + 'calendar/' + eventId + '/', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
@@ -244,7 +244,7 @@ function resizeEvent(info) {
   var newEnd = info.event.end.toISOString().substring(0, 10);
 
 
-  fetch(baseUrl + 'calendar/' + eventId, {
+  fetch(baseUrl + 'calendar/' + eventId + '/', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
@@ -308,20 +308,160 @@ function handleEventClick(info) {
 
   // Handle edit button click
   var editButton = document.getElementById('editButton');
-  editButton.addEventListener('click', function () {
-    // Handle editing functionality
-    var newTitle = prompt('Enter a new title', event.title);
-    if (newTitle) {
-      event.setProp('title', newTitle);
-      document.getElementById('eventTitle').innerHTML = newTitle;
-    }
-  });
 
-  // Close the modal when the close button is clicked
-  var closeBtn = document.getElementsByClassName('close')[0];
-  closeBtn.addEventListener('click', function () {
+  editButton.onclick = function () {
+    // Hide existing content
+    document.getElementById('eventTitle').style.display = 'none';
+    document.getElementById('eventStart').style.display = 'none';
+    document.getElementById('eventEnd').style.display = 'none';
+    document.getElementById('eventMaintenance').style.display = 'none';
+    editButton.style.display = 'none';
+
+    // Show edit form
+    var editForm = document.getElementById('editForm');
+    editForm.style.display = 'block';
+
+    // Populate form fields with existing values
+    document.getElementById('eventTitleInput').value = event.title;
+    document.getElementById('eventStartInput').value = event.start.toISOString().substring(0, 10);
+    document.getElementById('eventEndInput').value = event.end.toISOString().substring(0, 10);
+    if (event.extendedProps.PartMaintenanceID == 0) {
+      document.getElementById('eventMaintenanceInput').innerHTML = '<label class="fixspace" for="text">Narrative: </label>' +
+        '<input type="text" id="Narrative" placeholder="Narrative" value="' + event.extendedProps.maintenance.Narrative + '">' + '<br>' +
+        '<label class="fixspace" for="text">Time Remaining: </label>' + '<input type="text" id="TimeRemain" placeholder="Time Remaining" value="' + event.extendedProps.maintenance.TimeRemain + '">' + '<br>' +
+        '<label class="fixspace" for="text">Frequency: </label>' + '<input type="text" id="Freq" placeholder="Frequency" value="' + event.extendedProps.maintenance.Freq + '">' + '<br>' +
+        '<label class="fixspace" for="text">Type: </label>' + '<input type="text" id="Type" placeholder="Type" value="' + event.extendedProps.maintenance.Type + '">' + '<br>' +
+        '<label class="fixspace" for="text">Time Frame: </label>' + '<input type="text" id="TFrame" placeholder="Time Frame" value="' + event.extendedProps.maintenance.TFrame + '">';
+    }
+    else {
+      document.getElementById('eventMaintenanceInput').innerHTML = '<label class="fixspace" for="text">Narrative: </label>' +
+        '<input type="text" id="Narrative" placeholder="Narrative" value="' + event.extendedProps.maintenance.Narrative + '">' + '<br>' +
+        '<label class="fixspace" for="text">Time Remaining: </label>' + '<input type="text" id="TimeRemain" placeholder="Time Remaining" value="' + event.extendedProps.maintenance.TimeRemain + '">' + '<br>' +
+        '<label class="fixspace" for="text">Frequency: </label>' + '<input type="text" id="Freq" placeholder="Frequency" value="' + event.extendedProps.maintenance.Freq + '">' + '<br>' +
+        '<label class="fixspace" for="text">Type: </label>' + '<input type="text" id="Type" placeholder="Type" value="' + event.extendedProps.maintenance.Type + '">' + '<br>' +
+        '<label class="fixspace" for="text">Time Frame: </label>' + '<input type="text" id="TFrame" placeholder="Time Frame" value="' + event.extendedProps.maintenance.TFrame + '">' + '<br>' +
+        '<label class="fixspace" for="text">Equipment ID: </label>' + '<input type="text" id="EQP" placeholder="Equipment ID" value="' + event.extendedProps.maintenance.EQP_ID + '">' + '<br>' +
+        '<label class="fixspace" for="text">Part Serial Number: </label>' + '<input type="text" id="PartSN" placeholder="Part Serial Number" value="' + event.extendedProps.maintenance.PartSN + '">' + '<br>' +
+        '<label class="fixspace" for="text">Part Number: </label>' + '<input type="text" id="PartNum" placeholder="Part Number" value="' + event.extendedProps.maintenance.PartNum + '">' + '<br>' +
+        '<label class="fixspace" for="text">Justification: </label>' + '<input type="text" id="JST" placeholder="Justification" value="' + event.extendedProps.maintenance.JST + '">' + '<br>' +
+        '<label class="fixspace" for="text">Work Unit Code/ Logistics Control Number: </label>' + '<input type="text" id="WUC" placeholder="Work Unit Code/ Logistics Control Number" value="' + event.extendedProps.maintenance.WUC_LCN + '">' + '<br>';
+
+    }
+
+    var saveButton = document.getElementById('saveButton');
+    saveButton.onclick = function () {
+      var updatedTitle = document.getElementById('eventTitleInput').value;
+      var updatedStart = document.getElementById('eventStartInput').value;
+      var updatedEnd = document.getElementById('eventEndInput').value;
+
+      if (event.extendedProps.PartMaintenanceID == 0) {
+        var updatedNarrative = document.getElementById('Narrative').value;
+        var updatedTR = document.getElementById('TimeRemain').value;
+        var updatedFreq = document.getElementById('Freq').value;
+        var updatedType = document.getElementById('Type').value;
+        var updatedTFrame = document.getElementById('TFrame').value;
+        let planeSN = event.extendedProps.maintenance.PlaneSN;
+        let mds = event.extendedProps.maintenance.MDS;
+        let jst = event.extendedProps.maintenance.JST;
+
+        // PlaneSN, MDS and JST,
+        // Use Swal to confirm before submitting
+        Swal.fire({
+          title: "Updating Data!",
+          text: "Are you sure you want to submit these changes?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          cancelButtonText: "Cancel"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            fetch(baseUrl + 'plane-maintenance/' + planeSN + '/' + mds + '/' + jst + '/', {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                Narrative: updatedNarrative,
+                TimeRemain: updatedTR,
+                Freq: updatedFreq,
+                Type: updatedType,
+                TFrame: updatedTFrame
+              })
+            })
+              .then(response => {
+                if (response.ok) {
+                  // Show the updated content
+                  editForm.style.display = 'none';
+
+                  document.getElementById('eventMaintenance').innerHTML =
+                    'Start: ' + event.start.toDateString() + '<br>' +
+                    'End: ' + event.end.toDateString() + '<br>' +
+                    'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
+                    'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
+                    'Narrative: ' + updatedNarrative + '<br>' +
+                    'Time Remaining: ' + updatedTR + '<br>' +
+                    'Frequency: ' + updatedFreq + '<br>' +
+                    'Type: ' + updatedType + '<br>' +
+                    'Justification: ' + event.extendedProps.maintenance.JST + '<br>' +
+                    'Time Frame: ' + updatedTFrame;
+
+                  // Show the original content
+                  document.getElementById('eventTitle').style.display = 'block';
+                  document.getElementById('eventMaintenance').style.display = 'block';
+                  editButton.style.display = 'block';
+
+
+                } else {
+                  throw new Error('API call failed');
+                }
+              })
+              .catch(error => {
+                Swal.fire({
+                  title: "Error",
+                  text: "Failed to submit location: " + error.message,
+                  icon: "error",
+                  confirmButtonText: "OK"
+                });
+              });
+          }
+        });
+
+
+      } else {
+        var updatedNarrative = document.getElementById('Narrative').value;
+        var updatedTR = document.getElementById('TimeRemain').value;
+        var updatedFreq = document.getElementById('Freq').value;
+        var updatedType = document.getElementById('Type').value;
+        var updatedTFrame = document.getElementById('TFrame').value;
+        var updatedEQP = document.getElementById('EQP').value;
+        var updatedPartSN = document.getElementById('PartSN').value;
+        var updatedJST = document.getElementById('JST').value;
+        var updatedWUC = document.getElementById('WUC').value;
+      }
+
+
+
+    }
+    // Handle cancel button click
+    var cancelButton = document.getElementById('cancelButton');
+    cancelButton.onclick = function () {
+      // Hide the edit form
+      var editForm = document.getElementById('editForm');
+      editForm.style.display = 'none';
+
+      // Show the original content
+      document.getElementById('eventTitle').style.display = 'block';
+      document.getElementById('eventMaintenance').style.display = 'block';
+      editButton.style.display = 'block';
+    };
+
+
+  }
+
+  var closeButton = document.getElementsByClassName('close')[0];
+  closeButton.onclick = function () {
     modal.style.display = 'none';
-  });
+  };
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -380,7 +520,6 @@ function addlocation() {
       // Perform the API call or any other desired action
       // Replace the 'API_CALL_URL' with the actual API endpoint
       // You can use AJAX, Fetch, or any other method to make the API call
-
       // Example using Fetch API
       fetch(baseUrl + 'loc/', {
         method: 'POST',

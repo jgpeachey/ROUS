@@ -180,11 +180,12 @@ body {
 }
 
 .modal-content {
+    font-size: 25px;
     background-color: white;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 300px;
+    width: 500px;
 }
 
 .close {
@@ -257,4 +258,8 @@ input[type="text"] {
 
 .submitloc:hover {
     background-color: #5175e4;
+}
+
+.fixspace {
+    margin-right: 5px;
 }
