@@ -1,7 +1,5 @@
+# we have a Location, PlaneMaintenance, PartMaintenance, PlaneData and Calendar model
 from django.db import models
-
-# thinking of adding a plane Maintenance and part maintenance to Calendar and then connecting aircraft (calendar) to plane data. then
-# Create your models here.
 
 class Location(models.Model):
     GeoLoc = models.CharField(primary_key=True, max_length=10)
@@ -81,6 +79,4 @@ class Calendar(models.Model):
     GeoLoc = models.CharField(max_length=10)
     PlaneMaintenanceID = models.IntegerField(default=0)
     PartMaintenanceID = models.IntegerField(default=0)
-
-
-    # aircraft = models.OneToOneField(PlaneData, on_delete=models.CASCADE, related_name='aircraft', null=True)
+    ResourceID = models.IntegerField(default=0)
