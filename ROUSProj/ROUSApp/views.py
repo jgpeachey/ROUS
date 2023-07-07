@@ -281,3 +281,25 @@ class CalendarListByGeoLoc(generics.ListAPIView):
     def get_queryset(self):
         geoloc = self.kwargs['GeoLoc']
         return Calendar.objects.filter(GeoLoc=geoloc)
+
+class IndividualResourceView(APIView):
+    def get(self, request, pk1):
+        try:
+            obj = Resource.objects.get(TailNumber=pk1)
+        except Resource.DoesNotExist:
+            msg = {"msg": "not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        serializer = PartMaintenanceSerializer(obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+class PostResourceView(APIView):
+    def get(self, request):
+        obj = Resource.objects.all()
+        serializer = ResourceSerializer(obj, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    def post(self, request):
+        serializer = ResourceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

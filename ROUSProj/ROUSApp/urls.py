@@ -31,6 +31,9 @@ urlpatterns = [
     path("part-maintenance/", views.PartMaintenanceListView.as_view(), name='part maintenance'),
     # get and post to location list
     path('loc/', views.LocationList.as_view(), name='location-list'),
+    # get and post to resource list
+    path('resource/', views.PostResourceView.as_view(), name='resource-list'),
+
 
     # allows get, patch and delete based on PlaneSN and MDS in plane data
     path("plane-data/<str:pk1>/<str:pk2>/", views.IndividualPlaneData.as_view(), name='plane details'),
@@ -61,4 +64,7 @@ urlpatterns = [
 
     # allows get based on GeoLoc in Calendar
     path('calendar/geoloc/<str:GeoLoc>/', views.CalendarListByGeoLoc.as_view(), name='calendar-list-by-geoloc'),
+
+    path('resource/<str:pk1>/', views.IndividualResourceView.as_view(), name='resource-tail'),
+
 ]
