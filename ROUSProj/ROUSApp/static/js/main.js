@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
       schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
       timeZone: 'local',
       resources: function (fetchInfo, successCallback, failureCallback) {
-        callResources(fetchInfo, successCallback, failureCallback);
+        callResources(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
       },
       events: function (fetchInfo, successCallback, failureCallback) {
         callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
@@ -197,6 +197,12 @@ document.addEventListener('DOMContentLoaded', function () {
             let eqp = event.extendedProps.maintenance.EQP_ID;
             let partsn = event.extendedProps.maintenance.PartSN;
             let partnum = event.extendedProps.maintenance.PartNum;
+            if (updatedTitle != event.extendedProps.title || updatedStart != event.extendedProps.start || updatedEnd != event.extendedProps.end) {
+              console.log("true");
+            }
+            else {
+              console.log("false");
+            }
 
             if (event.extendedProps.PartMaintenanceID == 0) {
 
@@ -425,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
   // Make an API call to retrieve the events
   // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint URL
-  fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc))
+  fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
     .then(function (response) {
       return response.json();
     })
@@ -452,6 +458,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
           GeoLoc: apiEvent.GeoLoc,
           CalendarID: apiEvent.CalendarID,
           planeData: apiEvent.plane_data,
+          resourceId: apiEvent.ResourceID,
 
         }
       });
@@ -466,9 +473,9 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
     });
 }
 
-function callResources(fetchInfo, successCallback, failureCallback) {
+function callResources(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
   // Fetch the tail numbers from the Plane data model
-  fetch(baseUrl + 'plane-data/')
+  fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
     .then(function (response) {
       return response.json();
     })
@@ -477,6 +484,7 @@ function callResources(fetchInfo, successCallback, failureCallback) {
       // Process the API response and transform it into FullCalendar event format
       var resources = data.map(function (apiEvent) {
         return {
+          id: apiEvent.ResourceID,
           title: apiEvent.TailNumber,
         }
       });
