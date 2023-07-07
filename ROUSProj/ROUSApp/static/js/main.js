@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       eventClick: function (info) {
         var event = info.event;
+        var closeButton = document.getElementsByClassName('close')[0];
 
         if (event.extendedProps.PartMaintenanceID == 0) {
           document.getElementById('eventTitle').innerHTML = event.title;
@@ -143,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
           document.getElementById('eventStart').style.display = 'none';
           document.getElementById('eventEnd').style.display = 'none';
           document.getElementById('eventMaintenance').style.display = 'none';
+          closeButton.style.display = 'none';
           editButton.style.display = 'none';
 
           // Show edit form
@@ -244,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Show the original content
                         document.getElementById('eventTitle').style.display = 'block';
                         document.getElementById('eventMaintenance').style.display = 'block';
+                        closeButton.style.display = 'block';
                         editButton.style.display = 'block';
                       } else {
                         throw new Error('API call failed');
@@ -349,6 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Show the original content
                         document.getElementById('eventTitle').style.display = 'block';
                         document.getElementById('eventMaintenance').style.display = 'block';
+                        closeButton.style.display = 'block';
                         editButton.style.display = 'block';
                       } else {
                         throw new Error('API call failed');
@@ -376,17 +380,13 @@ document.addEventListener('DOMContentLoaded', function () {
             // Show the original content
             document.getElementById('eventTitle').style.display = 'block';
             document.getElementById('eventMaintenance').style.display = 'block';
+            closeButton.style.display = 'block';
             editButton.style.display = 'block';
           };
-
-
         }
-
-        var closeButton = document.getElementsByClassName('close')[0];
         closeButton.onclick = function () {
           modal.style.display = 'none';
         };
-
 
       },
       eventMouseEnter: function (info) {
