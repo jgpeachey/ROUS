@@ -178,20 +178,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
           var saveButton = document.getElementById('saveButton');
           saveButton.onclick = function () {
+
+            //updated variables
             var updatedTitle = document.getElementById('eventTitleInput').value;
             var updatedStart = document.getElementById('eventStartInput').value;
             var updatedEnd = document.getElementById('eventEndInput').value;
+            var updatedNarrative = document.getElementById('Narrative').value;
+            var updatedTR = document.getElementById('TimeRemain').value;
+            var updatedFreq = document.getElementById('Freq').value;
+            var updatedType = document.getElementById('Type').value;
+            var updatedTFrame = document.getElementById('TFrame').value;
+
+
+            //search variables
+            let planeSN = event.extendedProps.maintenance.PlaneSN;
+            let mds = event.extendedProps.maintenance.MDS;
+            let jst = event.extendedProps.maintenance.JST;
+            let eqp = event.extendedProps.maintenance.EQP_ID;
+            let partsn = event.extendedProps.maintenance.PartSN;
+            let partnum = event.extendedProps.maintenance.PartNum;
 
             if (event.extendedProps.PartMaintenanceID == 0) {
-              var updatedNarrative = document.getElementById('Narrative').value;
-              var updatedTR = document.getElementById('TimeRemain').value;
-              var updatedFreq = document.getElementById('Freq').value;
-              var updatedType = document.getElementById('Type').value;
-              var updatedTFrame = document.getElementById('TFrame').value;
-              let planeSN = event.extendedProps.maintenance.PlaneSN;
-              let mds = event.extendedProps.maintenance.MDS;
-              let jst = event.extendedProps.maintenance.JST;
-
 
               // Use Swal to confirm before submitting
               Swal.fire({
@@ -264,24 +271,12 @@ document.addEventListener('DOMContentLoaded', function () {
               });
 
             } else {
-              //udated variables
-              var updatedNarrative = document.getElementById('Narrative').value;
-              var updatedTR = document.getElementById('TimeRemain').value;
-              var updatedFreq = document.getElementById('Freq').value;
-              var updatedType = document.getElementById('Type').value;
-              var updatedTFrame = document.getElementById('TFrame').value;
+              // other updated variables
               var updatedEQP = document.getElementById('EQP').value;
               var updatedPartSN = document.getElementById('PartSN').value;
               var updatedPartNum = document.getElementById('PartNum').value;
               var updatedJST = document.getElementById('JST').value;
               var updatedWUC = document.getElementById('WUC').value;
-
-              // search variables
-              let planeSN = event.extendedProps.maintenance.PlaneSN;
-              let mds = event.extendedProps.maintenance.MDS;
-              let eqp = event.extendedProps.maintenance.EQP_ID;
-              let partsn = event.extendedProps.maintenance.PartSN;
-              let partnum = event.extendedProps.maintenance.PartNum;
 
               //PlaneSN, MDS, EQP_ID, PartSN and PartNum
               // Use Swal to confirm before submitting
@@ -319,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         // removes the editfrom data from being displayed
                         editForm.style.display = 'none';
 
-                        //udapdate it to the current calendar view
+                        //update it to the current calendar view
                         event.extendedProps.maintenance.Narrative = updatedNarrative;
                         event.extendedProps.maintenance.TimeRemain = updatedTR;
                         event.extendedProps.maintenance.Freq = updatedFreq;
