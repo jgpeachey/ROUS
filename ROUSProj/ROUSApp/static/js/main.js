@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         //udapdate it to the current calendar view
                         event.extendedProps.maintenance.Narrative = updatedNarrative;
-                        event.extendedProps.maintenance.TimeRemain = updatedTimeRemain;
+                        event.extendedProps.maintenance.TimeRemain = updatedTR;
                         event.extendedProps.maintenance.Freq = updatedFreq;
                         event.extendedProps.maintenance.Type = updatedType;
                         event.extendedProps.maintenance.TFrame = updatedTFrame;
@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
                           'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
                           'Narrative: ' + updatedNarrative + '<br>' +
-                          'Time Remaining: ' + updatedTimeRemain + '<br>' +
+                          'Time Remaining: ' + updatedTR + '<br>' +
                           'Frequency: ' + updatedFreq + '<br>' +
                           'Type: ' + updatedType + '<br>' +
                           'Justification: ' + updatedJST + '<br>' +
