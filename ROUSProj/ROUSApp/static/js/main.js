@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         //udapdate it to the current calendar view
                         event.extendedProps.maintenance.Narrative = updatedNarrative;
-                        event.extendedProps.maintenance.TimeRemain = updatedTimeRemain;
+                        event.extendedProps.maintenance.TimeRemain = updatedTR;
                         event.extendedProps.maintenance.Freq = updatedFreq;
                         event.extendedProps.maintenance.Type = updatedType;
                         event.extendedProps.maintenance.TFrame = updatedTFrame;
