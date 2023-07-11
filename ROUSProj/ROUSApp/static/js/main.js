@@ -34,19 +34,61 @@ document.addEventListener('DOMContentLoaded', function () {
         addEventButton: {
           text: 'add event...',
           click: function () {
-            var dateStr = prompt('Enter a date in YYYY-MM-DD format');
-            var date = new Date(dateStr + 'T00:00:00'); // will be in local time
-
-            if (!isNaN(date.valueOf())) { // valid?
-              calendar.addEvent({
-                title: 'dynamic event',
-                start: date,
-                allDay: true
+            cancelout.onclick = function () {
+              modal.style.display = 'none';
+              // Clear the input fields
+              var inputFields = document.querySelectorAll('#createModal input[type="text"]');
+              inputFields.forEach(function (input) {
+                input.value = '';
               });
-              alert('Great. Now, update your database...');
-            } else {
-              alert('Invalid date.');
+            };
+
+
+            // Show the modal
+            var modal = document.getElementById('createModal');
+            modal.style.display = 'block';
+
+
+            var save = document.getElementById('buttonSaveC');
+            save.onclick = function () {
+              // Retrieve input values
+              var title = document.getElementById('titleInput').value;
+              var start = document.getElementById('startInput').value;
+              var end = document.getElementById('endInput').value;
+              var julianDate = document.getElementById('julianInput').value;
+              var engineHours = document.getElementById('engineHoursInput').value;
+              var flightHours = document.getElementById('flightHoursInput').value;
+              var planeSN = document.getElementById('planeSNInput').value;
+              var mds = document.getElementById('mdsInput').value;
+              var narrative = document.getElementById('narrativeInput').value;
+              var currentTime = document.getElementById('currentTimeInput').value;
+              var timeRemaining = document.getElementById('timeRemainingInput').value;
+              var dueTime = document.getElementById('dueTimeInput').value;
+              var dueDate = document.getElementById('dueDateInput').value;
+              var frequency = document.getElementById('frequencyInput').value;
+              var type = document.getElementById('typeInput').value;
+              var justification = document.getElementById('justificationInput').value;
+              var timeFrame = document.getElementById('timeFrameInput').value;
+              var engineFlight = document.getElementById('engineFlightInput').value;
+              var partPlaneSN = document.getElementById('partPlaneSNInput').value;
+              var partMDS = document.getElementById('partMDSInput').value;
+              var equipmentID = document.getElementById('equipmentIDInput').value;
+              var partSerialNumber = document.getElementById('partSerialNumberInput').value;
+              var partNumber = document.getElementById('partNumberInput').value;
+              var partNarrative = document.getElementById('partNarrativeInput').value;
+              var wucLcn = document.getElementById('wucLcnInput').value;
+              var catNumber = document.getElementById('catNumberInput').value;
+              var partCurrentTime = document.getElementById('partCurrentTimeInput').value;
+              var partTimeRemaining = document.getElementById('partTimeRemainingInput').value;
+              var partDueTime = document.getElementById('partDueTimeInput').value;
+              var partDueDate = document.getElementById('partDueDateInput').value;
+              var partFrequency = document.getElementById('partFrequencyInput').value;
+              var partType = document.getElementById('partTypeInput').value;
+              var partJustification = document.getElementById('partJustificationInput').value;
+              var partTimeFrame = document.getElementById('partTimeFrameInput').value;
+              var partEngineFlight = document.getElementById('partEngineFlightInput').value;
             }
+
           }
         }
       },
@@ -657,3 +699,19 @@ function passgeoloc(filename) {
   const selectedGeoLoc = getSelectedGeoLoc();
   window.location.href = baseUrl + filename + '?geoloc=' + encodeURIComponent(selectedGeoLoc);
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Attach event listeners for collapsible buttons
+  var collapsibleButtons = document.getElementsByClassName('collapsible');
+  for (var i = 0; i < collapsibleButtons.length; i++) {
+    collapsibleButtons[i].addEventListener('click', function () {
+      this.classList.toggle('active');
+      var content = this.parentNode.nextElementSibling;
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+      } else {
+        content.style.display = 'block';
+      }
+    });
+  }
+});

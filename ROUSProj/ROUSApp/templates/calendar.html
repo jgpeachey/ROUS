@@ -50,7 +50,63 @@
         </div>
     </div>
 
-    <!-- display current -->
+    <!-- creates a new event -->
+    <div class="modal-fade" id="createModal">
+        <div class="modal-struct">
+            <p>Title: <input type="text" id="titleInput" placeholder="Title"></p>
+            <p>Start: <input type="text" id="startInput" placeholder="Start Date"></p>
+            <p>End: <input type="text" id="endInput" placeholder="Event End"></p>
+            <p>Julian Date: <input type="text" id="julianInput" placeholder="Julian Date"></p>
+            <p>Engine Hours: <input type="text" id="engineHoursInput" placeholder="Engine Hours"></p>
+            <p>Flight Hours: <input type="text" id="flightHoursInput" placeholder="Flight Hours"></p>
+            <p>
+                <button class="collapsible">Plane Maintenance</button>
+            </p>
+            <div class="contentCollapse">
+                <p>Plane Serial Number: <input type="text" id="planeSNInput" placeholder="planeSN"></p>
+                <p>MDS: <input type="text" id="mdsInput" placeholder="MDS"></p>
+                <p>Narrative: <input type="text" id="narrativeInput" placeholder="Narrative"></p>
+                <p>Current Time: <input type="text" id="currentTimeInput" placeholder="Current Time"></p>
+                <p>Time Remaining: <input type="text" id="timeRemainingInput" placeholder="Time Remaining"></p>
+                <p>Due Time: <input type="text" id="dueTimeInput" placeholder="Due Time"></p>
+                <p>Due Date: <input type="text" id="dueDateInput" placeholder="Due Date"></p>
+                <p>Frequency: <input type="text" id="frequencyInput" placeholder="Frequency"></p>
+                <p>Type: <input type="text" id="typeInput" placeholder="Type"></p>
+                <p>Justification: <input type="text" id="justificationInput" placeholder="Justification"></p>
+                <p>Time Frame: <input type="text" id="timeFrameInput" placeholder="Time Frame"></p>
+                <p>Engine or Flight: <input type="text" id="engineFlightInput" placeholder="Engine or Flight"></p>
+
+            </div>
+            <p>
+                <button class="collapsible">Part Maintenance</button>
+            </p>
+            <div class="contentCollapse">
+                <p>Plane Serial Number: <input type="text" id="partPlaneSNInput" placeholder="planeSN"></p>
+                <p>MDS: <input type="text" id="partMDSInput" placeholder="MDS"></p>
+                <p>Equipment ID: <input type="text" id="equipmentIDInput" placeholder="Equipment ID"></p>
+                <p>Part Serial Number: <input type="text" id="partSerialNumberInput" placeholder="Part Serial Number">
+                </p>
+                <p>Part Number: <input type="text" id="partNumberInput" placeholder="Part Serial Number"></p>
+                <p>Narrative: <input type="text" id="partNarrativeInput" placeholder="Narrative"></p>
+                <p>Work Unit Code/ Logistics Control Number: <input type="text" id="wucLcnInput" placeholder="WUC LCN">
+                </p>
+                <p>Cat Number: <input type="text" id="catNumberInput" placeholder="WUC LCN"></p>
+                <p>Current Time: <input type="text" id="partCurrentTimeInput" placeholder="Current Time"></p>
+                <p>Time Remaining: <input type="text" id="partTimeRemainingInput" placeholder="Time Remaining"></p>
+                <p>Due Time: <input type="text" id="partDueTimeInput" placeholder="Due Time"></p>
+                <p>Due Date: <input type="text" id="partDueDateInput" placeholder="Due Date"></p>
+                <p>Frequency: <input type="text" id="partFrequencyInput" placeholder="Frequency"></p>
+                <p>Type: <input type="text" id="partTypeInput" placeholder="Type"></p>
+                <p>Justification: <input type="text" id="partJustificationInput" placeholder="Justification"></p>
+                <p>Time Frame: <input type="text" id="partTimeFrameInput" placeholder="Time Frame"></p>
+                <p>Engine or Flight: <input type="text" id="partEngineFlightInput" placeholder="Engine or Flight"></p>
+            </div>
+            <button class="buttonSaveCal" id="buttonSaveC">Save</button>
+            <button id="cancelout">Cancel</button>
+        </div>
+    </div>
+
+    <!-- display event and edits -->
     <div id="eventModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
