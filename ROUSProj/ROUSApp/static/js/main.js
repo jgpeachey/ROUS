@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', function () {
       timeZone: 'local',
       resourceAreaColumns: [
         {
-            field: 'title',
-                headerContent: 'Tail Number',
-                render: function (resource) {
-                    return resource.title;
-            }
+          field: 'title',
+          headerContent: 'Tail Number',
+          render: function (resource) {
+            return resource.title;
+          }
         },
       ],
       resources: function (fetchInfo, successCallback, failureCallback) {
@@ -487,7 +487,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
+      //console.log(data);
       // Process the API response and transform it into FullCalendar event format
       var events = data.map(function (apiEvent) {
         return {
@@ -514,7 +514,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
         }
       });
 
-      console.log(events);
+      //console.log(events);
       // Call the successCallback with the retrieved events
       successCallback(events);
     })
@@ -531,7 +531,7 @@ function callResources(fetchInfo, successCallback, failureCallback, selectedGeoL
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
+      //console.log(data);
       // Process the API response and transform it into FullCalendar event format
       var resources = data.map(function (apiEvent) {
         return {
@@ -539,7 +539,7 @@ function callResources(fetchInfo, successCallback, failureCallback, selectedGeoL
           title: apiEvent.TailNumber,
         }
       });
-      console.log(resources);
+      //console.log(resources);
       // Call the successCallback with the retrieved events
       successCallback(resources);
     })
