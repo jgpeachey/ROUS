@@ -532,7 +532,7 @@ function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc)
       var today = new Date();
       // Filter the objects with end date prior to today's date and completed equal to false
       var filteredObjects = data.filter(obj => new Date(obj.end) < today && obj.Completed === false);
-      console.log(filteredObjects);
+      //console.log(filteredObjects);
       // Array to store all the update promises
       var updatePromises = [];
 
