@@ -23,7 +23,7 @@ class PlaneMaintenance(models.Model):
     Type = models.CharField(max_length=1)
     JST = models.IntegerField(default=0)
     TFrame = models.SmallIntegerField(default=0)
-    E_F = models.CharField(max_length=1)
+    E_F = models.CharField(max_length=10)
     title = models.TextField(blank=True)
 
     class Meta:
@@ -50,7 +50,7 @@ class PartMaintenance(models.Model):
     Type = models.CharField(max_length=1)
     JST = models.IntegerField(default=0)
     TFrame = models.SmallIntegerField(default=0)
-    E_F = models.CharField(max_length=1)
+    E_F = models.CharField(max_length=10)
     title = models.TextField(blank=True)
     class Meta:
         unique_together = (('PlaneSN', 'MDS', 'title'),)
@@ -84,3 +84,4 @@ class Calendar(models.Model):
     PlaneMaintenanceID = models.IntegerField(default=0)
     PartMaintenanceID = models.IntegerField(default=0)
     ResourceID = models.IntegerField(default=0)
+    Completed = models.BooleanField(default=False)
