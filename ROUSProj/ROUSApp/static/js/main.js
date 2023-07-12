@@ -13,6 +13,15 @@ document.addEventListener('DOMContentLoaded', function () {
     var calendar = new FullCalendar.Calendar(calendarEl, {
       schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
       timeZone: 'local',
+      resourceAreaColumns: [
+        {
+            field: 'title',
+                headerContent: 'Tail Number',
+                render: function (resource) {
+                    return resource.title;
+            }
+        },
+      ],
       resources: function (fetchInfo, successCallback, failureCallback) {
         callResources(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
       },
