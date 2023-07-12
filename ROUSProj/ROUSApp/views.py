@@ -269,21 +269,13 @@ class CalendarPartMaintenanceView(APIView):
         except PartMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        print(request.data)
 
         serializer = PartMaintenanceSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk1):
-        try:
-            obj = PartMaintenance.objects.get(PartMaintenanceID=pk1)
-        except PartMaintenance.DoesNotExist:
-            msg = {"msg": "not found"}
-            return Response(msg, status=status.HTTP_404_NOT_FOUND)
-        obj.delete()
-        return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 # class PartMaintenanceAircraftView(APIView):
 #     def delete(self, request, pk1, pk2):
