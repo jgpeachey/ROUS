@@ -1,6 +1,5 @@
 let starttime;
 let dropdown;
-let baseUrl = 'http://127.0.0.1:8000/';
 
 document.addEventListener('DOMContentLoaded', function () {
   if (document.getElementById('calendar')) {
@@ -268,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonText: "Cancel"
               }).then((result) => {
                 if (result.isConfirmed) {
-                  fetch(baseUrl + 'plane-maintenance/' + planeSN + '/' + mds + '/' + jst + '/', {
+                  fetch('plane-maintenance/' + planeSN + '/' + mds + '/' + jst + '/', {
                     method: 'PATCH',
                     headers: {
                       'Content-Type': 'application/json'
@@ -347,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonText: "Cancel"
               }).then((result) => {
                 if (result.isConfirmed) {
-                  fetch(baseUrl + 'part-maintenance/' + planeSN + '/' + mds + '/' + eqp + '/' + partsn + '/' + partnum + '/', {
+                  fetch('part-maintenance/' + planeSN + '/' + mds + '/' + eqp + '/' + partsn + '/' + partnum + '/', {
                     method: 'PATCH',
                     headers: {
                       'Content-Type': 'application/json'
@@ -483,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
   // Make an API call to retrieve the events
   // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint URL
-  fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
+  fetch('calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
     .then(function (response) {
       return response.json();
     })
@@ -526,7 +525,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
 }
 
 function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
-  fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
+  fetch('calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
     .then(response => response.json())
     .then(data => {
       // Get today's date
@@ -540,13 +539,13 @@ function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc)
       filteredObjects.forEach(obj => {
         // Update the time for each filtered object
         if (obj.PlaneMaintenanceID > 0) {
-          var updatePromise = fetch(baseUrl + 'calendar/planemaintenance/' + obj.PlaneMaintenanceID + '/')
+          var updatePromise = fetch('calendar/planemaintenance/' + obj.PlaneMaintenanceID + '/')
             .then(response => response.json())
             .then(data => {
               var newDueTime = data.DueTime + data.Freq;
               var newTimeRemain = data.Freq;
 
-              return fetch(baseUrl + 'calendar/planemaintenance/' + obj.PlaneMaintenanceID + '/', {
+              return fetch('calendar/planemaintenance/' + obj.PlaneMaintenanceID + '/', {
                 method: 'PATCH',
                 headers: {
                   'Content-Type': 'application/json'
@@ -560,7 +559,7 @@ function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc)
             .then(response => {
               if (response.ok) {
                 console.log('Object with PlaneMaintenanceID ' + obj.PlaneMaintenanceID + ' updated successfully.');
-                return fetch(baseUrl + 'calendar/' + obj.CalendarID + '/', {
+                return fetch('calendar/' + obj.CalendarID + '/', {
                   method: 'PATCH',
                   headers: {
                     'Content-Type': 'application/json'
@@ -589,13 +588,13 @@ function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc)
 
           updatePromises.push(updatePromise);
         } else if (obj.PartMaintenanceID > 0) {
-          var updatePromise = fetch(baseUrl + 'calendar/partmaintenance/' + obj.PartMaintenanceID + '/')
+          var updatePromise = fetch('calendar/partmaintenance/' + obj.PartMaintenanceID + '/')
             .then(response => response.json())
             .then(data => {
               var newDueTime = data.DueTime + data.Freq;
               var newTimeRemain = data.Freq;
 
-              return fetch(baseUrl + 'calendar/partmaintenance/' + obj.PartMaintenanceID + '/', {
+              return fetch('calendar/partmaintenance/' + obj.PartMaintenanceID + '/', {
                 method: 'PATCH',
                 headers: {
                   'Content-Type': 'application/json'
@@ -609,7 +608,7 @@ function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc)
             .then(response => {
               if (response.ok) {
                 console.log('Object with PartMaintenanceID ' + obj.PartMaintenanceID + ' updated successfully.');
-                return fetch(baseUrl + 'calendar/' + obj.CalendarID + '/', {
+                return fetch('calendar/' + obj.CalendarID + '/', {
                   method: 'PATCH',
                   headers: {
                     'Content-Type': 'application/json'
@@ -654,7 +653,7 @@ function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc)
 
 function callResources(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
   // Fetch the tail numbers from the Plane data model
-  fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
+  fetch('calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
     .then(function (response) {
       return response.json();
     })
@@ -685,7 +684,7 @@ function dropEvent(info) {
   var newStart = info.event.start.toISOString().substring(0, 10);
   var newEnd = info.event.end.toISOString().substring(0, 10);
 
-  fetch(baseUrl + 'calendar/' + eventId + '/', {
+  fetch('calendar/' + eventId + '/', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
@@ -716,7 +715,7 @@ function resizeEvent(info) {
   var newEnd = info.event.end.toISOString().substring(0, 10);
 
 
-  fetch(baseUrl + 'calendar/' + eventId + '/', {
+  fetch('calendar/' + eventId + '/', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
@@ -749,7 +748,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function fetchOptions() {
       try {
-        const response = await fetch(baseUrl + 'loc/');
+        const response = await fetch('loc/');
         const data = await response.json();
 
         dropdown = document.getElementById('select');
@@ -799,7 +798,7 @@ function addlocation() {
       // Replace the 'API_CALL_URL' with the actual API endpoint
       // You can use AJAX, Fetch, or any other method to make the API call
       // Example using Fetch API
-      fetch(baseUrl + 'loc/', {
+      fetch('loc/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -834,7 +833,7 @@ function getSelectedGeoLoc() {
 }
 function passgeoloc(filename) {
   const selectedGeoLoc = getSelectedGeoLoc();
-  window.location.href = baseUrl + filename + '?geoloc=' + encodeURIComponent(selectedGeoLoc);
+  window.location.href = filename + '?geoloc=' + encodeURIComponent(selectedGeoLoc);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
