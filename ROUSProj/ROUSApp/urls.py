@@ -1,9 +1,11 @@
 from django.urls import path
+from ROUSApp import views
 from . import views
 
 from django.urls import path, register_converter
 from datetime import date
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 class DateConverter:
     regex = r'\d{4}-\d{2}-\d{2}'
@@ -71,4 +73,4 @@ urlpatterns = [
 
     path('resource/<str:pk1>/', views.IndividualResourceView.as_view(), name='resource-tail'),
 
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
