@@ -97,8 +97,123 @@ document.addEventListener('DOMContentLoaded', function () {
               var partJustification = document.getElementById('partJustificationInput').value;
               var partTimeFrame = document.getElementById('partTimeFrameInput').value;
               var partEngineFlight = document.getElementById('partEngineFlightInput').value;
-            }
 
+              fetch(baseUrl + 'resource/')
+                .then(response => {
+                  if (response.ok) {
+                    return response.json(); // Parse the response as JSON
+                  } else {
+                    throw new Error('Request failed');
+                  }
+                })
+                .then(data => {
+                  // Process the data from the response
+                  console.log(data);
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                });
+
+              if (wucLcn === undefined) {
+                // First POST request
+                fetch(baseUrl + 'part-maintenance/', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    PlaneSN: partPlaneSN,
+                    MDS: partMDS,
+                    EQP_ID: equipmentID,
+                    PartSN: partSerialNumber,
+                    PartNum: partNumber,
+                    Narrative: partNarrative,
+                    WUC_LCN: wucLcn,
+                    CatNum: catNumber,
+                    CrntTime: partCurrentTime,
+                    TimeRemain: partTimeRemaining,
+                    DueTime: partDueTime,
+                    DueDate: partDueDate,
+                    Freq: partFrequency,
+                    Type: partType,
+                    JST: partJustification,
+                    TFrame: partTimeFrame,
+                    E_F: partEngineFlight,
+                    title: title
+                  })
+                })
+                  .then(response => response.json())
+                  .then(data => {
+                    // Extract the ID from the response
+                    const id = data.PartMaintenanceID;
+                    console.log(id);
+                    // Second POST request using the ID from the first response
+                    return fetch(baseUrl + 'calendar/', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        PartMaintenanceID: id,
+                        PlaneMaintenanceID: '0',
+                        GeoLoc: encodeURIComponent(selectedGeoLoc),
+                        FHours: flightHours,
+                        EHours: engineHours,
+                        title: title,
+                        MDS: partMDS,
+                        JulianDate: julianDate,
+                        end: end,
+                        start: start
+                      })
+                    });
+                  })
+                  .then(response => {
+                    if (response.ok) {
+                      console.log('Second POST request succeeded');
+                    } else {
+                      console.error('Second POST request failed');
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                  });
+              }
+              else {
+                // First POST request
+                fetch(baseUrl + 'plane-maintenance/', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ name: 'John', age: 25 })
+                })
+                  .then(response => response.json())
+                  .then(data => {
+                    // Extract the ID from the response
+                    const id = data.id;
+
+                    // Second POST request using the ID from the first response
+                    return fetch(baseUrl + 'calendar/', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ id: id, someData: 'example' })
+                    });
+                  })
+                  .then(response => {
+                    if (response.ok) {
+                      console.log('Second POST request succeeded');
+                    } else {
+                      console.error('Second POST request failed');
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                  });
+
+              }
+            }
           }
         }
       },
