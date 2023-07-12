@@ -526,8 +526,6 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
 }
 
 function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
-    let newDueTime;
-    let newTimeRemain;
   fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
     .then(response => response.json())
     .then(data => {
@@ -536,25 +534,19 @@ function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc)
       // Filter the objects with end date prior to today's date and completed equal to false
       var filteredObjects = data.filter(obj => new Date(obj.end) < today && obj.Completed === false);
       console.log(filteredObjects);
-      filteredObjects.forEach(obj => {
-        console.log(obj.PlaneMaintenanceID+' '+obj.PartMaintenanceID);
-      });
-      // Update the time for each filtered object
-      filteredObjects.forEach(obj => {
-        // Calculate the new times
+      // Array to store all the update promises
+      var updatePromises = [];
 
-        // Make a PATCH request to update the object
+      filteredObjects.forEach(obj => {
+        // Update the time for each filtered object
         if (obj.PlaneMaintenanceID > 0) {
-            fetch(baseUrl + 'calendar/planemaintenance/' + obj.PlaneMaintenanceID + '/')
+          var updatePromise = fetch(baseUrl + 'calendar/planemaintenance/' + obj.PlaneMaintenanceID + '/')
             .then(response => response.json())
             .then(data => {
-                newDueTime = data.DueTime + data.Freq;
-                newTimeRemain = data.Freq;
-            })
-            .catch(error => {
-              console.error('An error occurred while fetching the planemaintenance:', error);
-            });
-              fetch(baseUrl + 'calendar/planemaintenance/' + obj.PlaneMaintenanceID + '/', {
+              var newDueTime = data.DueTime + data.Freq;
+              var newTimeRemain = data.Freq;
+
+              return fetch(baseUrl + 'calendar/planemaintenance/' + obj.PlaneMaintenanceID + '/', {
                 method: 'PATCH',
                 headers: {
                   'Content-Type': 'application/json'
@@ -563,95 +555,100 @@ function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc)
                   DueTime: newDueTime,
                   TimeRemain: newTimeRemain
                 })
-              })
+              });
+            })
             .then(response => {
               if (response.ok) {
                 console.log('Object with PlaneMaintenanceID ' + obj.PlaneMaintenanceID + ' updated successfully.');
-                fetch(baseUrl + 'calendar/' + obj.CalendarID + '/', {
-                    method: 'PATCH',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      Completed: true
-                    })
-                })
-                .then(response => {
-                  if (response.ok) {
-                    console.log('Object with CalendarID ' + obj.CalendarID + ' updated successfully.');
-                  } else {
-                    console.error('Failed to update object with CalendarID ' + obj.CalendarID + '.');
-                  }
-                })
-                .catch(error => {
-                  console.error('An error occurred while updating object with CalendarID ' + obj.CalendarID + ':', error);
+                return fetch(baseUrl + 'calendar/' + obj.CalendarID + '/', {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    Completed: true
+                  })
                 });
-              }
-              else {
+              } else {
                 console.error('Failed to update object with PlaneMaintenanceID ' + obj.PlaneMaintenanceID + '.');
+                throw new Error('Failed to update object with PlaneMaintenanceID ' + obj.PlaneMaintenanceID + '.');
+              }
+            })
+            .then(response => {
+              if (response.ok) {
+                console.log('Object with CalendarID ' + obj.CalendarID + ' updated successfully.');
+              } else {
+                console.error('Failed to update object with CalendarID ' + obj.CalendarID + '.');
+                throw new Error('Failed to update object with CalendarID ' + obj.CalendarID + '.');
               }
             })
             .catch(error => {
-              console.error('An error occurred while updating object with PlaneMaintenanceID ' + obj.PlaneMaintenanceID + ':', error);
+              console.error('An error occurred while updating object:', error);
+              throw error;
             });
-        }
-        else if (obj.PartMaintenanceID > 0) {
-          fetch(baseUrl + 'calendar/partmaintenance/' + obj.PartMaintenanceID + '/')
+
+          updatePromises.push(updatePromise);
+        } else if (obj.PartMaintenanceID > 0) {
+          var updatePromise = fetch(baseUrl + 'calendar/partmaintenance/' + obj.PartMaintenanceID + '/')
             .then(response => response.json())
             .then(data => {
-                newDueTime = data.DueTime + data.Freq;
-                newTimeRemain = data.Freq;
-                console.log('inside'+newDueTime);
+              var newDueTime = data.DueTime + data.Freq;
+              var newTimeRemain = data.Freq;
+
+              return fetch(baseUrl + 'calendar/partmaintenance/' + obj.PartMaintenanceID + '/', {
+                method: 'PATCH',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  DueTime: newDueTime,
+                  TimeRemain: newTimeRemain
+                })
+              });
             })
-            .catch(error => {
-              console.error('An error occurred while fetching the partmaintenance:', error);
-            });
-            console.log('outside'+newDueTime);
-          fetch(baseUrl + 'calendar/partmaintenance/' + obj.PartMaintenanceID + '/', {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              DueTime: newDueTime,
-              TimeRemain: newTimeRemain
-            })
-          })
             .then(response => {
               if (response.ok) {
                 console.log('Object with PartMaintenanceID ' + obj.PartMaintenanceID + ' updated successfully.');
-                fetch(baseUrl + 'calendar/' + obj.CalendarID + '/', {
-                    method: 'PATCH',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      Completed: true
-                    })
-                })
-                .then(response => {
-                  if (response.ok) {
-                    console.log('Object with CalendarID ' + obj.CalendarID + ' updated successfully.');
-                  } else {
-                    console.error('Failed to update object with CalendarID ' + obj.CalendarID + '.');
-                  }
-                })
-                .catch(error => {
-                  console.error('An error occurred while updating object with CalendarID ' + obj.CalendarID + ':', error);
+                return fetch(baseUrl + 'calendar/' + obj.CalendarID + '/', {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    Completed: true
+                  })
                 });
-              }
-              else {
+              } else {
                 console.error('Failed to update object with PartMaintenanceID ' + obj.PartMaintenanceID + '.');
+                throw new Error('Failed to update object with PartMaintenanceID ' + obj.PartMaintenanceID + '.');
+              }
+            })
+            .then(response => {
+              if (response.ok) {
+                console.log('Object with CalendarID ' + obj.CalendarID + ' updated successfully.');
+              } else {
+                console.error('Failed to update object with CalendarID ' + obj.CalendarID + '.');
+                throw new Error('Failed to update object with CalendarID ' + obj.CalendarID + '.');
               }
             })
             .catch(error => {
-              console.error('An error occurred while updating object with PartMaintenanceID ' + obj.PartMaintenanceID + ':', error);
+              console.error('An error occurred while updating object:', error);
+              throw error;
             });
+
+          updatePromises.push(updatePromise);
         }
       });
+
+      // Wait for all the update promises to resolve
+      return Promise.all(updatePromises);
+    })
+    .then(() => {
+      successCallback();
     })
     .catch(error => {
       console.error('An error occurred while fetching the objects:', error);
+      failureCallback(error);
     });
 }
 
