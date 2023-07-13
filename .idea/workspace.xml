@@ -6,11 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="b479b856-6fd2-4578-9cc0-2130c6cb4313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/static/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/templates/fileupload.html" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/templates/fileupload.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/views.py" afterDir="false" />
+=======
+<<<<<<< Updated upstream
+      <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/static/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/static/js/main.js" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ROUSProj/ROUSApp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROUSProj/ROUSApp/views.py" afterDir="false" />
+>>>>>>> Stashed changes
+>>>>>>> 6421fdf8934d4fa1705bf6a3697acc279e924d3f
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +29,19 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="8757d742-6531-4a66-835e-094ab0bea386" />
+        <option name="url" value="https://github.com/jgpeachey/jgpeachey.github.io.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />

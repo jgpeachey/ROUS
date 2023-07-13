@@ -1,9 +1,11 @@
 from django.urls import path
+from ROUSApp import views
 from . import views
 
 from django.urls import path, register_converter
 from datetime import date
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 class DateConverter:
     regex = r'\d{4}-\d{2}-\d{2}'
@@ -69,6 +71,7 @@ urlpatterns = [
     # allows get based on GeoLoc in Calendar
     path('calendar/geoloc/<str:GeoLoc>/', views.CalendarListByGeoLoc.as_view(), name='calendar-list-by-geoloc'),
 
+<<<<<<< HEAD
     # allows get based on TailNumber in resource
     path('resource/<str:pk1>/', views.IndividualResourceView.as_view(), name='resource-tail'),
 
@@ -76,3 +79,12 @@ urlpatterns = [
 path('resource/<str:pk1>/', views.IndividualLocationResourceView.as_view(), name='resource-geo-tail'),
 
 ]
+=======
+    path('calendar/planemaintenance/<int:pk1>/', views.CalendarPlaneMaintenanceView.as_view(), name='calendar-plane-maintenance'),
+
+    path('calendar/partmaintenance/<int:pk1>/', views.CalendarPartMaintenanceView.as_view(), name='calendar-part-maintenance'),
+
+    path('resource/<str:pk1>/', views.IndividualResourceView.as_view(), name='resource-tail'),
+
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> 6421fdf8934d4fa1705bf6a3697acc279e924d3f
