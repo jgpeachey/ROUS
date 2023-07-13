@@ -331,3 +331,7 @@ input[type="text"] {
     display: none;
     overflow: hidden;
 }
+
+.hidden {
+    display: none;
+}
