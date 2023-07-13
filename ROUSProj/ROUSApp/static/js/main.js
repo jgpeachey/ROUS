@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Make a GET request to the API endpoint
-            fetch(baseUrl + 'resource/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
+            fetch('resource/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
               .then(response => response.json())
               .then(data => {
                 const dropdown = document.getElementById('eventDropdown');
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var planeEquipmentID = document.getElementById('currentEquipment').value;
                 var planeTailNum = document.getElementById('currentTail').value;
 
-                fetch(baseUrl + 'plane-data/', {
+                fetch('plane-data/', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   });
 
                 // post for resource
-                fetch(baseUrl + 'resource/', {
+                fetch('resource/', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       var partTimeFrame = document.getElementById('partTimeFrameInput').value;
                       var partEngineFlight = document.getElementById('partEngineFlightInput').value;
                       // First POST request
-                      fetch(baseUrl + 'part-maintenance/', {
+                      fetch('part-maintenance/', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           const id = data.PartMaintenanceID;
                           console.log(id);
                           // Second POST request using the ID from the first response
-                          return fetch(baseUrl + 'calendar/', {
+                          return fetch('calendar/', {
                             method: 'POST',
                             headers: {
                               'Content-Type': 'application/json'
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       var timeFrame = document.getElementById('timeFrameInput').value;
                       var engineFlight = document.getElementById('engineFlightInput').value;
                       // the other methods for plane and calendar data
-                      fetch(baseUrl + 'plane-maintenance/', {
+                      fetch('plane-maintenance/', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           const id = data.PlaneMaintenanceID;
                           console.log(id);
                           // Second POST request using the ID from the first response
-                          return fetch(baseUrl + 'calendar/', {
+                          return fetch('calendar/', {
                             method: 'POST',
                             headers: {
                               'Content-Type': 'application/json'
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   var partTimeFrame = document.getElementById('partTimeFrameInput').value;
                   var partEngineFlight = document.getElementById('partEngineFlightInput').value;
                   // First POST request
-                  fetch(baseUrl + 'part-maintenance/', {
+                  fetch('part-maintenance/', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json'
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       const id = data.PartMaintenanceID;
                       console.log(id);
                       // Second POST request using the ID from the first response
-                      return fetch(baseUrl + 'calendar/', {
+                      return fetch('calendar/', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   var timeFrame = document.getElementById('timeFrameInput').value;
                   var engineFlight = document.getElementById('engineFlightInput').value;
                   // the other methods for plane and calendar data
-                  fetch(baseUrl + 'plane-maintenance/', {
+                  fetch('plane-maintenance/', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json'
@@ -433,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       const id = data.PlaneMaintenanceID;
                       console.log(id);
                       // Second POST request using the ID from the first response
-                      return fetch(baseUrl + 'calendar/', {
+                      return fetch('calendar/', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
