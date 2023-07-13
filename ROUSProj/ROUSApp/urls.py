@@ -67,6 +67,8 @@ urlpatterns = [
     # allows get based on GeoLoc in Calendar
     path('calendar/geoloc/<str:GeoLoc>/', views.CalendarListByGeoLoc.as_view(), name='calendar-list-by-geoloc'),
 
+    path('resource/<str:pk1>/', views.IndividualLocationResourceView.as_view(), name='resource-geo-tail'),
+
     path('calendar/planemaintenance/<int:pk1>/', views.CalendarPlaneMaintenanceView.as_view(), name='calendar-plane-maintenance'),
 
     path('calendar/partmaintenance/<int:pk1>/', views.CalendarPartMaintenanceView.as_view(), name='calendar-part-maintenance'),
