@@ -52,8 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.value = '';
               });
             };
+
             // Make a GET request to the API endpoint
-            fetch(baseUrl + ' ')
+            fetch(baseUrl + 'resource/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
               .then(response => response.json())
               .then(data => {
                 const dropdown = document.getElementById('eventDropdown');
@@ -61,8 +62,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Iterate over the data and create an option element for each item
                 data.forEach(item => {
                   const option = document.createElement('option');
-                  option.value = item.value; // Set the value attribute
-                  option.textContent = item.text; // Set the text content
+                  option.value = item.ResourceID; // Set the value attribute
+                  option.textContent = item.TailNumber; // Set the text content
                   dropdown.appendChild(option); // Append the option to the dropdown
                 });
               })
@@ -74,12 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var modal = document.getElementById('createModal');
             modal.style.display = 'block';
 
-            // grabs tailnumber data
-            var dropdown = document.getElementById("eventDropdown");
-            var otherInputLabel = document.getElementById("otherInputLabel");
-            console.log(dropdown.value);
-
-
+            // set the values
             var save = document.getElementById('buttonSaveC');
             save.onclick = function () {
               // Retrieve input values
@@ -89,152 +85,392 @@ document.addEventListener('DOMContentLoaded', function () {
               var julianDate = document.getElementById('julianInput').value;
               var engineHours = document.getElementById('engineHoursInput').value;
               var flightHours = document.getElementById('flightHoursInput').value;
-              var planeSN = document.getElementById('planeSNInput').value;
-              var mds = document.getElementById('mdsInput').value;
-              var narrative = document.getElementById('narrativeInput').value;
-              var currentTime = document.getElementById('currentTimeInput').value;
-              var timeRemaining = document.getElementById('timeRemainingInput').value;
-              var dueTime = document.getElementById('dueTimeInput').value;
-              var dueDate = document.getElementById('dueDateInput').value;
-              var frequency = document.getElementById('frequencyInput').value;
-              var type = document.getElementById('typeInput').value;
-              var justification = document.getElementById('justificationInput').value;
-              var timeFrame = document.getElementById('timeFrameInput').value;
-              var engineFlight = document.getElementById('engineFlightInput').value;
-              var partPlaneSN = document.getElementById('partPlaneSNInput').value;
-              var partMDS = document.getElementById('partMDSInput').value;
-              var equipmentID = document.getElementById('equipmentIDInput').value;
-              var partSerialNumber = document.getElementById('partSerialNumberInput').value;
-              var partNumber = document.getElementById('partNumberInput').value;
-              var partNarrative = document.getElementById('partNarrativeInput').value;
-              var wucLcn = document.getElementById('wucLcnInput').value;
-              var catNumber = document.getElementById('catNumberInput').value;
-              var partCurrentTime = document.getElementById('partCurrentTimeInput').value;
-              var partTimeRemaining = document.getElementById('partTimeRemainingInput').value;
-              var partDueTime = document.getElementById('partDueTimeInput').value;
-              var partDueDate = document.getElementById('partDueDateInput').value;
-              var partFrequency = document.getElementById('partFrequencyInput').value;
-              var partType = document.getElementById('partTypeInput').value;
-              var partJustification = document.getElementById('partJustificationInput').value;
-              var partTimeFrame = document.getElementById('partTimeFrameInput').value;
-              var partEngineFlight = document.getElementById('partEngineFlightInput').value;
 
-              fetch(baseUrl + 'resource/')
-                .then(response => {
-                  if (response.ok) {
-                    return response.json(); // Parse the response as JSON
-                  } else {
-                    throw new Error('Request failed');
-                  }
-                })
-                .then(data => {
-                  // Process the data from the response
-                  console.log(data);
-                })
-                .catch(error => {
-                  console.error('Error:', error);
-                });
 
-              if (wucLcn === undefined) {
-                // First POST request
-                fetch(baseUrl + 'part-maintenance/', {
+              var location = encodeURIComponent(selectedGeoLoc);
+
+              // grabs tailnumber data
+              const dropdown = document.getElementById('eventDropdown');
+              const selectedOption = dropdown.options[dropdown.selectedIndex];
+
+              if (selectedOption.value === "other") {
+                var currPlaneSN = document.getElementById('currentplaneSN').value;
+                var planeMDS = document.getElementById('currentMDS').value;
+                var planeWUC = document.getElementById('currentWUC').value;
+                var planeEquipmentID = document.getElementById('currentEquipment').value;
+                var planeTailNum = document.getElementById('currentTail').value;
+
+                fetch(baseUrl + 'plane-data/', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'
                   },
                   body: JSON.stringify({
-                    PlaneSN: partPlaneSN,
-                    MDS: partMDS,
-                    EQP_ID: equipmentID,
-                    PartSN: partSerialNumber,
-                    PartNum: partNumber,
-                    Narrative: partNarrative,
-                    WUC_LCN: wucLcn,
-                    CatNum: catNumber,
-                    CrntTime: partCurrentTime,
-                    TimeRemain: partTimeRemaining,
-                    DueTime: partDueTime,
-                    DueDate: partDueDate,
-                    Freq: partFrequency,
-                    Type: partType,
-                    JST: partJustification,
-                    TFrame: partTimeFrame,
-                    E_F: partEngineFlight,
-                    title: title
+                    PlaneSN: currPlaneSN,
+                    GeoLoc: location,
+                    MDS: planeMDS,
+                    WUC_LCN: planeWUC,
+                    EQP_ID: planeEquipmentID,
+                    TailNumber: planeTailNum
                   })
                 })
-                  .then(response => response.json())
-                  .then(data => {
-                    // Extract the ID from the response
-                    const id = data.PartMaintenanceID;
-                    console.log(id);
-                    // Second POST request using the ID from the first response
-                    return fetch(baseUrl + 'calendar/', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                        PartMaintenanceID: id,
-                        PlaneMaintenanceID: '0',
-                        GeoLoc: encodeURIComponent(selectedGeoLoc),
-                        FHours: flightHours,
-                        EHours: engineHours,
-                        title: title,
-                        MDS: partMDS,
-                        JulianDate: julianDate,
-                        end: end,
-                        start: start
-                      })
-                    });
-                  })
                   .then(response => {
                     if (response.ok) {
-                      console.log('Second POST request succeeded');
+                      console.log('Plane Data POST request succeeded');
                     } else {
-                      console.error('Second POST request failed');
+                      console.error('Plane Data POST request failed');
                     }
                   })
                   .catch(error => {
                     console.error('Error:', error);
                   });
-              }
-              else {
-                // First POST request
-                fetch(baseUrl + 'plane-maintenance/', {
+
+                // post for resource
+                fetch(baseUrl + 'resource/', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'
                   },
-                  body: JSON.stringify({ name: 'John', age: 25 })
-                })
-                  .then(response => response.json())
-                  .then(data => {
-                    // Extract the ID from the response
-                    const id = data.id;
-
-                    // Second POST request using the ID from the first response
-                    return fetch(baseUrl + 'calendar/', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({ id: id, someData: 'example' })
-                    });
+                  body: JSON.stringify({
+                    TailNumber: planeTailNum,
+                    GeoLoc: location,
                   })
+                })
                   .then(response => {
                     if (response.ok) {
-                      console.log('Second POST request succeeded');
+                      return response.json(); // Parse the response as JSON
                     } else {
-                      console.error('Second POST request failed');
+                      throw new Error('resource Data POST request failed');
                     }
                   })
-                  .catch(error => {
-                    console.error('Error:', error);
+                  .then(data => {
+                    // Extract the resourceId from the response
+                    const resourceId = data.resourceId;
+
+                    // the other methods for parts and calendar data
+                    if (document.getElementById('catNumberInput').value !== 'undefined') {
+                      var partPlaneSN = document.getElementById('partPlaneSNInput').value;
+                      var partMDS = document.getElementById('partMDSInput').value;
+                      var equipmentID = document.getElementById('equipmentIDInput').value;
+                      var partSerialNumber = document.getElementById('partSerialNumberInput').value;
+                      var partNumber = document.getElementById('partNumberInput').value;
+                      var partNarrative = document.getElementById('partNarrativeInput').value;
+                      var wucLcn = document.getElementById('wucLcnInput').value;
+                      var catNumber = document.getElementById('catNumberInput').value;
+                      var partCurrentTime = document.getElementById('partCurrentTimeInput').value;
+                      var partTimeRemaining = document.getElementById('partTimeRemainingInput').value;
+                      var partDueTime = document.getElementById('partDueTimeInput').value;
+                      var partDueDate = document.getElementById('partDueDateInput').value;
+                      var partFrequency = document.getElementById('partFrequencyInput').value;
+                      var partType = document.getElementById('partTypeInput').value;
+                      var partJustification = document.getElementById('partJustificationInput').value;
+                      var partTimeFrame = document.getElementById('partTimeFrameInput').value;
+                      var partEngineFlight = document.getElementById('partEngineFlightInput').value;
+                      // First POST request
+                      fetch(baseUrl + 'part-maintenance/', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          PlaneSN: partPlaneSN,
+                          MDS: partMDS,
+                          EQP_ID: equipmentID,
+                          PartSN: partSerialNumber,
+                          PartNum: partNumber,
+                          Narrative: partNarrative,
+                          WUC_LCN: wucLcn,
+                          CatNum: catNumber,
+                          CrntTime: partCurrentTime,
+                          TimeRemain: partTimeRemaining,
+                          DueTime: partDueTime,
+                          DueDate: partDueDate,
+                          Freq: partFrequency,
+                          Type: partType,
+                          JST: partJustification,
+                          TFrame: partTimeFrame,
+                          E_F: partEngineFlight,
+                          title: title
+                        })
+                      })
+                        .then(response => response.json())
+                        .then(data => {
+                          // Extract the ID from the response
+                          const id = data.PartMaintenanceID;
+                          console.log(id);
+                          // Second POST request using the ID from the first response
+                          return fetch(baseUrl + 'calendar/', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                              PartMaintenanceID: id,
+                              PlaneMaintenanceID: '0',
+                              GeoLoc: location,
+                              FHours: flightHours,
+                              EHours: engineHours,
+                              title: title,
+                              MDS: partMDS,
+                              JulianDate: julianDate,
+                              end: end,
+                              start: start,
+                              TailNumber: planeTailNum,
+                              ResourceID: resourceId
+                            })
+                          });
+                        })
+                        .then(response => {
+                          if (response.ok) {
+                            console.log('Second POST request succeeded');
+                          } else {
+                            console.error('Second POST request failed');
+                          }
+                        })
+                        .catch(error => {
+                          console.error('Error:', error);
+                        });
+                    } else {
+                      var planeSN = document.getElementById('planeSNInput').value;
+                      var mds = document.getElementById('mdsInput').value;
+                      var narrative = document.getElementById('narrativeInput').value;
+                      var currentTime = document.getElementById('currentTimeInput').value;
+                      var timeRemaining = document.getElementById('timeRemainingInput').value;
+                      var dueTime = document.getElementById('dueTimeInput').value;
+                      var dueDate = document.getElementById('dueDateInput').value;
+                      var frequency = document.getElementById('frequencyInput').value;
+                      var type = document.getElementById('typeInput').value;
+                      var justification = document.getElementById('justificationInput').value;
+                      var timeFrame = document.getElementById('timeFrameInput').value;
+                      var engineFlight = document.getElementById('engineFlightInput').value;
+                      // the other methods for plane and calendar data
+                      fetch(baseUrl + 'plane-maintenance/', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          PlaneSN: planeSN,
+                          MDS: mds,
+                          Narrative: narrative,
+                          CrntTime: currentTime,
+                          TimeRemain: timeRemaining,
+                          DueTime: dueTime,
+                          DueDate: dueDate,
+                          Freq: frequency,
+                          Type: type,
+                          JST: justification,
+                          TFrame: timeFrame,
+                          E_F: engineFlight,
+                          title: title
+                        })
+                      })
+                        .then(response => response.json())
+                        .then(data => {
+                          // Extract the ID from the response
+                          const id = data.PlaneMaintenanceID;
+                          console.log(id);
+                          // Second POST request using the ID from the first response
+                          return fetch(baseUrl + 'calendar/', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                              PartMaintenanceID: '0',
+                              PlaneMaintenanceID: id,
+                              GeoLoc: location,
+                              FHours: flightHours,
+                              EHours: engineHours,
+                              title: title,
+                              MDS: mds,
+                              JulianDate: julianDate,
+                              end: end,
+                              start: start,
+                              TailNumber: planeTailNum,
+                              ResourceID: resourceId
+                            })
+                          });
+                        })
+                        .then(response => {
+                          if (response.ok) {
+                            console.log('Second POST request succeeded');
+                          } else {
+                            console.error('Second POST request failed');
+                          }
+                        })
+                        .catch(error => {
+                          console.error('Error:', error);
+                        });
+                    }
                   });
+              }
+              else {
+                let tailNumberGet = selectedOption.textContent;
+                let resourceNum = selectedOption.value;
+
+                // the other methods for parts and calendar data
+                if (document.getElementById('catNumberInput').value !== 'undefined') {
+                  var partPlaneSN = document.getElementById('partPlaneSNInput').value;
+                  var partMDS = document.getElementById('partMDSInput').value;
+                  var equipmentID = document.getElementById('equipmentIDInput').value;
+                  var partSerialNumber = document.getElementById('partSerialNumberInput').value;
+                  var partNumber = document.getElementById('partNumberInput').value;
+                  var partNarrative = document.getElementById('partNarrativeInput').value;
+                  var wucLcn = document.getElementById('wucLcnInput').value;
+                  var catNumber = document.getElementById('catNumberInput').value;
+                  var partCurrentTime = document.getElementById('partCurrentTimeInput').value;
+                  var partTimeRemaining = document.getElementById('partTimeRemainingInput').value;
+                  var partDueTime = document.getElementById('partDueTimeInput').value;
+                  var partDueDate = document.getElementById('partDueDateInput').value;
+                  var partFrequency = document.getElementById('partFrequencyInput').value;
+                  var partType = document.getElementById('partTypeInput').value;
+                  var partJustification = document.getElementById('partJustificationInput').value;
+                  var partTimeFrame = document.getElementById('partTimeFrameInput').value;
+                  var partEngineFlight = document.getElementById('partEngineFlightInput').value;
+                  // First POST request
+                  fetch(baseUrl + 'part-maintenance/', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      PlaneSN: partPlaneSN,
+                      MDS: partMDS,
+                      EQP_ID: equipmentID,
+                      PartSN: partSerialNumber,
+                      PartNum: partNumber,
+                      Narrative: partNarrative,
+                      WUC_LCN: wucLcn,
+                      CatNum: catNumber,
+                      CrntTime: partCurrentTime,
+                      TimeRemain: partTimeRemaining,
+                      DueTime: partDueTime,
+                      DueDate: partDueDate,
+                      Freq: partFrequency,
+                      Type: partType,
+                      JST: partJustification,
+                      TFrame: partTimeFrame,
+                      E_F: partEngineFlight,
+                      title: title
+                    })
+                  })
+                    .then(response => response.json())
+                    .then(data => {
+                      console.log(data);
+                      // Extract the ID from the response
+                      const id = data.PartMaintenanceID;
+                      console.log(id);
+                      // Second POST request using the ID from the first response
+                      return fetch(baseUrl + 'calendar/', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          PartMaintenanceID: id,
+                          PlaneMaintenanceID: '0',
+                          GeoLoc: location,
+                          FHours: flightHours,
+                          EHours: engineHours,
+                          title: title,
+                          MDS: partMDS,
+                          JulianDate: julianDate,
+                          end: end,
+                          start: start,
+                          TailNumber: tailNumberGet,
+                          ResourceID: resourceNum
+                        })
+                      });
+                    })
+                    .then(response => {
+                      if (response.ok) {
+                        console.log('Second POST request succeeded');
+                      } else {
+                        console.error('Second POST request failed');
+                      }
+                    })
+                    .catch(error => {
+                      console.error('Error:', error);
+                    });
+                } else {
+                  var planeSN = document.getElementById('planeSNInput').value;
+                  var mds = document.getElementById('mdsInput').value;
+                  var narrative = document.getElementById('narrativeInput').value;
+                  var currentTime = document.getElementById('currentTimeInput').value;
+                  var timeRemaining = document.getElementById('timeRemainingInput').value;
+                  var dueTime = document.getElementById('dueTimeInput').value;
+                  var dueDate = document.getElementById('dueDateInput').value;
+                  var frequency = document.getElementById('frequencyInput').value;
+                  var type = document.getElementById('typeInput').value;
+                  var justification = document.getElementById('justificationInput').value;
+                  var timeFrame = document.getElementById('timeFrameInput').value;
+                  var engineFlight = document.getElementById('engineFlightInput').value;
+                  // the other methods for plane and calendar data
+                  fetch(baseUrl + 'plane-maintenance/', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      PlaneSN: planeSN,
+                      MDS: mds,
+                      Narrative: narrative,
+                      CrntTime: currentTime,
+                      TimeRemain: timeRemaining,
+                      DueTime: dueTime,
+                      DueDate: dueDate,
+                      Freq: frequency,
+                      Type: type,
+                      JST: justification,
+                      TFrame: timeFrame,
+                      E_F: engineFlight,
+                      title: title
+                    })
+                  })
+                    .then(response => response.json())
+                    .then(data => {
+                      // Extract the ID from the response
+                      const id = data.PlaneMaintenanceID;
+                      console.log(id);
+                      // Second POST request using the ID from the first response
+                      return fetch(baseUrl + 'calendar/', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          PartMaintenanceID: '0',
+                          PlaneMaintenanceID: id,
+                          GeoLoc: location,
+                          FHours: flightHours,
+                          EHours: engineHours,
+                          title: title,
+                          MDS: mds,
+                          JulianDate: julianDate,
+                          end: end,
+                          start: start,
+                          TailNumber: tailNumberGet,
+                          ResourceID: resourceNum
+                        })
+                      });
+                    })
+                    .then(response => {
+                      if (response.ok) {
+                        console.log('Second POST request succeeded');
+                      } else {
+                        console.error('Second POST request failed');
+                      }
+                    })
+                    .catch(error => {
+                      console.error('Error:', error);
+                    });
+                }
 
               }
+              calendar.refetchEvents();
             }
+
           }
         }
       },
@@ -669,7 +905,7 @@ function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc)
       var today = new Date();
       // Filter the objects with end date prior to today's date and completed equal to false
       var filteredObjects = data.filter(obj => new Date(obj.end) < today && obj.Completed === false);
-      console.log(filteredObjects);
+      //console.log(filteredObjects);
       // Array to store all the update promises
       var updatePromises = [];
 
