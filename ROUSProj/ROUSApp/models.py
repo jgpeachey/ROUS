@@ -7,6 +7,7 @@ class Location(models.Model):
 class Resource(models.Model):
     ResourceID = models.AutoField(primary_key=True)
     TailNumber = models.CharField(max_length=10)
+    GeoLoc = models.CharField(max_length=10)
 
 class PlaneMaintenance(models.Model):
     # class Meta:

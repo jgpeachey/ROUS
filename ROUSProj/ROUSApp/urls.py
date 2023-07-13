@@ -21,6 +21,9 @@ urlpatterns = [
     path('calendar.html', views.calendar, name='calendar'),
     path('fileupload.html', views.fileupload, name='fileupload'),
 
+    # calls the upload excel sheet function
+    # path('upload/', views.upload_excel, name='upload_excel'),
+
     # get and post plane data list
     path("plane-data/", views.PlaneListView.as_view(), name='planes'),
     # get and post to calendar list
@@ -33,6 +36,7 @@ urlpatterns = [
     path('loc/', views.LocationList.as_view(), name='location-list'),
     # get and post to resource list
     path('resource/', views.PostResourceView.as_view(), name='resource-list'),
+
 
 
     # allows get, patch and delete based on PlaneSN and MDS in plane data
@@ -65,6 +69,10 @@ urlpatterns = [
     # allows get based on GeoLoc in Calendar
     path('calendar/geoloc/<str:GeoLoc>/', views.CalendarListByGeoLoc.as_view(), name='calendar-list-by-geoloc'),
 
+    # allows get based on TailNumber in resource
     path('resource/<str:pk1>/', views.IndividualResourceView.as_view(), name='resource-tail'),
+
+    # allows get based on location in resource
+path('resource/<str:pk1>/', views.IndividualLocationResourceView.as_view(), name='resource-geo-tail'),
 
 ]

@@ -37,7 +37,7 @@
 
 
     <div class="content">
-
+<!--    <form action="{% url 'upload_excel' %}" method="post" enctype="multipart/form-data">-->
         <form action="import_excel" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="message-container">
