@@ -336,8 +336,20 @@ class IndividualResourceView(APIView):
         except Resource.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
-        serializer = PartMaintenanceSerializer(obj)
+        serializer = ResourceSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    def patch(self, request, pk1):
+        try:
+            obj = Resource.objects.get(TailNumber=pk1)
+        except Resource.DoesNotExist:
+            msg = {"msg": "not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ResourceSerializer(obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class PostResourceView(APIView):
     def get(self, request):
         obj = Resource.objects.all()
@@ -350,3 +362,9 @@ class PostResourceView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class IndividualLocationResourceView(generics.ListAPIView):
+    serializer_class = ResourceSerializer
+    def get_queryset(self):
+        geoloc = self.kwargs['GeoLoc']
+        return Resource.objects.filter(GeoLoc=geoloc)

@@ -59,6 +59,24 @@
             <p>Julian Date: <input type="text" id="julianInput" placeholder="Julian Date"></p>
             <p>Engine Hours: <input type="text" id="engineHoursInput" placeholder="Engine Hours"></p>
             <p>Flight Hours: <input type="text" id="flightHoursInput" placeholder="Flight Hours"></p>
+
+            <p>Tail Number:
+                <select id="eventDropdown" name="eventType" onchange="toggleOtherInputLabel()" required>
+                    <option value="" selected disabled hidden>Choose here</option>
+                    <option value="other">Other</option>
+                </select>
+            </p>
+
+            <div id="otherInputLabel" class="hidden">
+                <h3>Plane Data</h3>
+                <p>Plane Serial Number: <input type="text" id="currentplaneSN" placeholder="planeSN"></p>
+                <p>MDS: <input type="text" id="currentMDS" placeholder="MDS"></p>
+                <p>Work Unit Code/ Logistics Control Number: <input type="text" id="currentWUC" placeholder="WUC LCN">
+                </p>
+                <p>Equipment ID: <input type="text" id="currentEquipment" placeholder="Equipment ID"></p>
+                <p>Tail Number: <input type="text" id="currentTail" placeholder="Tail Number"></p>
+            </div>
+
             <p>
                 <button class="collapsible">Plane Maintenance</button>
             </p>
