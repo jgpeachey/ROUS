@@ -52,11 +52,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.value = '';
               });
             };
+            // Make a GET request to the API endpoint
+            fetch(baseUrl + ' ')
+              .then(response => response.json())
+              .then(data => {
+                const dropdown = document.getElementById('eventDropdown');
 
+                // Iterate over the data and create an option element for each item
+                data.forEach(item => {
+                  const option = document.createElement('option');
+                  option.value = item.value; // Set the value attribute
+                  option.textContent = item.text; // Set the text content
+                  dropdown.appendChild(option); // Append the option to the dropdown
+                });
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
 
             // Show the modal
             var modal = document.getElementById('createModal');
             modal.style.display = 'block';
+
+            // grabs tailnumber data
+            var dropdown = document.getElementById("eventDropdown");
+            var otherInputLabel = document.getElementById("otherInputLabel");
+            console.log(dropdown.value);
 
 
             var save = document.getElementById('buttonSaveC');
@@ -910,3 +931,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+function toggleOtherInputLabel() {
+  var dropdown = document.getElementById("eventDropdown");
+  var otherInputLabel = document.getElementById("otherInputLabel");
+
+  if (dropdown.value === "other") {
+    otherInputLabel.classList.remove("hidden");
+  } else {
+    otherInputLabel.classList.add("hidden");
+  }
+}
