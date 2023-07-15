@@ -1,3 +1,4 @@
+# views.py
 from django.shortcuts import render
 from rest_framework.response import Response
 from .serializers import *
@@ -8,7 +9,7 @@ from rest_framework.views import APIView
 import pandas as pd
 from datetime import datetime
 from pandas._libs.tslibs.nattype import NaTType
-
+import numpy as np
 # views.py
 
 def home(request):
@@ -169,32 +170,9 @@ class IndividualPlaneMaintenanceView(APIView):
             return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CalendarPlaneMaintenanceView(APIView):
-    def get(self, request, pk1):
+    def delete(self, request, pk1, pk2, pk3):
         try:
-            obj = PlaneMaintenance.objects.get(PlaneMaintenanceID=pk1)
-        except PlaneMaintenance.DoesNotExist:
-            msg = {"msg": "not found"}
-            return Response(msg, status=status.HTTP_404_NOT_FOUND)
-        serializer = PlaneMaintenanceSerializer(obj)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def patch(self, request, pk1):
-        try:
-            obj = PlaneMaintenance.objects.get(PlaneMaintenanceID=pk1)
-        except PlaneMaintenance.DoesNotExist:
-            msg = {"msg": "not found"}
-            return Response(msg, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = PlaneMaintenanceSerializer(obj, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk1):
-        try:
-            obj = PlaneMaintenance.objects.get(PlaneMaintenanceID=pk1)
+            obj = PlaneMaintenance.objects.get(PlaneSN=pk1, MDS=pk2, JST=pk3)
         except PlaneMaintenance.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -264,30 +242,6 @@ class IndividualPartMaintenanceView(APIView):
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         obj.delete()
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
-
-class CalendarPartMaintenanceView(APIView):
-    def get(self, request, pk1):
-        try:
-            obj = PartMaintenance.objects.get(PartMaintenanceID=pk1)
-        except PartMaintenance.DoesNotExist:
-            msg = {"msg": "not found"}
-            return Response(msg, status=status.HTTP_404_NOT_FOUND)
-        serializer = PartMaintenanceSerializer(obj)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def patch(self, request, pk1):
-        try:
-            obj = PartMaintenance.objects.get(PartMaintenanceID=pk1)
-        except PartMaintenance.DoesNotExist:
-            msg = {"msg": "not found"}
-            return Response(msg, status=status.HTTP_404_NOT_FOUND)
-        print(request.data)
-
-        serializer = PartMaintenanceSerializer(obj, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # class PartMaintenanceAircraftView(APIView):
 #     def delete(self, request, pk1, pk2):
@@ -386,115 +340,122 @@ class IndividualLocationResourceView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 # a part of parser when the time comes
-# def parse_datetime(value):
-#     if pd.isnull(value) or value == 'NaT':
-#         return None
-#     try:
-#         parsed_value = datetime.strptime(str(value), '%Y-%m-%d')
-#         return parsed_value
-#     except (ValueError, TypeError):
-#         print(f"Failed to parse datetime value: {value}")
-#         return None
-#
-#
-#
-# def parse_julian_date(value):
-#     if isinstance(value, NaTType):
-#         return 0  # Set a default value or handle it based on your requirements
-#     try:
-#         return int(value)
-#     except (ValueError, TypeError):
-#         return 0
-#
+def parse_datetime(value):
+    if pd.isnull(value) or value == 'NaT':
+        return None
+    try:
+        parsed_value = datetime.strptime(str(value), '%Y-%m-%d')
+        return parsed_value
+    except (ValueError, TypeError):
+        print(f"Failed to parse datetime value: {value}")
+        return None
+
+
+
+def parse_julian_date(value):
+    if isinstance(value, NaTType):
+        return 0  # Set a default value or handle it based on your requirements
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return 0
+
 # supposed to process parsed excel sheet but does not work
-# def upload_excel(request):
-#     if request.method == 'POST' and request.FILES.get('excel_file'):
-#         excel_file = request.FILES['excel_file']
-#         df = pd.read_excel(excel_file)
-#
-#         field_names = df.columns.tolist()
-#
-#         for _, row in df.iterrows():
-#             # Process common fields
-#             entry_data = {}
-#             for field_name in field_names:
-#                 entry_data[field_name] = row[field_name]
-#
-#             if pd.isnull(entry_data['start']) or entry_data['start'] == '':
-#                 entry_data['start'] = datetime.now()
-#             if pd.isnull(entry_data['end']) or entry_data['end'] == '':
-#                 entry_data['end'] = datetime.now()
-#
-#             # Create Calendar object
-#             calendar_data = {
-#                 'start': parse_datetime(entry_data['start']),
-#                 'end': parse_datetime(entry_data['end']),
-#                 'JulianDate': parse_julian_date(entry_data['JulianDate']),
-#                 'MDS': entry_data['MDS'],
-#                 'TailNumber': entry_data['TailNumber'],
-#                 'title': entry_data['title'],
-#                 'EHours': entry_data.get('EHours', 0.0),
-#                 'FHours': entry_data.get('FHours', 0.0),
-#                 'GeoLoc': entry_data['GeoLoc'],
-#             }
-#             calendar = Calendar(**calendar_data)
-#             calendar.save()
-#
-#             # Create PlaneData object
-#             plane_data_data = {
-#                 'PlaneSN': entry_data['PlaneSN'],
-#                 'GeoLoc': entry_data['GeoLoc'],
-#                 'MDS': entry_data['MDS'],
-#                 'WUC_LCN': entry_data['WUC_LCN'],
-#                 'EQP_ID': entry_data['EQP_ID'],
-#                 'TailNumber': entry_data['TailNumber'],
-#             }
-#             plane_data = PlaneData(**plane_data_data)
-#             plane_data.save()
-#
-#             # Create PartMaintenance object
-#             part_maintenance_data = {
-#                 'PlaneSN': entry_data['PlaneSN'],
-#                 'MDS': entry_data['MDS'],
-#                 'EQP_ID': entry_data['EQP_ID'],
-#                 'PartSN': entry_data['PartSN'],
-#                 'PartNum': entry_data['PartNum'],
-#                 'Narrative': entry_data['Narrative'],
-#                 'WUC_LCN': entry_data['WUC_LCN'],
-#                 'CatNum': entry_data['CatNum'],
-#                 'CrntTime': entry_data['CrntTime'],
-#                 'TimeRemain': entry_data['TimeRemain'],
-#                 'DueTime': entry_data['DueTime'],
-#                 'DueDate': parse_datetime(entry_data['DueDate']),
-#                 'Freq': entry_data['Freq'],
-#                 'Type': entry_data['Type'],
-#                 'JST': entry_data['JST'],
-#                 'TFrame': entry_data['TFrame'],
-#                 'E_F': entry_data['E_F'],
-#                 'title': entry_data['title'],
-#             }
-#             part_maintenance = PartMaintenance(**part_maintenance_data)
-#             part_maintenance.save()
-#
-#             # Create PlaneMaintenance object
-#             plane_maintenance_data = {
-#                 'PlaneSN': entry_data['PlaneSN'],
-#                 'MDS': entry_data['MDS'],
-#                 'Narrative': entry_data['Narrative'],
-#                 'CrntTime': entry_data['CrntTime'],
-#                 'TimeRemain': entry_data['TimeRemain'],
-#                 'DueTime': entry_data['DueTime'],
-#                 'DueDate': parse_datetime(entry_data['DueDate']),
-#                 'Freq': entry_data['Freq'],
-#                 'Type': entry_data['Type'],
-#                 'JST': entry_data['JST'],
-#                 'TFrame': entry_data['TFrame'],
-#                 'E_F': entry_data['E_F'],
-#                 'title': entry_data['title'],
-#             }
-#             plane_maintenance = PlaneMaintenance(**plane_maintenance_data)
-#             plane_maintenance.save()
-#
-#         return render(request, 'calendar.html')
-#
-#     return render(request, 'fileupload.html')
+class ExcelImportView(APIView):
+    def post(self, request):
+        file = request.FILES.get('file')
+        if file is None:
+            return Response({'error': 'No file uploaded.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            df = pd.read_excel(file)
+            df = df.replace({np.nan: None})
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        for _, row in df.iterrows():
+            plane_sn = row['PlaneSN'] if pd.notnull(row['PlaneSN']) else ''
+            mds = row['MDS'] if pd.notnull(row['MDS']) else ''
+            if not mds:
+                continue
+            e_f = row['E_F'] if pd.notnull(row['E_F']) else ''
+            plane_maintenance_data = {
+                'PlaneSN': plane_sn,
+                'Narrative': row['Narrative'],
+                'CrntTime': row['CrntTime'],
+                'TimeRemain': row['TimeRemain'],
+                'DueTime': row['DueTime'],
+                'DueDate': row['DueDate'],
+                'Freq': int(row['Freq']) if pd.notnull(row['Freq']) else None,
+                'Type': row['Type'],
+                'JST': row['JST'],
+                'TFrame': int(row['TFrame']) if pd.notnull(row['TFrame']) else None,
+                'E_F': e_f,
+                'title': row['title'],
+                # Populate other fields accordingly
+            }
+            plane_maintenance_serializer = PlaneMaintenanceSerializer(data=plane_maintenance_data)
+            if plane_maintenance_serializer.is_valid():
+                plane_maintenance_serializer.save()
+            else:
+                return Response(plane_maintenance_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            part_maintenance_data = {
+                'PlaneSN': plane_sn,
+                'MDS': mds,
+                'EQP_ID': row['EQP_ID'],
+                'PartSN': row['PartSN'],
+                'PartNum': row['PartNum'],
+                'Narrative': row['Narrative'],
+                'WUC_LCN': row['WUC_LCN'],
+                'CatNum': row['CatNum'],
+                'CrntTime': row['CrntTime'],
+                'TimeRemain': row['TimeRemain'],
+                'DueTime': row['DueTime'],
+                'DueDate': row['DueDate'],
+                'Freq': int(row['Freq']) if pd.notnull(row['Freq']) else None,
+                'Type': row['Type'],
+                'JST': row['JST'],
+                'TFrame': int(row['TFrame']) if pd.notnull(row['TFrame']) else None,
+                'E_F': e_f,
+                'title': row['title'],
+                # Populate other fields accordingly
+            }
+            part_maintenance_serializer = PartMaintenanceSerializer(data=part_maintenance_data)
+            if part_maintenance_serializer.is_valid():
+                part_maintenance_serializer.save()
+            else:
+                return Response(part_maintenance_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            plane_data_data = {
+                'PlaneSN': plane_sn,
+                'MDS': mds,
+                'EQP_ID': row['EQP_ID'],
+                'WUC_LCN': row['WUC_LCN'],
+                'GeoLoc': row['GeoLoc'],
+                'TailNumber': row['TailNumber'],
+                # Populate other fields accordingly
+            }
+            plane_data_serializer = PlaneDataSerializer(data=plane_data_data)
+            if plane_data_serializer.is_valid():
+                plane_data_serializer.save()
+            else:
+                return Response(plane_data_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            calendar_data = {
+                'start': row['start'],
+                'end': row['end'],
+                'JulianDate': row['JulianDate'],
+                'MDS': mds,
+                'GeoLoc': row['GeoLoc'],
+                'TailNumber': row['TailNumber'],
+                'title': row['title'],
+                'EHours': row['EHours'],
+                'FHours': row['FHours'],
+                # Populate other fields accordingly
+            }
+            calendar_serializer = CalendarSerializer(data=calendar_data)
+            if calendar_serializer.is_valid():
+                calendar_serializer.save()
+            else:
+                return Response(calendar_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'success': 'Data imported successfully.'})
