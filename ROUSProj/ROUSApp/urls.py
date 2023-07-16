@@ -23,6 +23,9 @@ urlpatterns = [
     path('calendar.html', views.calendar, name='calendar'),
     path('fileupload.html', views.fileupload, name='fileupload'),
 
+    # calls the upload excel sheet function
+    path('excel-import/', views.ExcelImportView.as_view(), name='ExcelImportView'),
+
     # get and post plane data list
     path("plane-data/", views.PlaneListView.as_view(), name='planes'),
     # get and post to calendar list

@@ -19,7 +19,7 @@ class PlaneMaintenance(models.Model):
     CrntTime = models.FloatField(null=True, blank=True, default=0.0)
     TimeRemain = models.FloatField(null=True, blank=True, default=0.0)
     DueTime = models.FloatField(null=True, blank=True, default=0.0)
-    DueDate = models.DateField(null=True)
+    # DueDate = models.DateField()
     Freq = models.SmallIntegerField(default=0)
     Type = models.CharField(max_length=1)
     JST = models.IntegerField(default=0)
@@ -86,3 +86,6 @@ class Calendar(models.Model):
     PartMaintenanceID = models.IntegerField(default=0)
     ResourceID = models.IntegerField(default=0)
     Completed = models.BooleanField(default=False)
+
+class ExcelFileUpload(models.Model):
+    excel_file_upload = models.FileField(upload_to='excel')

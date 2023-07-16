@@ -4,7 +4,11 @@ from .serializers import *
 from .models import *
 from rest_framework import status, generics
 from rest_framework.views import APIView
-
+# gotta pip install pandas  and openpyxl first
+import pandas as pd
+from datetime import datetime
+from pandas._libs.tslibs.nattype import NaTType
+import numpy as np
 # views.py
 
 def home(request):
@@ -368,3 +372,128 @@ class IndividualLocationResourceView(generics.ListAPIView):
     def get_queryset(self):
         geoloc = self.kwargs['GeoLoc']
         return Resource.objects.filter(GeoLoc=geoloc)
+
+# a part of parser when the time comes
+def parse_datetime(value):
+    if pd.isnull(value) or value == 'NaT':
+        return None
+    try:
+        parsed_value = datetime.strptime(str(value), '%Y-%m-%d')
+        return parsed_value
+    except (ValueError, TypeError):
+        print(f"Failed to parse datetime value: {value}")
+        return None
+
+
+
+def parse_julian_date(value):
+    if isinstance(value, NaTType):
+        return 0  # Set a default value or handle it based on your requirements
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return 0
+
+# supposed to process parsed excel sheet but does not work
+class ExcelImportView(APIView):
+    def post(self, request):
+        file = request.FILES.get('excel_file')
+        print(request.FILES.keys())
+        if file is None:
+            return Response({'error': 'No file uploaded.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            df = pd.read_excel(file)
+            df = df.replace({np.nan: None})
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        for _, row in df.iterrows():
+            # plane_sn = row['PlaneSN'] if pd.notnull(row['PlaneSN']) else ''
+            # mds = row['MDS'] if pd.notnull(row['MDS']) else ''
+            # # if not mds:
+            # #     continue
+            # e_f = row['E_F'] if pd.notnull(row['E_F']) else ''
+            plane_sn = row['PlaneSN']
+            print(plane_sn)
+            if pd.isnull(plane_sn):
+                break
+            plane_maintenance = PlaneMaintenance(
+                PlaneSN=plane_sn,
+                Narrative=row['Narrative'],
+                CrntTime=row['CrntTime'],
+                TimeRemain=row['TimeRemain'],
+                DueTime=row['DueTime'],
+                # DueDate=row['DueDate'],  # Uncomment if DueDate is available in the DataFrame
+                Freq=int(row['Freq']) if pd.notnull(row['Freq']) else None,
+                Type=row['Type'],
+                JST=row['JST'],
+                TFrame=int(row['TFrame']) if pd.notnull(row['TFrame']) else None,
+                E_F=row['E_F'],
+                title=row['title'],
+                # Set other fields accordingly
+            )
+            print("heres")
+            print(plane_maintenance)
+            try:
+                plane_maintenance.save()
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+            part_maintenance = PartMaintenance(
+                PlaneSN= plane_sn,
+                MDS= row['MDS'],
+                EQP_ID= row['EQP_ID'],
+                PartSN= row['PartSN'],
+                PartNum= row['PartNum'],
+                Narrative= row['Narrative'],
+                WUC_LCN= row['WUC_LCN'],
+                CatNum= row['CatNum'],
+                CrntTime= row['CrntTime'],
+                TimeRemain= row['TimeRemain'],
+                DueTime= row['DueTime'],
+                DueDate= row['DueDate'],
+                Freq= int(row['Freq']) if pd.notnull(row['Freq']) else None,
+                Type= row['Type'],
+                JST= row['JST'],
+                TFrame= int(row['TFrame']) if pd.notnull(row['TFrame']) else None,
+                E_F= row['E_F'],
+                title= row['title'],
+                # Populate other fields accordingly
+            )
+            try:
+                part_maintenance.save()
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+            plane_data = PlaneData(
+                PlaneSN= plane_sn,
+                MDS= row['MDS'],
+                EQP_ID= row['EQP_ID'],
+                WUC_LCN= row['WUC_LCN'],
+                GeoLoc= row['GeoLoc'],
+                TailNumber= row['TailNumber'],
+                # Populate other fields accordingly
+            )
+            try:
+                plane_data.save()
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+            calendar_data = Calendar(
+                start= row['start'],
+                end= row['end'],
+                JulianDate= row['JulianDate'],
+                MDS= row['MDS'],
+                GeoLoc= row['GeoLoc'],
+                TailNumber= row['TailNumber'],
+                title= row['title'],
+                EHours= row['EHours'],
+                FHours= row['FHours'],
+                # Populate other fields accordingly
+            )
+            try:
+                calendar_data.save()
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'success': 'Data imported successfully.'})
