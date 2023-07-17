@@ -123,6 +123,14 @@ class IndividualDateCalendarEdit(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, pk1):
+        try:
+            obj = Calendar.objects.get(CalendarID=pk1)
+        except Calendar.DoesNotExist:
+            msg = {"msg": "not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        obj.delete()
+        return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 class PlaneMaintenanceListView(APIView):
     def get(self, request):
@@ -374,31 +382,28 @@ class IndividualLocationResourceView(generics.ListAPIView):
         return Resource.objects.filter(GeoLoc=geoloc)
 
 # a part of parser when the time comes
-def parse_datetime(value):
-    if pd.isnull(value) or value == 'NaT':
-        return None
-    try:
-        parsed_value = datetime.strptime(str(value), '%Y-%m-%d')
-        return parsed_value
-    except (ValueError, TypeError):
-        print(f"Failed to parse datetime value: {value}")
-        return None
+# def parse_datetime(value):
+#     if pd.isnull(value) or value == 'NaT':
+#         return None
+#     try:
+#         parsed_value = datetime.strptime(str(value), '%Y-%m-%d')
+#         return parsed_value
+#     except (ValueError, TypeError):
+#         print(f"Failed to parse datetime value: {value}")
+#         return None
+#
+# def parse_julian_date(value):
+#     if isinstance(value, NaTType):
+#         return 0  # Set a default value or handle it based on your requirements
+#     try:
+#         return int(value)
+#     except (ValueError, TypeError):
+#         return 0
 
-
-
-def parse_julian_date(value):
-    if isinstance(value, NaTType):
-        return 0  # Set a default value or handle it based on your requirements
-    try:
-        return int(value)
-    except (ValueError, TypeError):
-        return 0
-
-# supposed to process parsed excel sheet but does not work
-class ExcelImportView(APIView):
-    def post(self, request):
-        file = request.FILES.get('excel_file')
-        print(request.FILES.keys())
+# supposed to process parsed excel sheet data for calendar
+class ExcelImportCalendarDataView(APIView):
+    def post(self, request, file):
+    #     file = request.FILES.get('excel_file')
         if file is None:
             return Response({'error': 'No file uploaded.'}, status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -408,15 +413,39 @@ class ExcelImportView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         for _, row in df.iterrows():
-            # plane_sn = row['PlaneSN'] if pd.notnull(row['PlaneSN']) else ''
-            # mds = row['MDS'] if pd.notnull(row['MDS']) else ''
-            # # if not mds:
-            # #     continue
-            # e_f = row['E_F'] if pd.notnull(row['E_F']) else ''
+            calendar_data = Calendar(
+                start= row['start'],
+                end= row['end'],
+                JulianDate= row['JulianDate'],
+                MDS= row['MDS'],
+                GeoLoc= row['GeoLoc'],
+                TailNumber= row['TailNumber'],
+                title= row['title'],
+                EHours= row['EHours'],
+                FHours= row['FHours'],
+                # Populate other fields accordingly
+            )
+            try:
+                calendar_data.save()
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success': 'Data imported successfully.'})
+
+# supposed to process parsed excel sheet data for part maintenance, plane maintenance, plane data
+class ExcelImportView(APIView):
+    def post(self, request, file):
+    #     file = request.FILES.get('excel_file')
+        if file is None:
+            return Response({'error': 'No file uploaded.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            df = pd.read_excel(file)
+            df = df.replace({np.nan: None})
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        for _, row in df.iterrows():
             plane_sn = row['PlaneSN']
-            print(plane_sn)
-            if pd.isnull(plane_sn):
-                break
+            print("PlaneSN: ", plane_sn)
             plane_maintenance = PlaneMaintenance(
                 PlaneSN=plane_sn,
                 Narrative=row['Narrative'],
@@ -432,8 +461,7 @@ class ExcelImportView(APIView):
                 title=row['title'],
                 # Set other fields accordingly
             )
-            print("heres")
-            print(plane_maintenance)
+
             try:
                 plane_maintenance.save()
             except Exception as e:
@@ -476,23 +504,6 @@ class ExcelImportView(APIView):
             )
             try:
                 plane_data.save()
-            except Exception as e:
-                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-            calendar_data = Calendar(
-                start= row['start'],
-                end= row['end'],
-                JulianDate= row['JulianDate'],
-                MDS= row['MDS'],
-                GeoLoc= row['GeoLoc'],
-                TailNumber= row['TailNumber'],
-                title= row['title'],
-                EHours= row['EHours'],
-                FHours= row['FHours'],
-                # Populate other fields accordingly
-            )
-            try:
-                calendar_data.save()
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
