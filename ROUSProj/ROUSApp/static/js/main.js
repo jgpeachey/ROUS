@@ -819,7 +819,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
       },
-      eventMouseEnter: function (info) {
+      eventDidMount: function (info) {
         if (info.event) {
           var tooltipContent = '<div><strong>' + info.event.extendedProps.planeData.TailNumber + '</strong></div>';
           tooltipContent += '<div>Title: ' + info.event.title + '</div>';
@@ -832,24 +832,14 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltipContent += '<div>JST: ' + info.event.extendedProps.maintenance.JST + '</div>';
           }
 
-          var tooltipInstance = new bootstrap.Tooltip(info.el, {
+          var tooltip = new bootstrap.Tooltip(info.el, {
             title: tooltipContent,
             html: true,
             placement: 'auto',
             trigger: 'hover',
             container: 'body'
           });
-
-          tooltipInstance.show();
         }
-      },
-      eventMouseLeave: function (info) {
-        var tooltipInstance = bootstrap.Tooltip.getInstance(info.el);
-        if (tooltipInstance) {
-          tooltipInstance.dispose();
-          tooltipInstance.hide();
-        }
-
       },
     });
 
