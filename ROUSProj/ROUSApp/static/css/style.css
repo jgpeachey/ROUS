@@ -350,3 +350,7 @@ input[type="text"] {
     font-weight: bold;
     z-index: 9999;
 }
+
+.clicked-event {
+    border: 3px solid black;
+}

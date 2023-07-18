@@ -534,6 +534,7 @@ document.addEventListener('DOMContentLoaded', function () {
       eventClick: function (info) {
         var event = info.event;
         var closeButton = document.getElementsByClassName('close')[0];
+        info.el.classList.add('clicked-event');
 
         if (event.extendedProps.PartMaintenanceID == 0) {
           document.getElementById('eventTitle').innerHTML = event.title;
@@ -823,6 +824,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         closeButton.onclick = function () {
           modal.style.display = 'none';
+          info.el.classList.remove('clicked-event');
         };
 
       },
