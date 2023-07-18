@@ -29,6 +29,13 @@ document.addEventListener('DOMContentLoaded', function () {
         callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
         updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
       },
+      loading: function (isLoading) {
+        if (isLoading) {
+          document.getElementById('loading-screen').style.display = 'flex';
+        } else {
+          document.getElementById('loading-screen').style.display = 'none';
+        }
+      },
       themeSystem: 'bootstrap5',
       initialView: 'dayGridMonth',
       editable: true,
