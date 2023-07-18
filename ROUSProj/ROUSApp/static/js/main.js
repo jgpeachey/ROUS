@@ -40,6 +40,11 @@ document.addEventListener('DOMContentLoaded', function () {
         center: 'title',
         right: 'multiMonthYear,dayGridMonth,dayGridWeek,dayGridDay,resourceTimelineMonth',
       },
+      views: {
+        resourceTimelineMonth: {
+          buttonText: 'Tail Number'
+        }
+      },
       customButtons: {
         addEventButton: {
           text: 'add event...',
