@@ -841,12 +841,16 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltipContent += '<div>JST: ' + info.event.extendedProps.maintenance.JST + '</div>';
           }
 
-          var tooltip = new bootstrap.Tooltip(info.el, {
-            title: tooltipContent,
-            html: true,
+          tippy(info.el, {
+            content: tooltipContent,
+            allowHTML: true,
             placement: 'auto',
-            trigger: 'hover',
-            container: 'body'
+            trigger: 'mouseenter', // Use 'mouseenter' instead of 'hover'
+            interactive: true, // Set interactive to true if you want to interact with the content
+            appendTo: document.body, // Append the tooltip to the document body
+            onShow(instance) {
+              instance.popper.style.textAlign = 'center'; // Center the text
+            }
           });
         }
       },
