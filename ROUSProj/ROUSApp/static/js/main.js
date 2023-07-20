@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       events: function (fetchInfo, successCallback, failureCallback) {
         callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
-        updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc);
       },
       loading: function (isLoading) {
         if (isLoading) {
@@ -841,6 +840,7 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltipContent += '<div>JST: ' + info.event.extendedProps.maintenance.JST + '</div>';
           }
 
+
           tippy(info.el, {
             content: tooltipContent,
             allowHTML: true,
@@ -905,7 +905,7 @@ function callCalendar(fetchInfo, successCallback, failureCallback, selectedGeoLo
     });
 }
 
-function updateData(fetchInfo, successCallback, failureCallback, selectedGeoLoc) {
+function updateData(successCallback, failureCallback, selectedGeoLoc) {
   fetch(baseUrl + 'calendar/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
     .then(response => response.json())
     .then(data => {

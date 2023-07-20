@@ -30,6 +30,26 @@
     <!-- JavaScript File -->
     <script src="ROUSApp/static/js/main.js"></script>
 
+    <script>
+        // Define the successCallback and failureCallback functions
+        function successCallback() {
+            console.log('Data update successful.');
+            // You can add any other logic or actions you want to perform on success.
+        }
+
+        function failureCallback(error) {
+            console.error('Data update failed:', error);
+            // You can add any other logic or actions you want to perform on failure.
+        }
+
+        // Get the 'geoloc' parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const TheGeoLoc = urlParams.get('geoloc');
+
+        // Call the updateData function with the appropriate arguments
+        updateData(successCallback, failureCallback, TheGeoLoc);
+    </script>
+
 </head>
 
 <body>
