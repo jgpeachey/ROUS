@@ -177,18 +177,18 @@ async function postExcel() {
                       'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                      PlaneSN: planeSN,
-                      MDS: mds,
-                      Narrative: narrative,
-                      CrntTime: currentTime,
-                      TimeRemain: timeRemaining,
-                      DueTime: dueTime,
-                      Freq: frequency,
-                      Type: type,
-                      JST: justification,
-                      TFrame: timeFrame,
-                      E_F: engineFlight,
-                      title: title
+                      PlaneSN: obj.PlaneSN,
+                      MDS: obj.MDS,
+                      Narrative: obj.Narrative,
+                      CrntTime: obj.CrntTime,
+                      TimeRemain: obj.TimeRemain,
+                      DueTime: obj.DueTime,
+                      Freq: obj.Freq,
+                      Type: obj.Type,
+                      JST: obj.JST,
+                      TFrame: obj.TFrame,
+                      E_F: obj.E_F,
+                      title: obj.title
                     })
                 })
                 .then(response => response.json())
