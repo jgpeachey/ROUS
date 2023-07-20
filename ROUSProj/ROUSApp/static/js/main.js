@@ -97,6 +97,39 @@ document.addEventListener('DOMContentLoaded', function () {
               var engineHours = document.getElementById('engineHoursInput').value;
               var flightHours = document.getElementById('flightHoursInput').value;
 
+              // the others values
+              var currPlaneSN = document.getElementById('currentplaneSN').value;
+              var planeMDS = document.getElementById('currentMDS').value;
+              var planeTailNum = document.getElementById('currentTail').value;
+              var partPlaneSN = document.getElementById('partPlaneSNInput').value;
+              var partMDS = document.getElementById('partMDSInput').value;
+              var equipmentID = document.getElementById('equipmentIDInput').value;
+              var partSerialNumber = document.getElementById('partSerialNumberInput').value;
+              var partNumber = document.getElementById('partNumberInput').value;
+              var partNarrative = document.getElementById('partNarrativeInput').value;
+              var wucLcn = document.getElementById('wucLcnInput').value;
+              var catNumber = document.getElementById('catNumberInput').value;
+              var partCurrentTime = document.getElementById('partCurrentTimeInput').value;
+              var partTimeRemaining = document.getElementById('partTimeRemainingInput').value;
+              var partDueTime = document.getElementById('partDueTimeInput').value;
+              var partDueDate = document.getElementById('partDueDateInput').value;
+              var partFrequency = document.getElementById('partFrequencyInput').value;
+              var partType = document.getElementById('partTypeInput').value;
+              var partJustification = document.getElementById('partJustificationInput').value;
+              var partTimeFrame = document.getElementById('partTimeFrameInput').value;
+              var partEngineFlight = document.getElementById('partEngineFlightInput').value;
+              var planeSN = document.getElementById('planeSNInput').value;
+              var mds = document.getElementById('mdsInput').value;
+              var narrative = document.getElementById('narrativeInput').value;
+              var currentTime = document.getElementById('currentTimeInput').value;
+              var timeRemaining = document.getElementById('timeRemainingInput').value;
+              var dueTime = document.getElementById('dueTimeInput').value;
+              var frequency = document.getElementById('frequencyInput').value;
+              var type = document.getElementById('typeInput').value;
+              var justification = document.getElementById('justificationInput').value;
+              var timeFrame = document.getElementById('timeFrameInput').value;
+              var engineFlight = document.getElementById('engineFlightInput').value;
+
 
               var location = encodeURIComponent(selectedGeoLoc);
 
@@ -105,11 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
               const selectedOption = dropdown.options[dropdown.selectedIndex];
 
               if (selectedOption.value === "other") {
-                var currPlaneSN = document.getElementById('currentplaneSN').value;
-                var planeMDS = document.getElementById('currentMDS').value;
-                var planeWUC = document.getElementById('currentWUC').value;
-                var planeEquipmentID = document.getElementById('currentEquipment').value;
-                var planeTailNum = document.getElementById('currentTail').value;
+
 
                 fetch(baseUrl + 'plane-data/', {
                   method: 'POST',
@@ -120,8 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     PlaneSN: currPlaneSN,
                     GeoLoc: location,
                     MDS: planeMDS,
-                    WUC_LCN: planeWUC,
-                    EQP_ID: planeEquipmentID,
                     TailNumber: planeTailNum
                   })
                 })
@@ -159,24 +186,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     const resourceId = data.resourceId;
 
                     // the other methods for parts and calendar data
-                    if (document.getElementById('catNumberInput').value !== 'undefined') {
-                      var partPlaneSN = document.getElementById('partPlaneSNInput').value;
-                      var partMDS = document.getElementById('partMDSInput').value;
-                      var equipmentID = document.getElementById('equipmentIDInput').value;
-                      var partSerialNumber = document.getElementById('partSerialNumberInput').value;
-                      var partNumber = document.getElementById('partNumberInput').value;
-                      var partNarrative = document.getElementById('partNarrativeInput').value;
-                      var wucLcn = document.getElementById('wucLcnInput').value;
-                      var catNumber = document.getElementById('catNumberInput').value;
-                      var partCurrentTime = document.getElementById('partCurrentTimeInput').value;
-                      var partTimeRemaining = document.getElementById('partTimeRemainingInput').value;
-                      var partDueTime = document.getElementById('partDueTimeInput').value;
-                      var partDueDate = document.getElementById('partDueDateInput').value;
-                      var partFrequency = document.getElementById('partFrequencyInput').value;
-                      var partType = document.getElementById('partTypeInput').value;
-                      var partJustification = document.getElementById('partJustificationInput').value;
-                      var partTimeFrame = document.getElementById('partTimeFrameInput').value;
-                      var partEngineFlight = document.getElementById('partEngineFlightInput').value;
+                    if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
+
                       // First POST request
                       fetch(baseUrl + 'part-maintenance/', {
                         method: 'POST',
@@ -233,6 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         })
                         .then(response => {
                           if (response.ok) {
+                            calendar.refetchEvents();
                             console.log('Second POST request succeeded');
                           } else {
                             console.error('Second POST request failed');
@@ -242,18 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           console.error('Error:', error);
                         });
                     } else {
-                      var planeSN = document.getElementById('planeSNInput').value;
-                      var mds = document.getElementById('mdsInput').value;
-                      var narrative = document.getElementById('narrativeInput').value;
-                      var currentTime = document.getElementById('currentTimeInput').value;
-                      var timeRemaining = document.getElementById('timeRemainingInput').value;
-                      var dueTime = document.getElementById('dueTimeInput').value;
-                      var dueDate = document.getElementById('dueDateInput').value;
-                      var frequency = document.getElementById('frequencyInput').value;
-                      var type = document.getElementById('typeInput').value;
-                      var justification = document.getElementById('justificationInput').value;
-                      var timeFrame = document.getElementById('timeFrameInput').value;
-                      var engineFlight = document.getElementById('engineFlightInput').value;
+
                       // the other methods for plane and calendar data
                       fetch(baseUrl + 'plane-maintenance/', {
                         method: 'POST',
@@ -267,7 +268,6 @@ document.addEventListener('DOMContentLoaded', function () {
                           CrntTime: currentTime,
                           TimeRemain: timeRemaining,
                           DueTime: dueTime,
-                          DueDate: dueDate,
                           Freq: frequency,
                           Type: type,
                           JST: justification,
@@ -305,6 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         })
                         .then(response => {
                           if (response.ok) {
+                            calendar.refetchEvents();
                             console.log('Second POST request succeeded');
                           } else {
                             console.error('Second POST request failed');
@@ -321,24 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let resourceNum = selectedOption.value;
 
                 // the other methods for parts and calendar data
-                if (document.getElementById('catNumberInput').value !== 'undefined') {
-                  var partPlaneSN = document.getElementById('partPlaneSNInput').value;
-                  var partMDS = document.getElementById('partMDSInput').value;
-                  var equipmentID = document.getElementById('equipmentIDInput').value;
-                  var partSerialNumber = document.getElementById('partSerialNumberInput').value;
-                  var partNumber = document.getElementById('partNumberInput').value;
-                  var partNarrative = document.getElementById('partNarrativeInput').value;
-                  var wucLcn = document.getElementById('wucLcnInput').value;
-                  var catNumber = document.getElementById('catNumberInput').value;
-                  var partCurrentTime = document.getElementById('partCurrentTimeInput').value;
-                  var partTimeRemaining = document.getElementById('partTimeRemainingInput').value;
-                  var partDueTime = document.getElementById('partDueTimeInput').value;
-                  var partDueDate = document.getElementById('partDueDateInput').value;
-                  var partFrequency = document.getElementById('partFrequencyInput').value;
-                  var partType = document.getElementById('partTypeInput').value;
-                  var partJustification = document.getElementById('partJustificationInput').value;
-                  var partTimeFrame = document.getElementById('partTimeFrameInput').value;
-                  var partEngineFlight = document.getElementById('partEngineFlightInput').value;
+                if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
                   // First POST request
                   fetch(baseUrl + 'part-maintenance/', {
                     method: 'POST',
@@ -396,6 +380,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                     .then(response => {
                       if (response.ok) {
+                        calendar.refetchEvents();
                         console.log('Second POST request succeeded');
                       } else {
                         console.error('Second POST request failed');
@@ -405,18 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       console.error('Error:', error);
                     });
                 } else {
-                  var planeSN = document.getElementById('planeSNInput').value;
-                  var mds = document.getElementById('mdsInput').value;
-                  var narrative = document.getElementById('narrativeInput').value;
-                  var currentTime = document.getElementById('currentTimeInput').value;
-                  var timeRemaining = document.getElementById('timeRemainingInput').value;
-                  var dueTime = document.getElementById('dueTimeInput').value;
-                  var dueDate = document.getElementById('dueDateInput').value;
-                  var frequency = document.getElementById('frequencyInput').value;
-                  var type = document.getElementById('typeInput').value;
-                  var justification = document.getElementById('justificationInput').value;
-                  var timeFrame = document.getElementById('timeFrameInput').value;
-                  var engineFlight = document.getElementById('engineFlightInput').value;
+
                   // the other methods for plane and calendar data
                   fetch(baseUrl + 'plane-maintenance/', {
                     method: 'POST',
@@ -430,7 +404,6 @@ document.addEventListener('DOMContentLoaded', function () {
                       CrntTime: currentTime,
                       TimeRemain: timeRemaining,
                       DueTime: dueTime,
-                      DueDate: dueDate,
                       Freq: frequency,
                       Type: type,
                       JST: justification,
@@ -468,6 +441,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                     .then(response => {
                       if (response.ok) {
+                        calendar.refetchEvents();
                         console.log('Second POST request succeeded');
                       } else {
                         console.error('Second POST request failed');
@@ -479,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
               }
-              calendar.refetchEvents();
+
             }
 
           }
