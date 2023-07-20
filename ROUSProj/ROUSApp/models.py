@@ -27,8 +27,8 @@ class PlaneMaintenance(models.Model):
     E_F = models.CharField(max_length=10)
     title = models.TextField(blank=True)
 
-    class Meta:
-        unique_together = (('PlaneSN', 'MDS', 'title'),)
+    # class Meta:
+    #     unique_together = (('PlaneSN', 'MDS', 'title'),)
     # objects = models.Manager()
 
 class PartMaintenance(models.Model):
@@ -53,13 +53,13 @@ class PartMaintenance(models.Model):
     TFrame = models.SmallIntegerField(default=0)
     E_F = models.CharField(max_length=10)
     title = models.TextField(blank=True)
-    class Meta:
-        unique_together = (('PlaneSN', 'MDS', 'title'),)
+    # class Meta:
+    #     unique_together = (('PlaneSN', 'MDS', 'title'),)
 
 # multiple maintenances in plane_maintenance and part_maintenance
 class PlaneData(models.Model):
-    class Meta:
-        unique_together = (('PlaneSN', 'MDS'),)
+    # class Meta:
+    #     unique_together = (('PlaneSN', 'MDS'),)
 
     PlaneSN = models.CharField(max_length=10, primary_key=True)
     GeoLoc = models.CharField(max_length=10)
@@ -87,5 +87,5 @@ class Calendar(models.Model):
     ResourceID = models.IntegerField(default=0)
     Completed = models.BooleanField(default=False)
 
-class ExcelFileUpload(models.Model):
-    excel_file_upload = models.FileField(upload_to='excel')
+# class ExcelFileUpload(models.Model):
+#     excel_file_upload = models.FileField(upload_to='excel')
