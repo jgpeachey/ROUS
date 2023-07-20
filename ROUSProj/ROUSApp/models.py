@@ -64,8 +64,8 @@ class PlaneData(models.Model):
     PlaneSN = models.CharField(max_length=10, primary_key=True)
     GeoLoc = models.CharField(max_length=10)
     MDS = models.CharField(max_length=10)
-    WUC_LCN = models.CharField(max_length=14)
-    EQP_ID = models.CharField(max_length=5)
+    # WUC_LCN = models.CharField(max_length=14)
+    # EQP_ID = models.CharField(max_length=5)
     TailNumber = models.CharField(max_length=10)
 
 

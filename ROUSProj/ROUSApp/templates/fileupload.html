@@ -18,8 +18,8 @@
     <!-- CSS File -->
     {% load static %}
     <link rel="stylesheet" type="text/css" href="ROUSApp/static/css/style.css">
-    <!-- JavaScript File -->
-    <script src="ROUSApp/static/js/main.js"></script>
+    <!-- Excel Reader File -->
+    <script src="https://unpkg.com/read-excel-file@4.x/bundle/read-excel-file.min.js"></script>
 </head>
 
 <body>
@@ -38,8 +38,7 @@
 
     <div class="content">
 
-        <form action="excel-import/" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+
             <div class="message-container">
                 <p class="message-text">Please only insert Excel documents</p>
             </div>
@@ -48,10 +47,25 @@
                     Choose an Excel file
                     <input type="file" id="excel_file" name="excel_file" accept=".xlsx, .xls">
                 </label>
-                <button class="inputbut" type="submit">Import</button>
+                <span id="file_label">No File Selected</span>
+                <input class="inputbut" id="import_button" type="submit" value="Import" onclick="postExcel()">
+<!--                <button class="inputbut" onclick="importExcel()">Import</button> &lt;!&ndash;type="submit"&ndash;&gt;-->
             </div>
-        </form>
     </div>
+
+    <script>
+        var fInput = document.getElementById("excel_file");
+        var label = document.getElementById("file_label");
+        var defaultLabel = "No File Selected";
+
+        label.textContent = defaultLabel;
+        label.title = defaultLabel;
+
+        fInput.addEventListener("change", function () {
+            var fileName = fInput.files[0].name;
+            label.textContent = fileName;
+        });
+    </script>
 
     <footer class="footer">
         {% load static %}<img src="ROUSApp/static/images/AirForceLogoBlack.png" alt="Air Force Logo">
@@ -60,6 +74,9 @@
 
     <!-- Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript File -->
+    <script src="ROUSApp/static/js/main.js"></script>
+    <script src="ROUSApp/static/js/import.js"></script>
 </body>
 
 </html>
