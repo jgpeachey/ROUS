@@ -60,9 +60,9 @@ async function postExcel() {
           body: JSON.stringify({
                 PlaneSN: obj.PlaneSN,
                 GeoLoc: obj.GeoLoc,
-//                MDS: obj.MDS,
+                MDS: obj.MDS,
 //                WUC_LCN: obj.WUC_LCN,
-                EQP_ID: obj.EQP_ID,
+//                EQP_ID: obj.EQP_ID,
                 TailNumber: obj.TailNumber
           })
         })
