@@ -5,8 +5,11 @@ class Location(models.Model):
     GeoLoc = models.CharField(primary_key=True, max_length=10)
 
 class Resource(models.Model):
+    class Meta:
+        unique_together = (('TailNumber', 'MDS', 'GeoLoc'),)
     ResourceID = models.AutoField(primary_key=True)
     TailNumber = models.CharField(max_length=10)
+    MDS = models.CharField(max_length=10, default="")
     GeoLoc = models.CharField(max_length=10)
 
 class PlaneMaintenance(models.Model):
