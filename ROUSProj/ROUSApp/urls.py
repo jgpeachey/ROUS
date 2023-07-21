@@ -79,6 +79,6 @@ urlpatterns = [
 
     path('calendar/partmaintenance/<int:pk1>/', views.CalendarPartMaintenanceView.as_view(), name='calendar-part-maintenance'),
 
-    path('resource/<str:pk1>/', views.IndividualResourceView.as_view(), name='resource-tail'),
+    path('resource/<str:pk1>/<str:pk2>/', views.IndividualResourceView.as_view(), name='resource-tail'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -342,17 +342,17 @@ class CalendarListByGeoLoc(generics.ListAPIView):
         return Calendar.objects.filter(GeoLoc=geoloc)
 
 class IndividualResourceView(APIView):
-    def get(self, request, pk1):
+    def get(self, request, pk1, pk2):
         try:
-            obj = Resource.objects.get(TailNumber=pk1)
+            obj = Resource.objects.get(TailNumber=pk1, GeoLoc=pk2)
         except Resource.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         serializer = ResourceSerializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    def patch(self, request, pk1):
+    def patch(self, request, pk1, pk2):
         try:
-            obj = Resource.objects.get(TailNumber=pk1)
+            obj = Resource.objects.get(TailNumber=pk1, GeoLoc=pk2)
         except Resource.DoesNotExist:
             msg = {"msg": "not found"}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
