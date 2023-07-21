@@ -320,6 +320,8 @@ document.addEventListener('DOMContentLoaded', function () {
               else {
                 let tailNumberGet = selectedOption.textContent;
                 let resourceNum = selectedOption.value;
+                console.log('rescoure test: ' + resourceNum);
+                console.log('textcontent test: ' + tailNumberGet);
 
                 // the other methods for parts and calendar data
                 if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
@@ -607,12 +609,6 @@ document.addEventListener('DOMContentLoaded', function () {
             let eqp = event.extendedProps.maintenance.EQP_ID;
             let partsn = event.extendedProps.maintenance.PartSN;
             let partnum = event.extendedProps.maintenance.PartNum;
-            if (updatedTitle != event.extendedProps.title || updatedStart != event.extendedProps.start || updatedEnd != event.extendedProps.end) {
-              console.log("true");
-            }
-            else {
-              console.log("false");
-            }
 
             if (event.extendedProps.PartMaintenanceID == 0) {
 
@@ -626,6 +622,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonText: "Cancel"
               }).then((result) => {
                 if (result.isConfirmed) {
+                  if (updatedTitle != event.extendedProps.title || updatedStart != event.extendedProps.start || updatedEnd != event.extendedProps.end) {
+                    fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
+                      method: 'PATCH',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        title: updatedTitle,
+                        start: updatedStart,
+                        end: updatedEnd
+                      })
+                    })
+                      .then(function (response) {
+                        // Check if the update was successful
+                        if (response.ok) {
+                          console.log('Event updated in the database.');
+                        } else {
+                          console.error('Failed to update event in the database.');
+                        }
+                      })
+                      .catch(function (error) {
+                        console.error('Error updating event:', error);
+                      });
+                  }
+
                   fetch(baseUrl + 'plane-maintenance/' + planeSN + '/' + mds + '/' + jst + '/', {
                     method: 'PATCH',
                     headers: {
@@ -705,6 +726,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonText: "Cancel"
               }).then((result) => {
                 if (result.isConfirmed) {
+                  if (updatedTitle != event.extendedProps.title || updatedStart != event.extendedProps.start || updatedEnd != event.extendedProps.end) {
+                    fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
+                      method: 'PATCH',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        title: updatedTitle,
+                        start: updatedStart,
+                        end: updatedEnd
+                      })
+                    })
+                      .then(function (response) {
+                        // Check if the update was successful
+                        if (response.ok) {
+                          console.log('Event updated in the database.');
+                        } else {
+                          console.error('Failed to update event in the database.');
+                        }
+                      })
+                      .catch(function (error) {
+                        console.error('Error updating event:', error);
+                      });
+                  }
                   fetch(baseUrl + 'part-maintenance/' + planeSN + '/' + mds + '/' + eqp + '/' + partsn + '/' + partnum + '/', {
                     method: 'PATCH',
                     headers: {
