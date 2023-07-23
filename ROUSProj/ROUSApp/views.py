@@ -19,6 +19,9 @@ def calendar(request):
 def location(request):
     return render(request, 'location.html')
 
+def ScheduleHelper(request):
+    return render(request, 'ScheduleHelper.html')
+
 class PlaneListView(APIView):
     def get(self, request):
         obj = PlaneData.objects.all()

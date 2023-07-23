@@ -22,6 +22,7 @@ urlpatterns = [
     path('location.html', views.location, name='location'),
     path('calendar.html', views.calendar, name='calendar'),
     path('fileupload.html', views.fileupload, name='fileupload'),
+    path('ScheduleHelper.html', views.ScheduleHelper, name='ScheduleHelper'),
 
     # get and post plane data list
     path("plane-data/", views.PlaneListView.as_view(), name='planes'),
