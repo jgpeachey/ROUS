@@ -672,9 +672,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         editForm.style.display = 'none';
 
                         //updates the title, start and end.
-                        event.title = updatedTitle;
-                        event.start = updatedStart;
-                        event.end = updatedEnd;
+                        var updatedStarts = new Date(updatedStart);
+                        var updatedEnds = new Date(updatedEnd);
+                        updatedStarts.setDate(updatedStarts.getDate() + 1);
+                        updatedEnds.setDate(updatedEnds.getDate() + 1);
+                        var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+                        let stringStart = updatedStarts.toLocaleString('en-US', options);
+                        let stringEnd = updatedEnds.toLocaleString('en-US', options);
 
                         //update it to the current calendar view
                         event.extendedProps.maintenance.Narrative = updatedNarrative;
@@ -682,11 +686,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         event.extendedProps.maintenance.Freq = updatedFreq;
                         event.extendedProps.maintenance.Type = updatedType;
                         event.extendedProps.maintenance.TFrame = updatedTFrame;
+                        event.title = updatedTitle;
 
+                        //set the new title
+                        document.getElementById('eventTitle').innerHTML = updatedTitle;
                         //set the new text displyed to the current data.
                         document.getElementById('eventMaintenance').innerHTML =
-                          'Start: ' + updatedStart.toDateString() + '<br>' +
-                          'End: ' + updatedEnd.toDateString() + '<br>' +
+                          'Start: ' + stringStart + '<br>' +
+                          'End: ' + stringEnd + '<br>' +
                           'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
                           'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
                           'Narrative: ' + updatedNarrative + '<br>' +
@@ -735,7 +742,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonText: "Cancel"
               }).then((result) => {
                 if (result.isConfirmed) {
-                  console.log("title:" + event.title + " start:" + event.start.toISOString().substring(0, 10) + " new start:" + updatedStart);
                   if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
                     fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
                       method: 'PATCH',
@@ -789,15 +795,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         editForm.style.display = 'none';
 
                         //updates the title, start and end.
-                        var dayOfWeek = updatedStart.toLocaleString('en-us', { weekday: 'short' }); // e.g., Mon
-                        var month = updatedStart.toLocaleString('en-us', { month: 'short' }); // e.g., Jul
-                        var day = updatedStart.getDate(); // e.g., 24
-                        var year = updatedStart.getFullYear(); // e.g., 2023
-
-
-
-                        stringStart = dayOfWeek + ' ' + month + ' ' + day + ' ' + year;
-                        //stringEnd = 
+                        var updatedStarts = new Date(updatedStart);
+                        var updatedEnds = new Date(updatedEnd);
+                        updatedStarts.setDate(updatedStarts.getDate() + 1);
+                        updatedEnds.setDate(updatedEnds.getDate() + 1);
+                        var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+                        let stringStart = updatedStarts.toLocaleString('en-US', options);
+                        let stringEnd = updatedEnds.toLocaleString('en-US', options);
 
                         //update it to the current calendar view
                         event.extendedProps.maintenance.Narrative = updatedNarrative;
@@ -810,8 +814,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         event.extendedProps.maintenance.PartNum = updatedPartNum;
                         event.extendedProps.maintenance.JST = updatedJST;
                         event.extendedProps.maintenance.WUC_LCN = updatedWUC;
+                        event.title = updatedTitle;
 
-
+                        //set the new title
+                        document.getElementById('eventTitle').innerHTML = updatedTitle;
                         //set the new text displyed to the current data.
                         document.getElementById('eventMaintenance').innerHTML =
                           'Start: ' + stringStart + '<br>' +
