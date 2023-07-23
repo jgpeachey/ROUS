@@ -622,7 +622,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonText: "Cancel"
               }).then((result) => {
                 if (result.isConfirmed) {
-                  if (updatedTitle != event.extendedProps.title || updatedStart != event.extendedProps.start || updatedEnd != event.extendedProps.end) {
+                  console.log("title:" + event.title + " start:" + event.start.toISOString().substring(0, 10) + " new start:" + updatedStart);
+                  if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
                     fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
                       method: 'PATCH',
                       headers: {
@@ -637,6 +638,9 @@ document.addEventListener('DOMContentLoaded', function () {
                       .then(function (response) {
                         // Check if the update was successful
                         if (response.ok) {
+                          event.title = updatedTitle;
+                          event.start = updatedStart;
+                          event.end = updatedEnd;
                           console.log('Event updated in the database.');
                         } else {
                           console.error('Failed to update event in the database.');
@@ -667,7 +671,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         // removes the editfrom data from being displayed
                         editForm.style.display = 'none';
 
-                        //udapdate it to the current calendar view
+                        //updates the title, start and end.
+                        event.title = updatedTitle;
+                        event.start = updatedStart;
+                        event.end = updatedEnd;
+
+                        //update it to the current calendar view
                         event.extendedProps.maintenance.Narrative = updatedNarrative;
                         event.extendedProps.maintenance.TimeRemain = updatedTR;
                         event.extendedProps.maintenance.Freq = updatedFreq;
@@ -676,8 +685,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         //set the new text displyed to the current data.
                         document.getElementById('eventMaintenance').innerHTML =
-                          'Start: ' + event.start.toDateString() + '<br>' +
-                          'End: ' + event.end.toDateString() + '<br>' +
+                          'Start: ' + updatedStart.toDateString() + '<br>' +
+                          'End: ' + updatedEnd.toDateString() + '<br>' +
                           'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
                           'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
                           'Narrative: ' + updatedNarrative + '<br>' +
@@ -726,7 +735,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonText: "Cancel"
               }).then((result) => {
                 if (result.isConfirmed) {
-                  if (updatedTitle != event.extendedProps.title || updatedStart != event.extendedProps.start || updatedEnd != event.extendedProps.end) {
+                  console.log("title:" + event.title + " start:" + event.start.toISOString().substring(0, 10) + " new start:" + updatedStart);
+                  if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
                     fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
                       method: 'PATCH',
                       headers: {
@@ -741,6 +751,9 @@ document.addEventListener('DOMContentLoaded', function () {
                       .then(function (response) {
                         // Check if the update was successful
                         if (response.ok) {
+                          event.title = updatedTitle;
+                          event.start = updatedStart;
+                          event.end = updatedEnd;
                           console.log('Event updated in the database.');
                         } else {
                           console.error('Failed to update event in the database.');
@@ -775,6 +788,17 @@ document.addEventListener('DOMContentLoaded', function () {
                         // removes the editfrom data from being displayed
                         editForm.style.display = 'none';
 
+                        //updates the title, start and end.
+                        var dayOfWeek = updatedStart.toLocaleString('en-us', { weekday: 'short' }); // e.g., Mon
+                        var month = updatedStart.toLocaleString('en-us', { month: 'short' }); // e.g., Jul
+                        var day = updatedStart.getDate(); // e.g., 24
+                        var year = updatedStart.getFullYear(); // e.g., 2023
+
+
+
+                        stringStart = dayOfWeek + ' ' + month + ' ' + day + ' ' + year;
+                        //stringEnd = 
+
                         //update it to the current calendar view
                         event.extendedProps.maintenance.Narrative = updatedNarrative;
                         event.extendedProps.maintenance.TimeRemain = updatedTR;
@@ -790,8 +814,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         //set the new text displyed to the current data.
                         document.getElementById('eventMaintenance').innerHTML =
-                          'Start: ' + event.start.toDateString() + '<br>' +
-                          'End: ' + event.end.toDateString() + '<br>' +
+                          'Start: ' + stringStart + '<br>' +
+                          'End: ' + stringEnd + '<br>' +
                           'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
                           'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
                           'Narrative: ' + updatedNarrative + '<br>' +

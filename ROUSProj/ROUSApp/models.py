@@ -19,7 +19,7 @@ class PlaneMaintenance(models.Model):
     CrntTime = models.FloatField(null=True, blank=True, default=0.0)
     TimeRemain = models.FloatField(null=True, blank=True, default=0.0)
     DueTime = models.FloatField(null=True, blank=True, default=0.0)
-    DueDate = models.DateField(null=True)
+    #DueDate = models.DateField(null=True)
     Freq = models.SmallIntegerField(default=0)
     Type = models.CharField(max_length=1)
     JST = models.IntegerField(default=0)
@@ -64,8 +64,8 @@ class PlaneData(models.Model):
     PlaneSN = models.CharField(max_length=10, primary_key=True)
     GeoLoc = models.CharField(max_length=10)
     MDS = models.CharField(max_length=10)
-    WUC_LCN = models.CharField(max_length=14)
-    EQP_ID = models.CharField(max_length=5)
+    #WUC_LCN = models.CharField(max_length=14)
+    #EQP_ID = models.CharField(max_length=5)
     TailNumber = models.CharField(max_length=10)
 
 
