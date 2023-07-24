@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
               var currPlaneSN = document.getElementById('currentplaneSN').value;
               var planeMDS = document.getElementById('currentMDS').value;
               var planeTailNum = document.getElementById('currentTail').value;
+              //parts values
               var partPlaneSN = document.getElementById('partPlaneSNInput').value;
               var partMDS = document.getElementById('partMDSInput').value;
               var equipmentID = document.getElementById('equipmentIDInput').value;
@@ -119,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
               var partJustification = document.getElementById('partJustificationInput').value;
               var partTimeFrame = document.getElementById('partTimeFrameInput').value;
               var partEngineFlight = document.getElementById('partEngineFlightInput').value;
+              // plane maintenance data
               var planeSN = document.getElementById('planeSNInput').value;
               var mds = document.getElementById('mdsInput').value;
               var narrative = document.getElementById('narrativeInput').value;
@@ -138,25 +140,80 @@ document.addEventListener('DOMContentLoaded', function () {
               const dropdown = document.getElementById('eventDropdown');
               const selectedOption = dropdown.options[dropdown.selectedIndex];
 
+              const planeInputIds = ['currentplaneSN', 'currentMDS', 'currentTail'];
+              const partsInputIds = ['partPlaneSNInput', 'partMDSInput', 'equipmentIDInput', 'partSerialNumberInput', 'partNumberInput', 'partNarrativeInput', 'wucLcnInput', 'catNumberInput', 'partCurrentTimeInput', 'partTimeRemainingInput', 'partDueTimeInput', 'partDueDateInput', 'partFrequencyInput', 'partTypeInput', 'partJustificationInput', 'partTimeFrameInput', 'partEngineFlightInput'];
+              const maintInputIds = ['planeSNInput', 'mdsInput', 'narrativeInput', 'currentTimeInput', 'timeRemainingInput', 'dueTimeInput', 'frequencyInput', 'typeInput', 'justificationInput', 'timeFrameInput', 'engineFlightInput'];
+              let isAnyInputEmpty = false;
               if (selectedOption.value === "other") {
                 if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
-
+                  const completeID = basicInputIds + planeInputIds + partsInputIds;
+                  for (const id of completeID) {
+                    const input = document.getElementById(id);
+                    const value = input.value.trim();
+                    if (value === "") {
+                      // If the input is empty, add the red border
+                      input.style.borderColor = "red";
+                      isAnyInputEmpty = true;
+                    } else {
+                      // If the input is not empty, remove the red border
+                      input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
+                    }
+                  }
                 }
                 else {
-
-
+                  const completeID = basicInputIds + planeInputIds + maintInputIds;
+                  for (const id of completeID) {
+                    const input = document.getElementById(id);
+                    const value = input.value.trim();
+                    if (value === "") {
+                      // If the input is empty, add the red border
+                      input.style.borderColor = "red";
+                      isAnyInputEmpty = true;
+                    } else {
+                      // If the input is not empty, remove the red border
+                      input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
+                    }
+                  }
                 }
               }
               else {
                 if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
-
+                  const completeID = basicInputIds + partsInputIds;
+                  for (const id of completeID) {
+                    const input = document.getElementById(id);
+                    const value = input.value.trim();
+                    if (value === "") {
+                      // If the input is empty, add the red border
+                      input.style.borderColor = "red";
+                      isAnyInputEmpty = true;
+                    } else {
+                      // If the input is not empty, remove the red border
+                      input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
+                    }
+                  }
                 }
                 else {
+                  const completeID = basicInputIds + maintInputIds;
+                  for (const id of completeID) {
+                    const input = document.getElementById(id);
+                    const value = input.value.trim();
+                    if (value === "") {
+                      // If the input is empty, add the red border
+                      input.style.borderColor = "red";
+                      isAnyInputEmpty = true;
+                    } else {
+                      // If the input is not empty, remove the red border
+                      input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
+                    }
+                  }
+
+
                 }
               }
 
 
-              if (true === selectedOption.value) { }
+              if (isAnyInputEmpty) { }
+              else { }
               if (selectedOption.value === "other") {
 
 
