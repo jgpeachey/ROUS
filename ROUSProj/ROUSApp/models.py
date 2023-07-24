@@ -19,13 +19,14 @@ class PlaneMaintenance(models.Model):
     CrntTime = models.FloatField(null=True, blank=True, default=0.0)
     TimeRemain = models.FloatField(null=True, blank=True, default=0.0)
     DueTime = models.FloatField(null=True, blank=True, default=0.0)
-    DueDate = models.DateField(null=True)
+    # DueDate = models.DateField(null=True)
     Freq = models.SmallIntegerField(default=0)
     Type = models.CharField(max_length=1)
     JST = models.IntegerField(default=0)
     TFrame = models.SmallIntegerField(default=0)
     E_F = models.CharField(max_length=10)
     title = models.TextField(blank=True)
+    # Scheduled = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (('PlaneSN', 'MDS', 'title'),)
@@ -53,6 +54,7 @@ class PartMaintenance(models.Model):
     TFrame = models.SmallIntegerField(default=0)
     E_F = models.CharField(max_length=10)
     title = models.TextField(blank=True)
+    # Scheduled = models.BooleanField(default=False)
     class Meta:
         unique_together = (('PlaneSN', 'MDS', 'title'),)
 
@@ -64,8 +66,8 @@ class PlaneData(models.Model):
     PlaneSN = models.CharField(max_length=10, primary_key=True)
     GeoLoc = models.CharField(max_length=10)
     MDS = models.CharField(max_length=10)
-    WUC_LCN = models.CharField(max_length=14)
-    EQP_ID = models.CharField(max_length=5)
+    # WUC_LCN = models.CharField(max_length=14)
+    # EQP_ID = models.CharField(max_length=5)
     TailNumber = models.CharField(max_length=10)
 
 

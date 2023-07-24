@@ -1,16 +1,16 @@
-import { passgeoloc } from './main.js'
+//import { passgeoloc } from './main.js'
 
 let base = 'http://127.0.0.1:8000/';
 
 // waits until page has loaded to make changes
 window.onload = () => {
     const selectedGeoLoc = urlParams.get('geoloc');
-    loadTableData(selectedGeoLoc);
+    loadTable(selectedGeoLoc);
 }
 
 async function loadTable(selectedGeoLoc) {
     // gets all planes from current GeoLoc
-    let tailNums = await getTailNums(selectedGeoLoc);
+    const tailNums = await getTailNums(selectedGeoLoc);
 
     // create map for their respective maintenances
     var planeMap = new Map();
@@ -18,8 +18,8 @@ async function loadTable(selectedGeoLoc) {
 
     // gets all maintenances and adds them to their respective map with key = TailNumber and value = array of maintenance objects
     for (let plane of tailNums) {
-        let planeM = await getPlaneMaintenances(plane.PlaneSN, plane.MDS);
-        let partM = await getPartMaintenances(plane.PlaneSN, plane.MDS);
+        let planeM = await getPlaneMaintenances(plane.TailNumber);
+        let partM = await getPartMaintenances(plane.TailNumber);
         planeMap.set(plane.TailNumber, planeM);
         partMap.set(plane.TailNumber, partM);
     }
@@ -31,7 +31,7 @@ async function loadTable(selectedGeoLoc) {
 }
 
 // add Tail Numbers as table heads and Part/Plane as table sub heads for each plane
-async function loadTableHead(tailNums) {
+function loadTableHead(tailNums) {
     // get table headings from doc
     const tableHead = document.getElementById('TailNumbers');
     const tableSubHead = document.getElementById('Plane_Part');
@@ -48,6 +48,16 @@ async function loadTableHead(tailNums) {
     // add in all headings
     tableHead.innerHTML = headHtml;
     tableSubHead.innerHTML = subHeadHtml;
+}
+
+// uses GET api call to get all planes from selected GeoLoc
+ async function getTailNums (selectedGeoLoc) {
+    return fetch(base + 'resource/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
+    .then(response => response.json())
+    .then(data => {
+        return data;
+    })
+    .catch(error => console.warn(error));
 }
 
 // add plane/part maintenance to the table data under their designated plane
@@ -67,12 +77,14 @@ async function loadTableData(planeMap, partMap, tailNums) {
             length = partMap.get(plane.TailNumber).length;
         }
     }
+    console.log(planeMap);
+    console.log(partMap);
 
     // create table of size length
     for (let i = 0; i < length; i++) {
+        // create table row
+        bodyHtml += '<tr>'
         for (let plane of tailNums) {
-            // create table row
-            bodyHtml += '<tr>'
             // if able to access planeMaintenance, add planeMaintenance to table with id = PlaneMaintenanceID
             try {
                 // get planeMaintenance for easy access
@@ -95,12 +107,12 @@ async function loadTableData(planeMap, partMap, tailNums) {
             try {
                 // get partMaintenance for easy access
                 var maint = partMap.get(plane.TailNumber)[i];
-                bodyHtml += '<td class="maintenance-item" data-type="part" data-maintenance="'+maint.PartMaintenanceID+'">Equipment ID:'+maint.EQP-ID+'</td>';
-                bodyHtml += 'Part Serial Number: '+maint.PartSN+'<br>';
-                bodyHtml += 'Part Number: '+maint.PartNum+'<br>';
-                bodyHtml += 'WUC/LCN: '+maint.WUC_LCN+'<br>';
-                bodyHtml += 'Category Number: '+maint.CatNum+'<br>';
-                bodyHtml += 'Current Time: '+maint.CrntTime+'<br>';
+                bodyHtml += '<td class="maintenance-item" data-type="plane" data-maintenance="'+maint.PlaneMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
+                bodyHtml += 'Equipment ID:'+maint.EQP_ID+'<br>';
+                bodyHtml += 'Part Serial Number:'+maint.PartSN+'<br>';
+                bodyHtml += 'Part Number:'+maint.PartNum+'<br>';
+                bodyHtml += 'WUC/LCN:'+maint.WUC_LCN+'<br>';
+                bodyHtml += 'Category Number:'+maint.CatNum+'<br>';
                 bodyHtml += 'Time Remaining:'+maint.TimeRemain+'<br>';
                 bodyHtml += 'Due Time:'+maint.DueTime+'<br>';
                 bodyHtml += 'Frequency:'+maint.Freq+'<br>';
@@ -114,30 +126,42 @@ async function loadTableData(planeMap, partMap, tailNums) {
             catch {
                 bodyHtml += '<td></td>'
             }
-            // end table row
-            bodyHtml += '</tr>'
         }
+        // end table row
+        bodyHtml += '</tr>'
     }
+
+    tableBody.innerHTML = bodyHtml;
 }
 
-// uses GET api call to get all planes from selected GeoLoc
- async function getTailNums (selectedGeoLoc) {
-    fetch(base + 'resource/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
+// uses GET api call to get all plane maintenances from selected plane
+async function getPlaneMaintenances(TailNumber) {
+    return fetch(base + 'plane-data/' + TailNumber + '/')
     .then(response => response.json())
-    .then(data => {
-        return data;
+    .then(pdata => {
+        return fetch(base + 'plane-maintenance/' + pdata.PlaneSN + '/' + pdata.MDS + '/')
+        .then(response => response.json())
+        .then(data => {
+            return data;
+        })
+        .catch(error => console.warn(error));
     })
     .catch(error => console.warn(error));
 }
 
-// uses GET api call to get all plane maintenances from selected plane
-async function getPlaneMaintenances(PlaneSN, MDS) {
-
-}
-
 // uses GET api call to get all part maintenances from selected plane
-async function getPartMaintenances(PlaneSN, MDS) {
-
+async function getPartMaintenances(TailNumber) {
+    return fetch(base + 'plane-data/' + TailNumber + '/')
+    .then(response => response.json())
+    .then(pdata => {
+        return fetch(base + 'part-maintenance/' + pdata.PlaneSN + '/' + pdata.MDS + '/')
+        .then(response => response.json())
+        .then(data => {
+            return data;
+        })
+        .catch(error => console.warn(error));
+    })
+    .catch(error => console.warn(error));
 }
 
 // pops up with calendar event creation when maintenance is clicked on

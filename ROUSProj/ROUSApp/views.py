@@ -68,6 +68,16 @@ class IndividualPlaneData(APIView):
         obj.delete()
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
 
+class IndividualPlaneDataByTailNumber(APIView):
+    def get(self, request, pk1):
+        try:
+            obj = PlaneData.objects.get(TailNumber=pk1)
+        except PlaneData.DoesNotExist:
+            msg = {"msg": "not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        serializer = PlaneDataSerializer(obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class CalendarListView(APIView):
     def get(self, request):
         obj = Calendar.objects.all()
@@ -255,6 +265,22 @@ class IndividualPartMaintenanceView(APIView):
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         obj.delete()
         return Response({"msg": "it's deleted"}, status=status.HTTP_204_NO_CONTENT)
+
+class AircraftPartMaintenanceListView(generics.ListAPIView):
+    serializer_class = PartMaintenanceSerializer
+
+    def get_queryset(self):
+        planesn = self.kwargs['PlaneSN']
+        mds = self.kwargs['MDS']
+        return PartMaintenance.objects.filter(PlaneSN=planesn, MDS=mds)
+
+class AircraftPlaneMaintenanceListView(generics.ListAPIView):
+    serializer_class = PlaneMaintenanceSerializer
+
+    def get_queryset(self):
+        planesn = self.kwargs['PlaneSN']
+        mds = self.kwargs['MDS']
+        return PlaneMaintenance.objects.filter(PlaneSN=planesn, MDS=mds)
 
 class CalendarPartMaintenanceView(APIView):
     def get(self, request, pk1):
