@@ -46,7 +46,7 @@
     border-radius: 4px;
 }
 
-.nav-links a:hover{
+.nav-links a:hover {
     cursor: pointer;
 }
 
@@ -114,6 +114,13 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.boxcontent {
+    flex: 1;
+    display: flex;
+    background-color: #242435;
+}
+
 
 .inputbut {
     font-size: 20px;
@@ -379,7 +386,8 @@ input[type="text"] {
     min-width: max-content;
 }
 
-.MaintenanceData, .PlaneHead {
+.MaintenanceData,
+.PlaneHead {
     border: 1px solid #cccccc;
     background: white;
     padding: 8px;
