@@ -88,7 +88,7 @@ async function loadTableData(planeMap, partMap, tailNums) {
             try {
                 // get planeMaintenance for easy access
                 var maint = planeMap.get(plane.TailNumber)[i];
-                bodyHtml += '<td class="maintenance-item" data-type="plane" data-maintenance="'+maint.PlaneMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
+                bodyHtml += '<td onclick="getClickedTableCell(this)" data-tail="'+plane.TailNumber+'" data-resource="'+plane.ResourceID+'" data-type="plane" data-maintenance="'+maint.PlaneMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
                 bodyHtml += 'Time Remaining:'+maint.TimeRemain+'<br>';
                 bodyHtml += 'Due Time:'+maint.DueTime+'<br>';
                 bodyHtml += 'Frequency:'+maint.Freq+'<br>';
@@ -106,7 +106,7 @@ async function loadTableData(planeMap, partMap, tailNums) {
             try {
                 // get partMaintenance for easy access
                 var maint = partMap.get(plane.TailNumber)[i];
-                bodyHtml += '<td class="maintenance-item" data-type="plane" data-maintenance="'+maint.PlaneMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
+                bodyHtml += '<td onclick="getClickedTableCell(this)" class="maintenance-item" data-type="part" data-maintenance="'+maint.PartMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
                 bodyHtml += 'Equipment ID:'+maint.EQP_ID+'<br>';
                 bodyHtml += 'Part Serial Number:'+maint.PartSN+'<br>';
                 bodyHtml += 'Part Number:'+maint.PartNum+'<br>';
@@ -164,6 +164,17 @@ async function getPartMaintenances(TailNumber) {
 }
 
 // pops up with calendar event creation when maintenance is clicked on
-async function createEvent(maintenanceType, maintenanceID) {
-    
+async function createEvent(cellData) {
+
+}
+
+function getClickedTableCell(div) {
+    let cellData = {
+        TailNumber:div.getAttribute("data-tail"),
+        MaintenanceType:div.getAttribute("data-type"),
+        MaintenanceID:div.getAttribute("data-maintenance"),
+        ResourceID:div.getAttribute("data-resource")
+    };
+
+    createEvent(cellData);
 }
