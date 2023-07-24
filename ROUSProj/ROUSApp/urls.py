@@ -75,4 +75,6 @@ urlpatterns = [
 
     path('resource/<str:pk1>/', views.IndividualResourceView.as_view(), name='resource-tail'),
 
+    path('resource/<str:pk1>/<str:pk2>', views.IndividualResourceViewByGeoLoc.as_view(), name='resource-tail-loc'),
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

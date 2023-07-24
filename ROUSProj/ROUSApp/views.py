@@ -368,3 +368,13 @@ class IndividualLocationResourceView(generics.ListAPIView):
     def get_queryset(self):
         geoloc = self.kwargs['GeoLoc']
         return Resource.objects.filter(GeoLoc=geoloc)
+
+class IndividualResourceViewByGeoLoc(APIView):
+    def get(self, request, pk1, pk2):
+        try:
+            obj = Resource.objects.get(TailNumber=pk1, GeoLoc=pk2)
+        except Resource.DoesNotExist:
+            msg = {"msg": "not found"}
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+        serializer = ResourceSerializer(obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
