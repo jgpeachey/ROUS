@@ -77,8 +77,6 @@ async function loadTableData(planeMap, partMap, tailNums) {
             length = partMap.get(plane.TailNumber).length;
         }
     }
-    console.log(planeMap);
-    console.log(partMap);
 
     // create table of size length
     for (let i = 0; i < length; i++) {
