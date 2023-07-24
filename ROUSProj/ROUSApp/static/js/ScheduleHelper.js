@@ -42,8 +42,8 @@ function loadTableHead(tailNums) {
 
     // create headings for each plane and add to future innerHTML strings
     for (let plane of tailNums) {
-        headHtml += '<th colspan="2">'+plane.TailNumber+'</th>';
-        subHeadHtml += '<th>Plane</th><th>Part</th>';
+        headHtml += '<th colspan="2" class="PlaneHead">'+plane.TailNumber+'</th>';
+        subHeadHtml += '<th class="PlaneHead">Plane</th><th class="PlaneHead">Part</th>';
     }
 
     // add in all headings
@@ -88,7 +88,7 @@ async function loadTableData(planeMap, partMap, tailNums) {
             try {
                 // get planeMaintenance for easy access
                 var maint = planeMap.get(plane.TailNumber)[i];
-                bodyHtml += '<td onclick="getClickedTableCell(this)" data-tail="'+plane.TailNumber+'" data-resource="'+plane.ResourceID+'" data-type="plane" data-maintenance="'+maint.PlaneMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
+                bodyHtml += '<td class="MaintenanceData" onclick="getClickedTableCell(this)" data-tail="'+plane.TailNumber+'" data-resource="'+plane.ResourceID+'" data-type="plane" data-maintenance="'+maint.PlaneMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
                 bodyHtml += 'Time Remaining:'+maint.TimeRemain+'<br>';
                 bodyHtml += 'Due Time:'+maint.DueTime+'<br>';
                 bodyHtml += 'Frequency:'+maint.Freq+'<br>';
@@ -100,13 +100,13 @@ async function loadTableData(planeMap, partMap, tailNums) {
             }
             // if no planeMaintenance to access add blank row
             catch {
-                bodyHtml += '<td></td>'
+                bodyHtml += '<td class="MaintenanceData"></td>'
             }
             // if able to access partMaintenance, add partMaintenance to table with id = PartMaintenanceID
             try {
                 // get partMaintenance for easy access
                 var maint = partMap.get(plane.TailNumber)[i];
-                bodyHtml += '<td onclick="getClickedTableCell(this)" class="maintenance-item" data-type="part" data-maintenance="'+maint.PartMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
+                bodyHtml += '<td class="MaintenanceData" onclick="getClickedTableCell(this)" class="maintenance-item" data-type="part" data-maintenance="'+maint.PartMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
                 bodyHtml += 'Equipment ID:'+maint.EQP_ID+'<br>';
                 bodyHtml += 'Part Serial Number:'+maint.PartSN+'<br>';
                 bodyHtml += 'Part Number:'+maint.PartNum+'<br>';
@@ -123,7 +123,7 @@ async function loadTableData(planeMap, partMap, tailNums) {
             }
             // if no partMaintenance to access add blank row
             catch {
-                bodyHtml += '<td></td>'
+                bodyHtml += '<td class="MaintenanceData"></td>'
             }
         }
         // end table row
@@ -164,7 +164,7 @@ async function getPartMaintenances(TailNumber) {
 }
 
 // pops up with calendar event creation when maintenance is clicked on
-async function createEvent(cellData) {
+function createEvent(cellData) {
 
 }
 

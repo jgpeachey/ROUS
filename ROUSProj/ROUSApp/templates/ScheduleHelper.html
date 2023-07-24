@@ -31,50 +31,6 @@
 <!--    </script>-->
 </head>
 
-<style>
-
-    .tbl-container {
-        max-width: fit-content;
-        max-height: fit-content;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .tbl-fixed {
-        overflow-x: scroll;
-        overflow-y: scroll;
-        height: fit-content;
-        max-height: 70vh;
-        margin-top: 40px;
-    }
-
-    table {
-        border-collapse: condense;
-        min-width: max-content;
-    }
-
-    td, th {
-        border: 1px solid #cccccc;
-        background: white;
-        padding: 8px;
-    }
-
-    thead {
-        position: sticky;
-        top: 0px;
-        font-weight: bold;
-        text-transform: uppercase;
-        text-align: center;
-        font-size: 16px;
-    }
-
-    td:hover {
-        background: #3492eb;
-        border: 3px solid black;
-    }
-
-</style>
-
 <body>
 
     <header class="header">
@@ -86,9 +42,9 @@
         </nav>
     </header>
 
-    <div class="container tbl-container">
-        <div class="row tbl-fixed">
-            <table class="table-striped table-condensed">
+    <div id="TableDiv1" class="container tbl-container">
+        <div id="TableDiv2" class="row tbl-fixed">
+            <table id="ScheduleTable" class="table-striped table-condensed">
                 <thead id="TailNumberHead">
                     <tr id="TailNumbers">
 
