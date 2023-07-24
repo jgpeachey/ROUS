@@ -600,6 +600,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var updatedFreq = document.getElementById('Freq').value;
             var updatedType = document.getElementById('Type').value;
             var updatedTFrame = document.getElementById('TFrame').value;
+            const inputIds = ['eventTitleInput', 'eventStartInput', 'eventEndInput', 'Narrative', 'TimeRemain', 'Freq', 'Type', 'TFrame'];
 
 
             //search variables
@@ -609,251 +610,300 @@ document.addEventListener('DOMContentLoaded', function () {
             let eqp = event.extendedProps.maintenance.EQP_ID;
             let partsn = event.extendedProps.maintenance.PartSN;
             let partnum = event.extendedProps.maintenance.PartNum;
+            let isAnyInputEmpty = false;
 
-            if (event.extendedProps.PartMaintenanceID == 0) {
+            for (const id of inputIds) {
+              const input = document.getElementById(id);
+              const value = input.value.trim();
+              if (value === "") {
+                // If the input is empty, add the red border
+                input.style.borderColor = "red";
+                isAnyInputEmpty = true;
+              } else {
+                // If the input is not empty, remove the red border
+                input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
+              }
+            }
 
-              // Use Swal to confirm before submitting
+            if (isAnyInputEmpty) {
+
               Swal.fire({
-                title: "Updating Data!",
-                text: "Are you sure you want to submit these changes?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonText: "Yes",
-                cancelButtonText: "Cancel"
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  console.log("title:" + event.title + " start:" + event.start.toISOString().substring(0, 10) + " new start:" + updatedStart);
-                  if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
-                    fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
-                      method: 'PATCH',
-                      headers: {
-                        'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                        title: updatedTitle,
-                        start: updatedStart,
-                        end: updatedEnd
-                      })
-                    })
-                      .then(function (response) {
-                        // Check if the update was successful
-                        if (response.ok) {
-                          event.title = updatedTitle;
-                          event.start = updatedStart;
-                          event.end = updatedEnd;
-                          console.log('Event updated in the database.');
-                        } else {
-                          console.error('Failed to update event in the database.');
-                        }
-                      })
-                      .catch(function (error) {
-                        console.error('Error updating event:', error);
-                      });
-                  }
-
-                  fetch(baseUrl + 'plane-maintenance/' + planeSN + '/' + mds + '/' + jst + '/', {
-                    method: 'PATCH',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      Narrative: updatedNarrative,
-                      TimeRemain: updatedTR,
-                      Freq: updatedFreq,
-                      Type: updatedType,
-                      TFrame: updatedTFrame
-                    })
-                  })
-                    .then(response => {
-                      if (response.ok) {
-                        //updates the calendar with the updated data from the server
-                        calendar.refetchEvents();
-                        // removes the editfrom data from being displayed
-                        editForm.style.display = 'none';
-
-                        //updates the title, start and end.
-                        var updatedStarts = new Date(updatedStart);
-                        var updatedEnds = new Date(updatedEnd);
-                        updatedStarts.setDate(updatedStarts.getDate() + 1);
-                        updatedEnds.setDate(updatedEnds.getDate() + 1);
-                        var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
-                        let stringStart = updatedStarts.toLocaleString('en-US', options);
-                        let stringEnd = updatedEnds.toLocaleString('en-US', options);
-
-                        //update it to the current calendar view
-                        event.extendedProps.maintenance.Narrative = updatedNarrative;
-                        event.extendedProps.maintenance.TimeRemain = updatedTR;
-                        event.extendedProps.maintenance.Freq = updatedFreq;
-                        event.extendedProps.maintenance.Type = updatedType;
-                        event.extendedProps.maintenance.TFrame = updatedTFrame;
-                        event.title = updatedTitle;
-
-                        //set the new title
-                        document.getElementById('eventTitle').innerHTML = updatedTitle;
-                        //set the new text displyed to the current data.
-                        document.getElementById('eventMaintenance').innerHTML =
-                          'Start: ' + stringStart + '<br>' +
-                          'End: ' + stringEnd + '<br>' +
-                          'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
-                          'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
-                          'Narrative: ' + updatedNarrative + '<br>' +
-                          'Time Remaining: ' + updatedTR + '<br>' +
-                          'Frequency: ' + updatedFreq + '<br>' +
-                          'Type: ' + updatedType + '<br>' +
-                          'Justification: ' + event.extendedProps.maintenance.JST + '<br>' +
-                          'Time Frame: ' + updatedTFrame;
-
-                        // Show the original content
-                        document.getElementById('eventTitle').style.display = 'block';
-                        document.getElementById('eventMaintenance').style.display = 'block';
-                        closeButton.style.display = 'block';
-                        editButton.style.display = 'block';
-                      } else {
-                        throw new Error('API call failed');
-                      }
-                    })
-                    .catch(error => {
-                      Swal.fire({
-                        title: "Error",
-                        text: "Failed to submit location: " + error.message,
-                        icon: "error",
-                        confirmButtonText: "OK"
-                      });
-                    });
-                }
+                icon: 'error',
+                title: 'Error',
+                text: "One or many of the input fields was left blank.",
               });
-
             } else {
-              // other updated variables
-              var updatedEQP = document.getElementById('EQP').value;
-              var updatedPartSN = document.getElementById('PartSN').value;
-              var updatedPartNum = document.getElementById('PartNum').value;
-              var updatedJST = document.getElementById('JST').value;
-              var updatedWUC = document.getElementById('WUC').value;
+              if (event.extendedProps.PartMaintenanceID == 0) {
 
-              //PlaneSN, MDS, EQP_ID, PartSN and PartNum
-              // Use Swal to confirm before submitting
-              Swal.fire({
-                title: "Updating Data!",
-                text: "Are you sure you want to submit these changes?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonText: "Yes",
-                cancelButtonText: "Cancel"
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
-                    fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
+                // Use Swal to confirm before submitting
+                Swal.fire({
+                  title: "Updating Data!",
+                  text: "Are you sure you want to submit these changes?",
+                  icon: "question",
+                  showCancelButton: true,
+                  confirmButtonText: "Yes",
+                  cancelButtonText: "Cancel"
+                }).then((result) => {
+                  if (result.isConfirmed) {
+
+                    if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
+                      fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
+                        method: 'PATCH',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          title: updatedTitle,
+                          start: updatedStart,
+                          end: updatedEnd
+                        })
+                      })
+                        .then(function (response) {
+                          // Check if the update was successful
+                          if (response.ok) {
+                            event.title = updatedTitle;
+                            event.start = updatedStart;
+                            event.end = updatedEnd;
+                            console.log('Event updated in the database.');
+                          } else {
+                            console.error('Failed to update event in the database.');
+                          }
+                        })
+                        .catch(function (error) {
+                          console.error('Error updating event:', error);
+                        });
+                    }
+
+                    fetch(baseUrl + 'plane-maintenance/' + planeSN + '/' + mds + '/' + jst + '/', {
                       method: 'PATCH',
                       headers: {
                         'Content-Type': 'application/json'
                       },
                       body: JSON.stringify({
-                        title: updatedTitle,
-                        start: updatedStart,
-                        end: updatedEnd
+                        Narrative: updatedNarrative,
+                        TimeRemain: updatedTR,
+                        Freq: updatedFreq,
+                        Type: updatedType,
+                        TFrame: updatedTFrame
                       })
                     })
-                      .then(function (response) {
-                        // Check if the update was successful
+                      .then(response => {
                         if (response.ok) {
+                          //updates the calendar with the updated data from the server
+                          calendar.refetchEvents();
+                          // removes the editfrom data from being displayed
+                          editForm.style.display = 'none';
+
+                          //updates the title, start and end.
+                          var updatedStarts = new Date(updatedStart);
+                          var updatedEnds = new Date(updatedEnd);
+                          updatedStarts.setDate(updatedStarts.getDate() + 1);
+                          updatedEnds.setDate(updatedEnds.getDate() + 1);
+                          var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+                          let stringStart = updatedStarts.toLocaleString('en-US', options);
+                          let stringEnd = updatedEnds.toLocaleString('en-US', options);
+
+                          //update it to the current calendar view
+                          event.extendedProps.maintenance.Narrative = updatedNarrative;
+                          event.extendedProps.maintenance.TimeRemain = updatedTR;
+                          event.extendedProps.maintenance.Freq = updatedFreq;
+                          event.extendedProps.maintenance.Type = updatedType;
+                          event.extendedProps.maintenance.TFrame = updatedTFrame;
                           event.title = updatedTitle;
-                          event.start = updatedStart;
-                          event.end = updatedEnd;
-                          console.log('Event updated in the database.');
+
+                          //set the new title
+                          document.getElementById('eventTitle').innerHTML = updatedTitle;
+                          //set the new text displyed to the current data.
+                          document.getElementById('eventMaintenance').innerHTML =
+                            'Start: ' + stringStart + '<br>' +
+                            'End: ' + stringEnd + '<br>' +
+                            'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
+                            'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
+                            'Narrative: ' + updatedNarrative + '<br>' +
+                            'Time Remaining: ' + updatedTR + '<br>' +
+                            'Frequency: ' + updatedFreq + '<br>' +
+                            'Type: ' + updatedType + '<br>' +
+                            'Justification: ' + event.extendedProps.maintenance.JST + '<br>' +
+                            'Time Frame: ' + updatedTFrame;
+
+                          // Show the original content
+                          document.getElementById('eventTitle').style.display = 'block';
+                          document.getElementById('eventMaintenance').style.display = 'block';
+                          closeButton.style.display = 'block';
+                          editButton.style.display = 'block';
                         } else {
-                          console.error('Failed to update event in the database.');
+                          throw new Error('API call failed');
                         }
                       })
-                      .catch(function (error) {
-                        console.error('Error updating event:', error);
+                      .catch(error => {
+                        Swal.fire({
+                          title: "Error",
+                          text: "Failed to submit location: " + error.message,
+                          icon: "error",
+                          confirmButtonText: "OK"
+                        });
                       });
                   }
-                  fetch(baseUrl + 'part-maintenance/' + planeSN + '/' + mds + '/' + eqp + '/' + partsn + '/' + partnum + '/', {
-                    method: 'PATCH',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      Narrative: updatedNarrative,
-                      TimeRemain: updatedTR,
-                      Freq: updatedFreq,
-                      Type: updatedType,
-                      TFrame: updatedTFrame,
-                      EQP_ID: updatedEQP,
-                      PartSN: updatedPartSN,
-                      PartNum: updatedPartNum,
-                      JST: updatedJST,
-                      WUC_LCN: updatedWUC
-                    })
-                  })
-                    .then(response => {
-                      if (response.ok) {
-                        //updates the calendar with the updated data from the server
-                        calendar.refetchEvents();
-                        // removes the editfrom data from being displayed
-                        editForm.style.display = 'none';
+                });
 
-                        //updates the title, start and end.
-                        var updatedStarts = new Date(updatedStart);
-                        var updatedEnds = new Date(updatedEnd);
-                        updatedStarts.setDate(updatedStarts.getDate() + 1);
-                        updatedEnds.setDate(updatedEnds.getDate() + 1);
-                        var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
-                        let stringStart = updatedStarts.toLocaleString('en-US', options);
-                        let stringEnd = updatedEnds.toLocaleString('en-US', options);
+              } else {
 
-                        //update it to the current calendar view
-                        event.extendedProps.maintenance.Narrative = updatedNarrative;
-                        event.extendedProps.maintenance.TimeRemain = updatedTR;
-                        event.extendedProps.maintenance.Freq = updatedFreq;
-                        event.extendedProps.maintenance.Type = updatedType;
-                        event.extendedProps.maintenance.TFrame = updatedTFrame;
-                        event.extendedProps.maintenance.EQP_ID = updatedEQP;
-                        event.extendedProps.maintenance.PartSN = updatedPartSN;
-                        event.extendedProps.maintenance.PartNum = updatedPartNum;
-                        event.extendedProps.maintenance.JST = updatedJST;
-                        event.extendedProps.maintenance.WUC_LCN = updatedWUC;
-                        event.title = updatedTitle;
+                // other updated variables
+                var updatedEQP = document.getElementById('EQP').value;
+                var updatedPartSN = document.getElementById('PartSN').value;
+                var updatedPartNum = document.getElementById('PartNum').value;
+                var updatedJST = document.getElementById('JST').value;
+                var updatedWUC = document.getElementById('WUC').value;
 
-                        //set the new title
-                        document.getElementById('eventTitle').innerHTML = updatedTitle;
-                        //set the new text displyed to the current data.
-                        document.getElementById('eventMaintenance').innerHTML =
-                          'Start: ' + stringStart + '<br>' +
-                          'End: ' + stringEnd + '<br>' +
-                          'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
-                          'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
-                          'Narrative: ' + updatedNarrative + '<br>' +
-                          'Time Remaining: ' + updatedTR + '<br>' +
-                          'Frequency: ' + updatedFreq + '<br>' +
-                          'Type: ' + updatedType + '<br>' +
-                          'Justification: ' + updatedJST + '<br>' +
-                          'Time Frame: ' + updatedTFrame + '<br>' +
-                          'Equipment ID: ' + updatedEQP + '<br>' +
-                          'Part Serial Number: ' + updatedPartSN + '<br>' +
-                          'Part Number: ' + updatedPartNum + '<br>' +
-                          'Work Unit Code/ Logistics Control Number: ' + updatedWUC;
+                const listIds = ['EQP', 'PartSN', 'PartNum', 'JST', 'WUC'];
 
-                        // Show the original content
-                        document.getElementById('eventTitle').style.display = 'block';
-                        document.getElementById('eventMaintenance').style.display = 'block';
-                        closeButton.style.display = 'block';
-                        editButton.style.display = 'block';
-                      } else {
-                        throw new Error('API call failed');
-                      }
-                    })
-                    .catch(error => {
-                      Swal.fire({
-                        title: "Error",
-                        text: "Failed to submit location: " + error.message,
-                        icon: "error",
-                        confirmButtonText: "OK"
-                      });
-                    });
+                let checkInput = false;
+                for (const ids of listIds) {
+                  const input = document.getElementById(ids);
+                  const value = input.value.trim();
+                  if (value === "") {
+                    // If the input is empty, add the red border
+                    input.style.borderColor = "red";
+                    checkInput = true;
+                  } else {
+                    // If the input is not empty, remove the red border
+                    input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
+                  }
                 }
-              });
+
+                if (checkInput) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: "One or many of the input fields was left blank.",
+                  });
+
+                } else {
+                  //PlaneSN, MDS, EQP_ID, PartSN and PartNum
+                  // Use Swal to confirm before submitting
+                  Swal.fire({
+                    title: "Updating Data!",
+                    text: "Are you sure you want to submit these changes?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "Cancel"
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
+                        fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
+                          method: 'PATCH',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            title: updatedTitle,
+                            start: updatedStart,
+                            end: updatedEnd
+                          })
+                        })
+                          .then(function (response) {
+                            // Check if the update was successful
+                            if (response.ok) {
+                              event.title = updatedTitle;
+                              event.start = updatedStart;
+                              event.end = updatedEnd;
+                              console.log('Event updated in the database.');
+                            } else {
+                              console.error('Failed to update event in the database.');
+                            }
+                          })
+                          .catch(function (error) {
+                            console.error('Error updating event:', error);
+                          });
+                      }
+                      fetch(baseUrl + 'part-maintenance/' + planeSN + '/' + mds + '/' + eqp + '/' + partsn + '/' + partnum + '/', {
+                        method: 'PATCH',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          Narrative: updatedNarrative,
+                          TimeRemain: updatedTR,
+                          Freq: updatedFreq,
+                          Type: updatedType,
+                          TFrame: updatedTFrame,
+                          EQP_ID: updatedEQP,
+                          PartSN: updatedPartSN,
+                          PartNum: updatedPartNum,
+                          JST: updatedJST,
+                          WUC_LCN: updatedWUC
+                        })
+                      })
+                        .then(response => {
+                          if (response.ok) {
+                            //updates the calendar with the updated data from the server
+                            calendar.refetchEvents();
+                            // removes the editfrom data from being displayed
+                            editForm.style.display = 'none';
+
+                            //updates the title, start and end.
+                            var updatedStarts = new Date(updatedStart);
+                            var updatedEnds = new Date(updatedEnd);
+                            updatedStarts.setDate(updatedStarts.getDate() + 1);
+                            updatedEnds.setDate(updatedEnds.getDate() + 1);
+                            var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+                            let stringStart = updatedStarts.toLocaleString('en-US', options);
+                            let stringEnd = updatedEnds.toLocaleString('en-US', options);
+
+                            //update it to the current calendar view
+                            event.extendedProps.maintenance.Narrative = updatedNarrative;
+                            event.extendedProps.maintenance.TimeRemain = updatedTR;
+                            event.extendedProps.maintenance.Freq = updatedFreq;
+                            event.extendedProps.maintenance.Type = updatedType;
+                            event.extendedProps.maintenance.TFrame = updatedTFrame;
+                            event.extendedProps.maintenance.EQP_ID = updatedEQP;
+                            event.extendedProps.maintenance.PartSN = updatedPartSN;
+                            event.extendedProps.maintenance.PartNum = updatedPartNum;
+                            event.extendedProps.maintenance.JST = updatedJST;
+                            event.extendedProps.maintenance.WUC_LCN = updatedWUC;
+                            event.title = updatedTitle;
+
+                            //set the new title
+                            document.getElementById('eventTitle').innerHTML = updatedTitle;
+                            //set the new text displyed to the current data.
+                            document.getElementById('eventMaintenance').innerHTML =
+                              'Start: ' + stringStart + '<br>' +
+                              'End: ' + stringEnd + '<br>' +
+                              'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
+                              'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
+                              'Narrative: ' + updatedNarrative + '<br>' +
+                              'Time Remaining: ' + updatedTR + '<br>' +
+                              'Frequency: ' + updatedFreq + '<br>' +
+                              'Type: ' + updatedType + '<br>' +
+                              'Justification: ' + updatedJST + '<br>' +
+                              'Time Frame: ' + updatedTFrame + '<br>' +
+                              'Equipment ID: ' + updatedEQP + '<br>' +
+                              'Part Serial Number: ' + updatedPartSN + '<br>' +
+                              'Part Number: ' + updatedPartNum + '<br>' +
+                              'Work Unit Code/ Logistics Control Number: ' + updatedWUC;
+
+                            // Show the original content
+                            document.getElementById('eventTitle').style.display = 'block';
+                            document.getElementById('eventMaintenance').style.display = 'block';
+                            closeButton.style.display = 'block';
+                            editButton.style.display = 'block';
+                          } else {
+                            throw new Error('API call failed');
+                          }
+                        })
+                        .catch(error => {
+                          Swal.fire({
+                            title: "Error",
+                            text: "Failed to submit location: " + error.message,
+                            icon: "error",
+                            confirmButtonText: "OK"
+                          });
+                        });
+                    }
+                  });
+                }
+              }
             }
           }
           // Handle cancel button click
