@@ -4,6 +4,7 @@ let base = 'http://127.0.0.1:8000/';
 
 // waits until page has loaded to make changes
 window.onload = () => {
+    const urlParams = new URLSearchParams(window.location.search);
     const selectedGeoLoc = urlParams.get('geoloc');
     loadTable(selectedGeoLoc);
 }

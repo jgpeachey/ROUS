@@ -46,6 +46,10 @@
     border-radius: 4px;
 }
 
+.nav-links a:hover{
+    cursor: pointer;
+}
+
 .nav-links a.current {
     background-color: #ffffff;
     color: #000000;
