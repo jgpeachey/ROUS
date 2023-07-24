@@ -74,7 +74,6 @@ async function postExcel() {
       try {
         const rResponse = await fetch(base + 'resource/' + obj.TailNumber + '/' + obj.GeoLoc + '/');
         const rData = await rResponse.json();
-        console.log(rData);
 
         if (rResponse.ok) {
           const startD = new Date(obj.start);
@@ -187,7 +186,7 @@ async function postExcel() {
               console.error('Second POST request failed');
             }
           }
-        } else if (rResponse.status === 404) {
+        } else {
           const resourceResponse = await fetch(base + 'resource/', {
             method: 'POST',
             headers: {
