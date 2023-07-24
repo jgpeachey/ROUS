@@ -96,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
               var julianDate = document.getElementById('julianInput').value;
               var engineHours = document.getElementById('engineHoursInput').value;
               var flightHours = document.getElementById('flightHoursInput').value;
+              const basicInputIds = ['titleInput', 'startInput', 'endInput', 'julianInput', 'engineHoursInput', 'flightHoursInput'];
 
               // the others values
               var currPlaneSN = document.getElementById('currentplaneSN').value;
@@ -137,6 +138,25 @@ document.addEventListener('DOMContentLoaded', function () {
               const dropdown = document.getElementById('eventDropdown');
               const selectedOption = dropdown.options[dropdown.selectedIndex];
 
+              if (selectedOption.value === "other") {
+                if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
+
+                }
+                else {
+
+
+                }
+              }
+              else {
+                if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
+
+                }
+                else {
+                }
+              }
+
+
+              if (true === selectedOption.value) { }
               if (selectedOption.value === "other") {
 
 
@@ -320,8 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
               else {
                 let tailNumberGet = selectedOption.textContent;
                 let resourceNum = selectedOption.value;
-                console.log('rescoure test: ' + resourceNum);
-                console.log('textcontent test: ' + tailNumberGet);
+
 
                 // the other methods for parts and calendar data
                 if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
