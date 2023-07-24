@@ -26,6 +26,7 @@ class PlaneMaintenance(models.Model):
     TFrame = models.SmallIntegerField(default=0)
     E_F = models.CharField(max_length=10)
     title = models.TextField(blank=True)
+    # Scheduled = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (('PlaneSN', 'MDS', 'title'),)
@@ -53,6 +54,7 @@ class PartMaintenance(models.Model):
     TFrame = models.SmallIntegerField(default=0)
     E_F = models.CharField(max_length=10)
     title = models.TextField(blank=True)
+    # Scheduled = models.BooleanField(default=False)
     class Meta:
         unique_together = (('PlaneSN', 'MDS', 'title'),)
 

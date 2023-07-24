@@ -22,6 +22,7 @@ urlpatterns = [
     path('location.html', views.location, name='location'),
     path('calendar.html', views.calendar, name='calendar'),
     path('fileupload.html', views.fileupload, name='fileupload'),
+    path('ScheduleHelper.html', views.ScheduleHelper, name='ScheduleHelper'),
 
     # get and post plane data list
     path("plane-data/", views.PlaneListView.as_view(), name='planes'),
@@ -40,6 +41,9 @@ urlpatterns = [
     # allows get, patch and delete based on PlaneSN and MDS in plane data
     path("plane-data/<str:pk1>/<str:pk2>/", views.IndividualPlaneData.as_view(), name='plane details'),
 
+    # allows get, patch and delete based on PlaneSN and MDS in plane data
+    path("plane-data/<str:pk1>/", views.IndividualPlaneDataByTailNumber.as_view(), name='plane tailnumber details'),
+
     # allows get and patch based on CalendarID in Calendar
     path("calendar/<str:pk1>/", views.IndividualDateCalendarEdit.as_view(), name='calendar date details'),
 
@@ -54,6 +58,12 @@ urlpatterns = [
 
     # allows get, patch and delete based on PlaneSN, MDS, EQP_ID, PartSN and PartNum,in part maintenance
     path("part-maintenance/<str:pk1>/<str:pk2>/<str:pk3>/<str:pk4>/<str:pk5>/", views.IndividualPartMaintenanceView.as_view(), name='part main details'),
+
+    # allows get based on PlaneSN and MDS in part maintenance
+    path("part-maintenance/<str:PlaneSN>/<str:MDS>/", views.AircraftPartMaintenanceListView.as_view(), name='aircraft part main details'),
+
+    # allows get based on PlaneSN and MDS in plane maintenance
+    path("plane-maintenance/<str:PlaneSN>/<str:MDS>/", views.AircraftPlaneMaintenanceListView.as_view(), name='aircraft plane main details'),
 
     # allows get and delete based on PlaneSN and MDS, in part maintenance
     # path("part-maintenance/<str:pk1>/<str:pk2>/", views.PartMaintenanceAircraftView.as_view(), name='part main aircraft details'),
