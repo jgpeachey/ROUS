@@ -1,15 +1,17 @@
 //import { passgeoloc } from './main.js'
 
 let base = 'http://127.0.0.1:8000/';
+const urlParams = new URLSearchParams(window.location.search);
+const selectedGeoLoc = urlParams.get('geoloc');
 
 // waits until page has loaded to make changes
 window.onload = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedGeoLoc = urlParams.get('geoloc');
     loadTable(selectedGeoLoc);
 }
 
 async function loadTable(selectedGeoLoc) {
+    //put up loading screen while getting data
+    document.getElementById('loading-screen').style.display = 'flex';
     // gets all planes from current GeoLoc
     const tailNums = await getTailNums(selectedGeoLoc);
 
@@ -29,6 +31,8 @@ async function loadTable(selectedGeoLoc) {
     loadTableHead(tailNums);
     // adds all Maintenances for their respective TailNumber
     loadTableData(planeMap, partMap, tailNums);
+    // remove loading screen
+    document.getElementById('loading-screen').style.display = 'none';
 }
 
 // add Tail Numbers as table heads and Part/Plane as table sub heads for each plane
@@ -106,7 +110,7 @@ async function loadTableData(planeMap, partMap, tailNums) {
             try {
                 // get partMaintenance for easy access
                 var maint = partMap.get(plane.TailNumber)[i];
-                bodyHtml += '<td class="MaintenanceData" onclick="getClickedTableCell(this)" class="maintenance-item" data-type="part" data-maintenance="' + maint.PartMaintenanceID + '">Current Time: ' + maint.CrntTime + '<br>';
+                bodyHtml += '<td class="MaintenanceData" onclick="getClickedTableCell(this)" data-tail="' + plane.TailNumber + '" data-resource="' + plane.ResourceID + '" data-type="part" data-maintenance="' + maint.PartMaintenanceID + '">Current Time: ' + maint.CrntTime + '<br>';
                 bodyHtml += 'Equipment ID:' + maint.EQP_ID + '<br>';
                 bodyHtml += 'Part Serial Number:' + maint.PartSN + '<br>';
                 bodyHtml += 'Part Number:' + maint.PartNum + '<br>';
@@ -174,6 +178,7 @@ function createEvent(cellData) {
         inputFields.forEach(function (input) {
             input.value = '';
         });
+
     };
 
 
@@ -184,7 +189,75 @@ function createEvent(cellData) {
     // set the values when saved.
     var save = document.getElementById('buttonSaveC');
     save.onclick = function () {
+        var eventTitle = document.getElementById('titleInput').value;
+        var eventStart = document.getElementById('startInput').value;
+        var eventEnd = document.getElementById('endInput').value;
+        var eventJulian = document.getElementById('julianInput').value;
+        var eventEHours = document.getElementById('engineHoursInput').value;
+        var eventFHours = document.getElementById('flightHoursInput').value;
+        eventEnd = eventEnd.slice(0, -1) + (parseInt(eventEnd.slice(-1)) + 1);
 
+        if (cellData.MaintenanceType == 'plane') {
+            fetch(base + 'plane-data/' + cellData.TailNumber + '/')
+            .then(response => response.json())
+            .then(pdata => {
+                fetch(baseUrl + 'calendar/', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      PartMaintenanceID: cellData.MaintenanceID,
+                      PlaneMaintenanceID: '0',
+                      GeoLoc: selectedGeoLoc,
+                      FHours: eventFHours,
+                      EHours: eventEHours,
+                      title: eventTitle,
+                      MDS: pdata.MDS,
+                      JulianDate: eventJulian,
+                      end: eventEnd,
+                      start: eventStart,
+                      TailNumber: cellData.TailNumber,
+                      ResourceID: cellData.ResourceID
+                    })
+                });
+            })
+            .catch(error => console.warn(error));
+        }
+        else if (cellData.MaintenanceType == 'part') {
+            fetch(base + 'plane-data/' + cellData.TailNumber + '/')
+            .then(response => response.json())
+            .then(pdata => {
+                fetch(baseUrl + 'calendar/', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      PartMaintenanceID: '0',
+                      PlaneMaintenanceID: cellData.MaintenanceID,
+                      GeoLoc: selectedGeoLoc,
+                      FHours: eventFHours,
+                      EHours: eventEHours,
+                      title: eventTitle,
+                      MDS: pdata.MDS,
+                      JulianDate: eventJulian,
+                      end: eventEnd,
+                      start: eventStart,
+                      TailNumber: cellData.TailNumber,
+                      ResourceID: cellData.ResourceID
+                    })
+                });
+            })
+            .catch(error => console.warn(error));
+        }
+
+        modal.style.display = 'none';
+        // Clear the input fields
+        var inputFields = document.querySelectorAll('#createModal input[type="text"]');
+        inputFields.forEach(function (input) {
+            input.value = '';
+        });
     }
 
 }
