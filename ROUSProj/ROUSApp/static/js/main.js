@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
               var julianDate = document.getElementById('julianInput').value;
               var engineHours = document.getElementById('engineHoursInput').value;
               var flightHours = document.getElementById('flightHoursInput').value;
-              const basicInputIds = ['titleInput', 'startInput', 'endInput', 'julianInput', 'engineHoursInput', 'flightHoursInput'];
+
 
               // the others values
               var currPlaneSN = document.getElementById('currentplaneSN').value;
@@ -140,13 +140,16 @@ document.addEventListener('DOMContentLoaded', function () {
               const dropdown = document.getElementById('eventDropdown');
               const selectedOption = dropdown.options[dropdown.selectedIndex];
 
+              const basicInputIds = ['titleInput', 'startInput', 'endInput', 'julianInput', 'engineHoursInput', 'flightHoursInput'];
               const planeInputIds = ['currentplaneSN', 'currentMDS', 'currentTail'];
               const partsInputIds = ['partPlaneSNInput', 'partMDSInput', 'equipmentIDInput', 'partSerialNumberInput', 'partNumberInput', 'partNarrativeInput', 'wucLcnInput', 'catNumberInput', 'partCurrentTimeInput', 'partTimeRemainingInput', 'partDueTimeInput', 'partDueDateInput', 'partFrequencyInput', 'partTypeInput', 'partJustificationInput', 'partTimeFrameInput', 'partEngineFlightInput'];
               const maintInputIds = ['planeSNInput', 'mdsInput', 'narrativeInput', 'currentTimeInput', 'timeRemainingInput', 'dueTimeInput', 'frequencyInput', 'typeInput', 'justificationInput', 'timeFrameInput', 'engineFlightInput'];
               let isAnyInputEmpty = false;
+
               if (selectedOption.value === "other") {
                 if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
                   const completeID = basicInputIds + planeInputIds + partsInputIds;
+                  console.log(completeID);
                   for (const id of completeID) {
                     const input = document.getElementById(id);
                     const value = input.value.trim();
@@ -162,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 else {
                   const completeID = basicInputIds + planeInputIds + maintInputIds;
+                  console.log(completeID);
                   for (const id of completeID) {
                     const input = document.getElementById(id);
                     const value = input.value.trim();
@@ -179,8 +183,10 @@ document.addEventListener('DOMContentLoaded', function () {
               else {
                 if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
                   const completeID = basicInputIds + partsInputIds;
+                  console.log(completeID);
                   for (const id of completeID) {
                     const input = document.getElementById(id);
+                    if (input === null) continue;
                     const value = input.value.trim();
                     if (value === "") {
                       // If the input is empty, add the red border
@@ -194,6 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 else {
                   const completeID = basicInputIds + maintInputIds;
+                  console.log(completeID);
                   for (const id of completeID) {
                     const input = document.getElementById(id);
                     const value = input.value.trim();
@@ -206,332 +213,336 @@ document.addEventListener('DOMContentLoaded', function () {
                       input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
                     }
                   }
-
-
                 }
               }
 
 
-              if (isAnyInputEmpty) { }
-              else { }
-              if (selectedOption.value === "other") {
-
-
-                fetch(baseUrl + 'plane-data/', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    PlaneSN: currPlaneSN,
-                    GeoLoc: location,
-                    MDS: planeMDS,
-                    TailNumber: planeTailNum
-                  })
-                })
-                  .then(response => {
-                    if (response.ok) {
-                      console.log('Plane Data POST request succeeded');
-                    } else {
-                      console.error('Plane Data POST request failed');
-                    }
-                  })
-                  .catch(error => {
-                    console.error('Error:', error);
-                  });
-
-                // post for resource
-                fetch(baseUrl + 'resource/', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    TailNumber: planeTailNum,
-                    GeoLoc: location,
-                  })
-                })
-                  .then(response => {
-                    if (response.ok) {
-                      return response.json(); // Parse the response as JSON
-                    } else {
-                      throw new Error('resource Data POST request failed');
-                    }
-                  })
-                  .then(data => {
-                    // Extract the resourceId from the response
-                    const resourceId = data.resourceId;
-
-                    // the other methods for parts and calendar data
-                    if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
-
-                      // First POST request
-                      fetch(baseUrl + 'part-maintenance/', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                          PlaneSN: partPlaneSN,
-                          MDS: partMDS,
-                          EQP_ID: equipmentID,
-                          PartSN: partSerialNumber,
-                          PartNum: partNumber,
-                          Narrative: partNarrative,
-                          WUC_LCN: wucLcn,
-                          CatNum: catNumber,
-                          CrntTime: partCurrentTime,
-                          TimeRemain: partTimeRemaining,
-                          DueTime: partDueTime,
-                          DueDate: partDueDate,
-                          Freq: partFrequency,
-                          Type: partType,
-                          JST: partJustification,
-                          TFrame: partTimeFrame,
-                          E_F: partEngineFlight,
-                          title: title
-                        })
-                      })
-                        .then(response => response.json())
-                        .then(data => {
-                          // Extract the ID from the response
-                          const id = data.PartMaintenanceID;
-                          console.log(id);
-                          // Second POST request using the ID from the first response
-                          return fetch(baseUrl + 'calendar/', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                              PartMaintenanceID: id,
-                              PlaneMaintenanceID: '0',
-                              GeoLoc: location,
-                              FHours: flightHours,
-                              EHours: engineHours,
-                              title: title,
-                              MDS: partMDS,
-                              JulianDate: julianDate,
-                              end: end,
-                              start: start,
-                              TailNumber: planeTailNum,
-                              ResourceID: resourceId
-                            })
-                          });
-                        })
-                        .then(response => {
-                          if (response.ok) {
-                            calendar.refetchEvents();
-                            console.log('Second POST request succeeded');
-                          } else {
-                            console.error('Second POST request failed');
-                          }
-                        })
-                        .catch(error => {
-                          console.error('Error:', error);
-                        });
-                    } else {
-
-                      // the other methods for plane and calendar data
-                      fetch(baseUrl + 'plane-maintenance/', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                          PlaneSN: planeSN,
-                          MDS: mds,
-                          Narrative: narrative,
-                          CrntTime: currentTime,
-                          TimeRemain: timeRemaining,
-                          DueTime: dueTime,
-                          Freq: frequency,
-                          Type: type,
-                          JST: justification,
-                          TFrame: timeFrame,
-                          E_F: engineFlight,
-                          title: title
-                        })
-                      })
-                        .then(response => response.json())
-                        .then(data => {
-                          // Extract the ID from the response
-                          const id = data.PlaneMaintenanceID;
-                          console.log(id);
-                          // Second POST request using the ID from the first response
-                          return fetch(baseUrl + 'calendar/', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                              PartMaintenanceID: '0',
-                              PlaneMaintenanceID: id,
-                              GeoLoc: location,
-                              FHours: flightHours,
-                              EHours: engineHours,
-                              title: title,
-                              MDS: mds,
-                              JulianDate: julianDate,
-                              end: end,
-                              start: start,
-                              TailNumber: planeTailNum,
-                              ResourceID: resourceId
-                            })
-                          });
-                        })
-                        .then(response => {
-                          if (response.ok) {
-                            calendar.refetchEvents();
-                            console.log('Second POST request succeeded');
-                          } else {
-                            console.error('Second POST request failed');
-                          }
-                        })
-                        .catch(error => {
-                          console.error('Error:', error);
-                        });
-                    }
-                  });
+              if (isAnyInputEmpty) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: "One or many of the input fields was left blank.",
+                });
               }
               else {
-                let tailNumberGet = selectedOption.textContent;
-                let resourceNum = selectedOption.value;
+                if (selectedOption.value === "other") {
 
-
-                // the other methods for parts and calendar data
-                if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
-                  // First POST request
-                  fetch(baseUrl + 'part-maintenance/', {
+                  fetch(baseUrl + 'plane-data/', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                      PlaneSN: partPlaneSN,
-                      MDS: partMDS,
-                      EQP_ID: equipmentID,
-                      PartSN: partSerialNumber,
-                      PartNum: partNumber,
-                      Narrative: partNarrative,
-                      WUC_LCN: wucLcn,
-                      CatNum: catNumber,
-                      CrntTime: partCurrentTime,
-                      TimeRemain: partTimeRemaining,
-                      DueTime: partDueTime,
-                      DueDate: partDueDate,
-                      Freq: partFrequency,
-                      Type: partType,
-                      JST: partJustification,
-                      TFrame: partTimeFrame,
-                      E_F: partEngineFlight,
-                      title: title
+                      PlaneSN: currPlaneSN,
+                      GeoLoc: location,
+                      MDS: planeMDS,
+                      TailNumber: planeTailNum
                     })
                   })
-                    .then(response => response.json())
-                    .then(data => {
-                      console.log(data);
-                      // Extract the ID from the response
-                      const id = data.PartMaintenanceID;
-                      console.log(id);
-                      // Second POST request using the ID from the first response
-                      return fetch(baseUrl + 'calendar/', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                          PartMaintenanceID: id,
-                          PlaneMaintenanceID: '0',
-                          GeoLoc: location,
-                          FHours: flightHours,
-                          EHours: engineHours,
-                          title: title,
-                          MDS: partMDS,
-                          JulianDate: julianDate,
-                          end: end,
-                          start: start,
-                          TailNumber: tailNumberGet,
-                          ResourceID: resourceNum
-                        })
-                      });
-                    })
                     .then(response => {
                       if (response.ok) {
-                        calendar.refetchEvents();
-                        console.log('Second POST request succeeded');
+                        console.log('Plane Data POST request succeeded');
                       } else {
-                        console.error('Second POST request failed');
+                        console.error('Plane Data POST request failed');
                       }
                     })
                     .catch(error => {
                       console.error('Error:', error);
                     });
-                } else {
 
-                  // the other methods for plane and calendar data
-                  fetch(baseUrl + 'plane-maintenance/', {
+                  // post for resource
+                  fetch(baseUrl + 'resource/', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                      PlaneSN: planeSN,
-                      MDS: mds,
-                      Narrative: narrative,
-                      CrntTime: currentTime,
-                      TimeRemain: timeRemaining,
-                      DueTime: dueTime,
-                      Freq: frequency,
-                      Type: type,
-                      JST: justification,
-                      TFrame: timeFrame,
-                      E_F: engineFlight,
-                      title: title
+                      TailNumber: planeTailNum,
+                      GeoLoc: location,
                     })
                   })
-                    .then(response => response.json())
-                    .then(data => {
-                      // Extract the ID from the response
-                      const id = data.PlaneMaintenanceID;
-                      console.log(id);
-                      // Second POST request using the ID from the first response
-                      return fetch(baseUrl + 'calendar/', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                          PartMaintenanceID: '0',
-                          PlaneMaintenanceID: id,
-                          GeoLoc: location,
-                          FHours: flightHours,
-                          EHours: engineHours,
-                          title: title,
-                          MDS: mds,
-                          JulianDate: julianDate,
-                          end: end,
-                          start: start,
-                          TailNumber: tailNumberGet,
-                          ResourceID: resourceNum
-                        })
-                      });
-                    })
                     .then(response => {
                       if (response.ok) {
-                        calendar.refetchEvents();
-                        console.log('Second POST request succeeded');
+                        return response.json(); // Parse the response as JSON
                       } else {
-                        console.error('Second POST request failed');
+                        throw new Error('resource Data POST request failed');
                       }
                     })
-                    .catch(error => {
-                      console.error('Error:', error);
+                    .then(data => {
+                      // Extract the resourceId from the response
+                      const resourceId = data.resourceId;
+
+                      // the other methods for parts and calendar data
+                      if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
+
+                        // First POST request
+                        fetch(baseUrl + 'part-maintenance/', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            PlaneSN: partPlaneSN,
+                            MDS: partMDS,
+                            EQP_ID: equipmentID,
+                            PartSN: partSerialNumber,
+                            PartNum: partNumber,
+                            Narrative: partNarrative,
+                            WUC_LCN: wucLcn,
+                            CatNum: catNumber,
+                            CrntTime: partCurrentTime,
+                            TimeRemain: partTimeRemaining,
+                            DueTime: partDueTime,
+                            DueDate: partDueDate,
+                            Freq: partFrequency,
+                            Type: partType,
+                            JST: partJustification,
+                            TFrame: partTimeFrame,
+                            E_F: partEngineFlight,
+                            title: title
+                          })
+                        })
+                          .then(response => response.json())
+                          .then(data => {
+                            // Extract the ID from the response
+                            const id = data.PartMaintenanceID;
+                            console.log(id);
+                            // Second POST request using the ID from the first response
+                            return fetch(baseUrl + 'calendar/', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify({
+                                PartMaintenanceID: id,
+                                PlaneMaintenanceID: '0',
+                                GeoLoc: location,
+                                FHours: flightHours,
+                                EHours: engineHours,
+                                title: title,
+                                MDS: partMDS,
+                                JulianDate: julianDate,
+                                end: end,
+                                start: start,
+                                TailNumber: planeTailNum,
+                                ResourceID: resourceId
+                              })
+                            });
+                          })
+                          .then(response => {
+                            if (response.ok) {
+                              calendar.refetchEvents();
+                              console.log('Second POST request succeeded');
+                            } else {
+                              console.error('Second POST request failed');
+                            }
+                          })
+                          .catch(error => {
+                            console.error('Error:', error);
+                          });
+                      } else {
+
+                        // the other methods for plane and calendar data
+                        fetch(baseUrl + 'plane-maintenance/', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            PlaneSN: planeSN,
+                            MDS: mds,
+                            Narrative: narrative,
+                            CrntTime: currentTime,
+                            TimeRemain: timeRemaining,
+                            DueTime: dueTime,
+                            Freq: frequency,
+                            Type: type,
+                            JST: justification,
+                            TFrame: timeFrame,
+                            E_F: engineFlight,
+                            title: title
+                          })
+                        })
+                          .then(response => response.json())
+                          .then(data => {
+                            // Extract the ID from the response
+                            const id = data.PlaneMaintenanceID;
+                            console.log(id);
+                            // Second POST request using the ID from the first response
+                            return fetch(baseUrl + 'calendar/', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify({
+                                PartMaintenanceID: '0',
+                                PlaneMaintenanceID: id,
+                                GeoLoc: location,
+                                FHours: flightHours,
+                                EHours: engineHours,
+                                title: title,
+                                MDS: mds,
+                                JulianDate: julianDate,
+                                end: end,
+                                start: start,
+                                TailNumber: planeTailNum,
+                                ResourceID: resourceId
+                              })
+                            });
+                          })
+                          .then(response => {
+                            if (response.ok) {
+                              calendar.refetchEvents();
+                              console.log('Second POST request succeeded');
+                            } else {
+                              console.error('Second POST request failed');
+                            }
+                          })
+                          .catch(error => {
+                            console.error('Error:', error);
+                          });
+                      }
                     });
+                }
+                else {
+                  let tailNumberGet = selectedOption.textContent;
+                  let resourceNum = selectedOption.value;
+
+
+                  // the other methods for parts and calendar data
+                  if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
+                    // First POST request
+                    fetch(baseUrl + 'part-maintenance/', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        PlaneSN: partPlaneSN,
+                        MDS: partMDS,
+                        EQP_ID: equipmentID,
+                        PartSN: partSerialNumber,
+                        PartNum: partNumber,
+                        Narrative: partNarrative,
+                        WUC_LCN: wucLcn,
+                        CatNum: catNumber,
+                        CrntTime: partCurrentTime,
+                        TimeRemain: partTimeRemaining,
+                        DueTime: partDueTime,
+                        DueDate: partDueDate,
+                        Freq: partFrequency,
+                        Type: partType,
+                        JST: partJustification,
+                        TFrame: partTimeFrame,
+                        E_F: partEngineFlight,
+                        title: title
+                      })
+                    })
+                      .then(response => response.json())
+                      .then(data => {
+                        console.log(data);
+                        // Extract the ID from the response
+                        const id = data.PartMaintenanceID;
+                        console.log(id);
+                        // Second POST request using the ID from the first response
+                        return fetch(baseUrl + 'calendar/', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            PartMaintenanceID: id,
+                            PlaneMaintenanceID: '0',
+                            GeoLoc: location,
+                            FHours: flightHours,
+                            EHours: engineHours,
+                            title: title,
+                            MDS: partMDS,
+                            JulianDate: julianDate,
+                            end: end,
+                            start: start,
+                            TailNumber: tailNumberGet,
+                            ResourceID: resourceNum
+                          })
+                        });
+                      })
+                      .then(response => {
+                        if (response.ok) {
+                          calendar.refetchEvents();
+                          console.log('Second POST request succeeded');
+                        } else {
+                          console.error('Second POST request failed');
+                        }
+                      })
+                      .catch(error => {
+                        console.error('Error:', error);
+                      });
+                  } else {
+
+                    // the other methods for plane and calendar data
+                    fetch(baseUrl + 'plane-maintenance/', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        PlaneSN: planeSN,
+                        MDS: mds,
+                        Narrative: narrative,
+                        CrntTime: currentTime,
+                        TimeRemain: timeRemaining,
+                        DueTime: dueTime,
+                        Freq: frequency,
+                        Type: type,
+                        JST: justification,
+                        TFrame: timeFrame,
+                        E_F: engineFlight,
+                        title: title
+                      })
+                    })
+                      .then(response => response.json())
+                      .then(data => {
+                        // Extract the ID from the response
+                        const id = data.PlaneMaintenanceID;
+                        console.log(id);
+                        // Second POST request using the ID from the first response
+                        return fetch(baseUrl + 'calendar/', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            PartMaintenanceID: '0',
+                            PlaneMaintenanceID: id,
+                            GeoLoc: location,
+                            FHours: flightHours,
+                            EHours: engineHours,
+                            title: title,
+                            MDS: mds,
+                            JulianDate: julianDate,
+                            end: end,
+                            start: start,
+                            TailNumber: tailNumberGet,
+                            ResourceID: resourceNum
+                          })
+                        });
+                      })
+                      .then(response => {
+                        if (response.ok) {
+                          calendar.refetchEvents();
+                          console.log('Second POST request succeeded');
+                        } else {
+                          console.error('Second POST request failed');
+                        }
+                      })
+                      .catch(error => {
+                        console.error('Error:', error);
+                      });
+                  }
+
                 }
 
               }
-
             }
 
           }
