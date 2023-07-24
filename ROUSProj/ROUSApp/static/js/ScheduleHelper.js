@@ -42,7 +42,7 @@ function loadTableHead(tailNums) {
 
     // create headings for each plane and add to future innerHTML strings
     for (let plane of tailNums) {
-        headHtml += '<th colspan="2" class="PlaneHead">'+plane.TailNumber+'</th>';
+        headHtml += '<th colspan="2" class="PlaneHead">' + plane.TailNumber + '</th>';
         subHeadHtml += '<th class="PlaneHead">Plane</th><th class="PlaneHead">Part</th>';
     }
 
@@ -52,13 +52,13 @@ function loadTableHead(tailNums) {
 }
 
 // uses GET api call to get all planes from selected GeoLoc
- async function getTailNums (selectedGeoLoc) {
+async function getTailNums(selectedGeoLoc) {
     return fetch(base + 'resource/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
-    .then(response => response.json())
-    .then(data => {
-        return data;
-    })
-    .catch(error => console.warn(error));
+        .then(response => response.json())
+        .then(data => {
+            return data;
+        })
+        .catch(error => console.warn(error));
 }
 
 // add plane/part maintenance to the table data under their designated plane
@@ -88,14 +88,14 @@ async function loadTableData(planeMap, partMap, tailNums) {
             try {
                 // get planeMaintenance for easy access
                 var maint = planeMap.get(plane.TailNumber)[i];
-                bodyHtml += '<td class="MaintenanceData" onclick="getClickedTableCell(this)" data-tail="'+plane.TailNumber+'" data-resource="'+plane.ResourceID+'" data-type="plane" data-maintenance="'+maint.PlaneMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
-                bodyHtml += 'Time Remaining:'+maint.TimeRemain+'<br>';
-                bodyHtml += 'Due Time:'+maint.DueTime+'<br>';
-                bodyHtml += 'Frequency:'+maint.Freq+'<br>';
-                bodyHtml += 'Type:'+maint.Type+'<br>';
-                bodyHtml += 'Justification:'+maint.JST+'<br>';
-                bodyHtml += 'Time Frame:'+maint.TFrame+'<br>';
-                bodyHtml += 'Engine(E)/Flight(F):'+maint.E_F+'<br>';
+                bodyHtml += '<td class="MaintenanceData" onclick="getClickedTableCell(this)" data-tail="' + plane.TailNumber + '" data-resource="' + plane.ResourceID + '" data-type="plane" data-maintenance="' + maint.PlaneMaintenanceID + '">Current Time: ' + maint.CrntTime + '<br>';
+                bodyHtml += 'Time Remaining:' + maint.TimeRemain + '<br>';
+                bodyHtml += 'Due Time:' + maint.DueTime + '<br>';
+                bodyHtml += 'Frequency:' + maint.Freq + '<br>';
+                bodyHtml += 'Type:' + maint.Type + '<br>';
+                bodyHtml += 'Justification:' + maint.JST + '<br>';
+                bodyHtml += 'Time Frame:' + maint.TFrame + '<br>';
+                bodyHtml += 'Engine(E)/Flight(F):' + maint.E_F + '<br>';
                 bodyHtml += '</td>'
             }
             // if no planeMaintenance to access add blank row
@@ -106,19 +106,19 @@ async function loadTableData(planeMap, partMap, tailNums) {
             try {
                 // get partMaintenance for easy access
                 var maint = partMap.get(plane.TailNumber)[i];
-                bodyHtml += '<td class="MaintenanceData" onclick="getClickedTableCell(this)" class="maintenance-item" data-type="part" data-maintenance="'+maint.PartMaintenanceID+'">Current Time: '+maint.CrntTime+'<br>';
-                bodyHtml += 'Equipment ID:'+maint.EQP_ID+'<br>';
-                bodyHtml += 'Part Serial Number:'+maint.PartSN+'<br>';
-                bodyHtml += 'Part Number:'+maint.PartNum+'<br>';
-                bodyHtml += 'WUC/LCN:'+maint.WUC_LCN+'<br>';
-                bodyHtml += 'Category Number:'+maint.CatNum+'<br>';
-                bodyHtml += 'Time Remaining:'+maint.TimeRemain+'<br>';
-                bodyHtml += 'Due Time:'+maint.DueTime+'<br>';
-                bodyHtml += 'Frequency:'+maint.Freq+'<br>';
-                bodyHtml += 'Type:'+maint.Type+'<br>';
-                bodyHtml += 'Justification:'+maint.JST+'<br>';
-                bodyHtml += 'Time Frame:'+maint.TFrame+'<br>';
-                bodyHtml += 'Engine(E)/Flight(F):'+maint.E_F+'<br>';
+                bodyHtml += '<td class="MaintenanceData" onclick="getClickedTableCell(this)" class="maintenance-item" data-type="part" data-maintenance="' + maint.PartMaintenanceID + '">Current Time: ' + maint.CrntTime + '<br>';
+                bodyHtml += 'Equipment ID:' + maint.EQP_ID + '<br>';
+                bodyHtml += 'Part Serial Number:' + maint.PartSN + '<br>';
+                bodyHtml += 'Part Number:' + maint.PartNum + '<br>';
+                bodyHtml += 'WUC/LCN:' + maint.WUC_LCN + '<br>';
+                bodyHtml += 'Category Number:' + maint.CatNum + '<br>';
+                bodyHtml += 'Time Remaining:' + maint.TimeRemain + '<br>';
+                bodyHtml += 'Due Time:' + maint.DueTime + '<br>';
+                bodyHtml += 'Frequency:' + maint.Freq + '<br>';
+                bodyHtml += 'Type:' + maint.Type + '<br>';
+                bodyHtml += 'Justification:' + maint.JST + '<br>';
+                bodyHtml += 'Time Frame:' + maint.TFrame + '<br>';
+                bodyHtml += 'Engine(E)/Flight(F):' + maint.E_F + '<br>';
                 bodyHtml += '</td>'
             }
             // if no partMaintenance to access add blank row
@@ -136,44 +136,65 @@ async function loadTableData(planeMap, partMap, tailNums) {
 // uses GET api call to get all plane maintenances from selected plane
 async function getPlaneMaintenances(TailNumber) {
     return fetch(base + 'plane-data/' + TailNumber + '/')
-    .then(response => response.json())
-    .then(pdata => {
-        return fetch(base + 'plane-maintenance/' + pdata.PlaneSN + '/' + pdata.MDS + '/')
         .then(response => response.json())
-        .then(data => {
-            return data;
+        .then(pdata => {
+            return fetch(base + 'plane-maintenance/' + pdata.PlaneSN + '/' + pdata.MDS + '/')
+                .then(response => response.json())
+                .then(data => {
+                    return data;
+                })
+                .catch(error => console.warn(error));
         })
         .catch(error => console.warn(error));
-    })
-    .catch(error => console.warn(error));
 }
 
 // uses GET api call to get all part maintenances from selected plane
 async function getPartMaintenances(TailNumber) {
     return fetch(base + 'plane-data/' + TailNumber + '/')
-    .then(response => response.json())
-    .then(pdata => {
-        return fetch(base + 'part-maintenance/' + pdata.PlaneSN + '/' + pdata.MDS + '/')
         .then(response => response.json())
-        .then(data => {
-            return data;
+        .then(pdata => {
+            return fetch(base + 'part-maintenance/' + pdata.PlaneSN + '/' + pdata.MDS + '/')
+                .then(response => response.json())
+                .then(data => {
+                    return data;
+                })
+                .catch(error => console.warn(error));
         })
         .catch(error => console.warn(error));
-    })
-    .catch(error => console.warn(error));
 }
 
 // pops up with calendar event creation when maintenance is clicked on
 function createEvent(cellData) {
 
+    // exits out of the create event.
+    cancelout.onclick = function () {
+        modal.style.display = 'none';
+        // Clear the input fields
+        var inputFields = document.querySelectorAll('#createModal input[type="text"]');
+        inputFields.forEach(function (input) {
+            input.value = '';
+        });
+    };
+
+
+    // Show the modal  when clicked on.
+    var modal = document.getElementById('createModal');
+    modal.style.display = 'block';
+
+    // set the values when saved.
+    var save = document.getElementById('buttonSaveC');
+    save.onclick = function () {
+
+    }
+
 }
 
 function getClickedTableCell(div) {
     let cellData = {
-        TailNumber:div.getAttribute("data-tail"),
-        MaintenanceType:div.getAttribute("data-type"),
-        MaintenanceID:div.getAttribute("data-maintenance"),
-        ResourceID:div.getAttribute("data-resource")
+        TailNumber: div.getAttribute("data-tail"),
+        MaintenanceType: div.getAttribute("data-type"),
+        MaintenanceID: div.getAttribute("data-maintenance"),
+        ResourceID: div.getAttribute("data-resource")
     };
 
     createEvent(cellData);
