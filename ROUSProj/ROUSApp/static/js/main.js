@@ -1125,7 +1125,7 @@ function updateData(successCallback, failureCallback, selectedGeoLoc) {
                 },
                 body: JSON.stringify({
                   DueTime: newDueTime,
-                  TimeRemain: newTimeRemain
+                  TimeRemain: newTimeRemain,
                 })
               });
             })

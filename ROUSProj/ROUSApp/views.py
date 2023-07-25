@@ -272,7 +272,7 @@ class AircraftPartMaintenanceListView(generics.ListAPIView):
     def get_queryset(self):
         planesn = self.kwargs['PlaneSN']
         mds = self.kwargs['MDS']
-        return PartMaintenance.objects.filter(PlaneSN=planesn, MDS=mds)
+        return PartMaintenance.objects.filter(PlaneSN=planesn, MDS=mds).order_by('TimeRemain')
 
 class AircraftPlaneMaintenanceListView(generics.ListAPIView):
     serializer_class = PlaneMaintenanceSerializer
@@ -280,7 +280,7 @@ class AircraftPlaneMaintenanceListView(generics.ListAPIView):
     def get_queryset(self):
         planesn = self.kwargs['PlaneSN']
         mds = self.kwargs['MDS']
-        return PlaneMaintenance.objects.filter(PlaneSN=planesn, MDS=mds)
+        return PlaneMaintenance.objects.filter(PlaneSN=planesn, MDS=mds).order_by('TimeRemain')
 
 class CalendarPartMaintenanceView(APIView):
     def get(self, request, pk1):

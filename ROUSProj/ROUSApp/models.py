@@ -26,7 +26,7 @@ class PlaneMaintenance(models.Model):
     TFrame = models.SmallIntegerField(default=0)
     E_F = models.CharField(max_length=10)
     title = models.TextField(blank=True)
-    # Scheduled = models.BooleanField(default=False)
+    # Scheduled = models.BooleanField(default=True)
 
     class Meta:
         unique_together = (('PlaneSN', 'MDS', 'title'),)
@@ -47,14 +47,14 @@ class PartMaintenance(models.Model):
     CrntTime = models.FloatField(default=0.0)
     TimeRemain = models.FloatField(default=0.0)
     DueTime = models.FloatField(default=0.0)
-    DueDate = models.DateField()
+    # DueDate = models.DateField()
     Freq = models.SmallIntegerField(default=0)
     Type = models.CharField(max_length=1)
     JST = models.IntegerField(default=0)
     TFrame = models.SmallIntegerField(default=0)
     E_F = models.CharField(max_length=10)
     title = models.TextField(blank=True)
-    # Scheduled = models.BooleanField(default=False)
+    # Scheduled = models.BooleanField(default=True)
     class Meta:
         unique_together = (('PlaneSN', 'MDS', 'title'),)
 
