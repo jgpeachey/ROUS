@@ -196,110 +196,67 @@ function createEvent(cellData) {
         var eventEHours = document.getElementById('engineHoursInput').value;
         var eventFHours = document.getElementById('flightHoursInput').value;
 
-        //grabs all the ids above.
-        const idsList = ['titleInput', 'startInput', 'endInput', 'julianInput', 'engineHoursInput', 'flightHoursInput'];
-
-        //
-        let idCheckInput = false;
-
-        for (const ids of idsList) {
-            const input = document.getElementById(ids);
-            const value = input.value.trim();
-            if (value === "") {
-                // If the input is empty, add the red border
-                input.style.borderColor = "red";
-                idCheckInput = true;
-            } else {
-                // If the input is not empty, remove the red border
-                input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
-            }
+        if (cellData.MaintenanceType == 'plane') {
+            fetch(base + 'plane-data/' + cellData.TailNumber + '/')
+            .then(response => response.json())
+            .then(pdata => {
+                fetch(baseUrl + 'calendar/', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      PartMaintenanceID: cellData.MaintenanceID,
+                      PlaneMaintenanceID: '0',
+                      GeoLoc: selectedGeoLoc,
+                      FHours: eventFHours,
+                      EHours: eventEHours,
+                      title: eventTitle,
+                      MDS: pdata.MDS,
+                      JulianDate: eventJulian,
+                      end: eventEnd,
+                      start: eventStart,
+                      TailNumber: cellData.TailNumber,
+                      ResourceID: cellData.ResourceID
+                    })
+                });
+            })
+            .catch(error => console.warn(error));
+        }
+        else if (cellData.MaintenanceType == 'part') {
+            fetch(base + 'plane-data/' + cellData.TailNumber + '/')
+            .then(response => response.json())
+            .then(pdata => {
+                fetch(baseUrl + 'calendar/', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      PartMaintenanceID: '0',
+                      PlaneMaintenanceID: cellData.MaintenanceID,
+                      GeoLoc: selectedGeoLoc,
+                      FHours: eventFHours,
+                      EHours: eventEHours,
+                      title: eventTitle,
+                      MDS: pdata.MDS,
+                      JulianDate: eventJulian,
+                      end: eventEnd,
+                      start: eventStart,
+                      TailNumber: cellData.TailNumber,
+                      ResourceID: cellData.ResourceID
+                    })
+                });
+            })
+            .catch(error => console.warn(error));
         }
 
-        if (idCheckInput) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: "One or many of the input fields was left blank.",
-            });
-
-        }
-        else {
-            // Use Swal to confirm before submitting
-            Swal.fire({
-                title: "Uploading Data!",
-                text: "Are you sure you want to submit?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonText: "Yes",
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    if (cellData.MaintenanceType == 'plane') {
-                        fetch(base + 'plane-data/' + cellData.TailNumber + '/')
-                            .then(response => response.json())
-                            .then(pdata => {
-                                fetch(baseUrl + 'calendar/', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        PartMaintenanceID: cellData.MaintenanceID,
-                                        PlaneMaintenanceID: '0',
-                                        GeoLoc: selectedGeoLoc,
-                                        FHours: eventFHours,
-                                        EHours: eventEHours,
-                                        title: eventTitle,
-                                        MDS: pdata.MDS,
-                                        JulianDate: eventJulian,
-                                        end: eventEnd,
-                                        start: eventStart,
-                                        TailNumber: cellData.TailNumber,
-                                        ResourceID: cellData.ResourceID
-                                    })
-                                });
-                            })
-                            .catch(error => console.warn(error));
-                    }
-                    else if (cellData.MaintenanceType == 'part') {
-                        fetch(base + 'plane-data/' + cellData.TailNumber + '/')
-                            .then(response => response.json())
-                            .then(pdata => {
-                                fetch(baseUrl + 'calendar/', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        PartMaintenanceID: '0',
-                                        PlaneMaintenanceID: cellData.MaintenanceID,
-                                        GeoLoc: selectedGeoLoc,
-                                        FHours: eventFHours,
-                                        EHours: eventEHours,
-                                        title: eventTitle,
-                                        MDS: pdata.MDS,
-                                        JulianDate: eventJulian,
-                                        end: eventEnd,
-                                        start: eventStart,
-                                        TailNumber: cellData.TailNumber,
-                                        ResourceID: cellData.ResourceID
-                                    })
-                                });
-                            })
-                            .catch(error => console.warn(error));
-                    }
-                }
-            });
-        }
-        if (!idCheckInput) {
-            modal.style.display = 'none';
-
-            // Clear the input fields
-            var inputFields = document.querySelectorAll('#createModal input[type="text"]');
-            inputFields.forEach(function (input) {
-                input.value = '';
-            });
-        }
+        modal.style.display = 'none';
+        // Clear the input fields
+        var inputFields = document.querySelectorAll('#createModal input[type="text"]');
+        inputFields.forEach(function (input) {
+            input.value = '';
+        });
     }
 
 }
