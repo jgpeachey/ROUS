@@ -404,6 +404,7 @@ input[type="text"] {
 }
 
 .MaintenanceData:hover {
-    background: #3492eb;
-    border: 3px solid black;
+    background: #e3e3e3;
+    border: 2px solid black;
+    font-weight: bold;
 }

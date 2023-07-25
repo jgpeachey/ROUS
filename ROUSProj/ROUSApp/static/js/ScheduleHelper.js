@@ -195,7 +195,6 @@ function createEvent(cellData) {
         var eventJulian = document.getElementById('julianInput').value;
         var eventEHours = document.getElementById('engineHoursInput').value;
         var eventFHours = document.getElementById('flightHoursInput').value;
-        eventEnd = eventEnd.slice(0, -1) + (parseInt(eventEnd.slice(-1)) + 1);
 
         if (cellData.MaintenanceType == 'plane') {
             fetch(base + 'plane-data/' + cellData.TailNumber + '/')
