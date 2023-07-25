@@ -38,7 +38,7 @@ class PartMaintenance(models.Model):
     PartMaintenanceID = models.AutoField(primary_key=True)
     PlaneSN = models.CharField(max_length=10)
     MDS = models.CharField(max_length=10)
-    EQP_ID = models.CharField(max_length=5)
+    EQP_ID = models.CharField(max_length=10)
     PartSN = models.CharField(max_length=10)
     PartNum = models.CharField(max_length=10)
     Narrative = models.TextField(default="", blank=True)
