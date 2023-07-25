@@ -97,10 +97,12 @@ document.addEventListener('DOMContentLoaded', function () {
               var engineHours = document.getElementById('engineHoursInput').value;
               var flightHours = document.getElementById('flightHoursInput').value;
 
+
               // the others values
               var currPlaneSN = document.getElementById('currentplaneSN').value;
               var planeMDS = document.getElementById('currentMDS').value;
               var planeTailNum = document.getElementById('currentTail').value;
+              //parts values
               var partPlaneSN = document.getElementById('partPlaneSNInput').value;
               var partMDS = document.getElementById('partMDSInput').value;
               var equipmentID = document.getElementById('equipmentIDInput').value;
@@ -118,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
               var partJustification = document.getElementById('partJustificationInput').value;
               var partTimeFrame = document.getElementById('partTimeFrameInput').value;
               var partEngineFlight = document.getElementById('partEngineFlightInput').value;
+              // plane maintenance data
               var planeSN = document.getElementById('planeSNInput').value;
               var mds = document.getElementById('mdsInput').value;
               var narrative = document.getElementById('narrativeInput').value;
@@ -137,325 +140,409 @@ document.addEventListener('DOMContentLoaded', function () {
               const dropdown = document.getElementById('eventDropdown');
               const selectedOption = dropdown.options[dropdown.selectedIndex];
 
+              const basicInputIds = ['titleInput', 'startInput', 'endInput', 'julianInput', 'engineHoursInput', 'flightHoursInput'];
+              const planeInputIds = ['currentplaneSN', 'currentMDS', 'currentTail'];
+              const partsInputIds = ['partPlaneSNInput', 'partMDSInput', 'equipmentIDInput', 'partSerialNumberInput', 'partNumberInput', 'partNarrativeInput', 'wucLcnInput', 'catNumberInput', 'partCurrentTimeInput', 'partTimeRemainingInput', 'partDueTimeInput', 'partDueDateInput', 'partFrequencyInput', 'partTypeInput', 'partJustificationInput', 'partTimeFrameInput', 'partEngineFlightInput'];
+              const maintInputIds = ['planeSNInput', 'mdsInput', 'narrativeInput', 'currentTimeInput', 'timeRemainingInput', 'dueTimeInput', 'frequencyInput', 'typeInput', 'justificationInput', 'timeFrameInput', 'engineFlightInput'];
+              let isAnyInputEmpty = false;
+
               if (selectedOption.value === "other") {
-
-
-                fetch(baseUrl + 'plane-data/', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    PlaneSN: currPlaneSN,
-                    GeoLoc: location,
-                    MDS: planeMDS,
-                    TailNumber: planeTailNum
-                  })
-                })
-                  .then(response => {
-                    if (response.ok) {
-                      console.log('Plane Data POST request succeeded');
+                if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
+                  const completeID = basicInputIds + planeInputIds + partsInputIds;
+                  console.log(completeID);
+                  for (const id of completeID) {
+                    const input = document.getElementById(id);
+                    const value = input.value.trim();
+                    if (value === "") {
+                      // If the input is empty, add the red border
+                      input.style.borderColor = "red";
+                      isAnyInputEmpty = true;
                     } else {
-                      console.error('Plane Data POST request failed');
+                      // If the input is not empty, remove the red border
+                      input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
                     }
-                  })
-                  .catch(error => {
-                    console.error('Error:', error);
-                  });
-
-                // post for resource
-                fetch(baseUrl + 'resource/', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    TailNumber: planeTailNum,
-                    GeoLoc: location,
-                  })
-                })
-                  .then(response => {
-                    if (response.ok) {
-                      return response.json(); // Parse the response as JSON
+                  }
+                }
+                else {
+                  const completeID = basicInputIds + planeInputIds + maintInputIds;
+                  console.log(completeID);
+                  for (const id of completeID) {
+                    const input = document.getElementById(id);
+                    const value = input.value.trim();
+                    if (value === "") {
+                      // If the input is empty, add the red border
+                      input.style.borderColor = "red";
+                      isAnyInputEmpty = true;
                     } else {
-                      throw new Error('resource Data POST request failed');
+                      // If the input is not empty, remove the red border
+                      input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
                     }
-                  })
-                  .then(data => {
-                    // Extract the resourceId from the response
-                    const resourceId = data.resourceId;
-
-                    // the other methods for parts and calendar data
-                    if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
-
-                      // First POST request
-                      fetch(baseUrl + 'part-maintenance/', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                          PlaneSN: partPlaneSN,
-                          MDS: partMDS,
-                          EQP_ID: equipmentID,
-                          PartSN: partSerialNumber,
-                          PartNum: partNumber,
-                          Narrative: partNarrative,
-                          WUC_LCN: wucLcn,
-                          CatNum: catNumber,
-                          CrntTime: partCurrentTime,
-                          TimeRemain: partTimeRemaining,
-                          DueTime: partDueTime,
-                          DueDate: partDueDate,
-                          Freq: partFrequency,
-                          Type: partType,
-                          JST: partJustification,
-                          TFrame: partTimeFrame,
-                          E_F: partEngineFlight,
-                          title: title
-                        })
-                      })
-                        .then(response => response.json())
-                        .then(data => {
-                          // Extract the ID from the response
-                          const id = data.PartMaintenanceID;
-                          console.log(id);
-                          // Second POST request using the ID from the first response
-                          return fetch(baseUrl + 'calendar/', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                              PartMaintenanceID: id,
-                              PlaneMaintenanceID: '0',
-                              GeoLoc: location,
-                              FHours: flightHours,
-                              EHours: engineHours,
-                              title: title,
-                              MDS: partMDS,
-                              JulianDate: julianDate,
-                              end: end,
-                              start: start,
-                              TailNumber: planeTailNum,
-                              ResourceID: resourceId
-                            })
-                          });
-                        })
-                        .then(response => {
-                          if (response.ok) {
-                            calendar.refetchEvents();
-                            console.log('Second POST request succeeded');
-                          } else {
-                            console.error('Second POST request failed');
-                          }
-                        })
-                        .catch(error => {
-                          console.error('Error:', error);
-                        });
-                    } else {
-
-                      // the other methods for plane and calendar data
-                      fetch(baseUrl + 'plane-maintenance/', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                          PlaneSN: planeSN,
-                          MDS: mds,
-                          Narrative: narrative,
-                          CrntTime: currentTime,
-                          TimeRemain: timeRemaining,
-                          DueTime: dueTime,
-                          Freq: frequency,
-                          Type: type,
-                          JST: justification,
-                          TFrame: timeFrame,
-                          E_F: engineFlight,
-                          title: title
-                        })
-                      })
-                        .then(response => response.json())
-                        .then(data => {
-                          // Extract the ID from the response
-                          const id = data.PlaneMaintenanceID;
-                          console.log(id);
-                          // Second POST request using the ID from the first response
-                          return fetch(baseUrl + 'calendar/', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                              PartMaintenanceID: '0',
-                              PlaneMaintenanceID: id,
-                              GeoLoc: location,
-                              FHours: flightHours,
-                              EHours: engineHours,
-                              title: title,
-                              MDS: mds,
-                              JulianDate: julianDate,
-                              end: end,
-                              start: start,
-                              TailNumber: planeTailNum,
-                              ResourceID: resourceId
-                            })
-                          });
-                        })
-                        .then(response => {
-                          if (response.ok) {
-                            calendar.refetchEvents();
-                            console.log('Second POST request succeeded');
-                          } else {
-                            console.error('Second POST request failed');
-                          }
-                        })
-                        .catch(error => {
-                          console.error('Error:', error);
-                        });
-                    }
-                  });
+                  }
+                }
               }
               else {
-                let tailNumberGet = selectedOption.textContent;
-                let resourceNum = selectedOption.value;
-                console.log('rescoure test: ' + resourceNum);
-                console.log('textcontent test: ' + tailNumberGet);
-
-                // the other methods for parts and calendar data
                 if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
-                  // First POST request
-                  fetch(baseUrl + 'part-maintenance/', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      PlaneSN: partPlaneSN,
-                      MDS: partMDS,
-                      EQP_ID: equipmentID,
-                      PartSN: partSerialNumber,
-                      PartNum: partNumber,
-                      Narrative: partNarrative,
-                      WUC_LCN: wucLcn,
-                      CatNum: catNumber,
-                      CrntTime: partCurrentTime,
-                      TimeRemain: partTimeRemaining,
-                      DueTime: partDueTime,
-                      DueDate: partDueDate,
-                      Freq: partFrequency,
-                      Type: partType,
-                      JST: partJustification,
-                      TFrame: partTimeFrame,
-                      E_F: partEngineFlight,
-                      title: title
-                    })
-                  })
-                    .then(response => response.json())
-                    .then(data => {
-                      console.log(data);
-                      // Extract the ID from the response
-                      const id = data.PartMaintenanceID;
-                      console.log(id);
-                      // Second POST request using the ID from the first response
-                      return fetch(baseUrl + 'calendar/', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                          PartMaintenanceID: id,
-                          PlaneMaintenanceID: '0',
-                          GeoLoc: location,
-                          FHours: flightHours,
-                          EHours: engineHours,
-                          title: title,
-                          MDS: partMDS,
-                          JulianDate: julianDate,
-                          end: end,
-                          start: start,
-                          TailNumber: tailNumberGet,
-                          ResourceID: resourceNum
-                        })
-                      });
-                    })
-                    .then(response => {
-                      if (response.ok) {
-                        calendar.refetchEvents();
-                        console.log('Second POST request succeeded');
-                      } else {
-                        console.error('Second POST request failed');
-                      }
-                    })
-                    .catch(error => {
-                      console.error('Error:', error);
-                    });
-                } else {
+                  const completeID = basicInputIds + partsInputIds;
+                  console.log(completeID);
+                  for (const id of completeID) {
+                    const input = document.getElementById(id);
+                    if (input === null) continue;
+                    const value = input.value.trim();
+                    if (value === "") {
+                      // If the input is empty, add the red border
+                      input.style.borderColor = "red";
+                      isAnyInputEmpty = true;
+                    } else {
+                      // If the input is not empty, remove the red border
+                      input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
+                    }
+                  }
+                }
+                else {
+                  const completeID = basicInputIds + maintInputIds;
+                  console.log(completeID);
+                  for (const id of completeID) {
+                    const input = document.getElementById(id);
+                    const value = input.value.trim();
+                    if (value === "") {
+                      // If the input is empty, add the red border
+                      input.style.borderColor = "red";
+                      isAnyInputEmpty = true;
+                    } else {
+                      // If the input is not empty, remove the red border
+                      input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
+                    }
+                  }
+                }
+              }
 
-                  // the other methods for plane and calendar data
-                  fetch(baseUrl + 'plane-maintenance/', {
+
+              if (isAnyInputEmpty) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: "One or many of the input fields was left blank.",
+                });
+              }
+              else {
+                if (selectedOption.value === "other") {
+
+                  fetch(baseUrl + 'plane-data/', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                      PlaneSN: planeSN,
-                      MDS: mds,
-                      Narrative: narrative,
-                      CrntTime: currentTime,
-                      TimeRemain: timeRemaining,
-                      DueTime: dueTime,
-                      Freq: frequency,
-                      Type: type,
-                      JST: justification,
-                      TFrame: timeFrame,
-                      E_F: engineFlight,
-                      title: title
+                      PlaneSN: currPlaneSN,
+                      GeoLoc: location,
+                      MDS: planeMDS,
+                      TailNumber: planeTailNum
                     })
                   })
-                    .then(response => response.json())
-                    .then(data => {
-                      // Extract the ID from the response
-                      const id = data.PlaneMaintenanceID;
-                      console.log(id);
-                      // Second POST request using the ID from the first response
-                      return fetch(baseUrl + 'calendar/', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                          PartMaintenanceID: '0',
-                          PlaneMaintenanceID: id,
-                          GeoLoc: location,
-                          FHours: flightHours,
-                          EHours: engineHours,
-                          title: title,
-                          MDS: mds,
-                          JulianDate: julianDate,
-                          end: end,
-                          start: start,
-                          TailNumber: tailNumberGet,
-                          ResourceID: resourceNum
-                        })
-                      });
-                    })
                     .then(response => {
                       if (response.ok) {
-                        calendar.refetchEvents();
-                        console.log('Second POST request succeeded');
+                        console.log('Plane Data POST request succeeded');
                       } else {
-                        console.error('Second POST request failed');
+                        console.error('Plane Data POST request failed');
                       }
                     })
                     .catch(error => {
                       console.error('Error:', error);
                     });
+
+                  // post for resource
+                  fetch(baseUrl + 'resource/', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      TailNumber: planeTailNum,
+                      GeoLoc: location,
+                    })
+                  })
+                    .then(response => {
+                      if (response.ok) {
+                        return response.json(); // Parse the response as JSON
+                      } else {
+                        throw new Error('resource Data POST request failed');
+                      }
+                    })
+                    .then(data => {
+                      // Extract the resourceId from the response
+                      const resourceId = data.resourceId;
+
+                      // the other methods for parts and calendar data
+                      if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
+
+                        // First POST request
+                        fetch(baseUrl + 'part-maintenance/', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            PlaneSN: partPlaneSN,
+                            MDS: partMDS,
+                            EQP_ID: equipmentID,
+                            PartSN: partSerialNumber,
+                            PartNum: partNumber,
+                            Narrative: partNarrative,
+                            WUC_LCN: wucLcn,
+                            CatNum: catNumber,
+                            CrntTime: partCurrentTime,
+                            TimeRemain: partTimeRemaining,
+                            DueTime: partDueTime,
+                            DueDate: partDueDate,
+                            Freq: partFrequency,
+                            Type: partType,
+                            JST: partJustification,
+                            TFrame: partTimeFrame,
+                            E_F: partEngineFlight,
+                            title: title
+                          })
+                        })
+                          .then(response => response.json())
+                          .then(data => {
+                            // Extract the ID from the response
+                            const id = data.PartMaintenanceID;
+                            console.log(id);
+                            // Second POST request using the ID from the first response
+                            return fetch(baseUrl + 'calendar/', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify({
+                                PartMaintenanceID: id,
+                                PlaneMaintenanceID: '0',
+                                GeoLoc: location,
+                                FHours: flightHours,
+                                EHours: engineHours,
+                                title: title,
+                                MDS: partMDS,
+                                JulianDate: julianDate,
+                                end: end,
+                                start: start,
+                                TailNumber: planeTailNum,
+                                ResourceID: resourceId
+                              })
+                            });
+                          })
+                          .then(response => {
+                            if (response.ok) {
+                              calendar.refetchEvents();
+                              console.log('Second POST request succeeded');
+                            } else {
+                              console.error('Second POST request failed');
+                            }
+                          })
+                          .catch(error => {
+                            console.error('Error:', error);
+                          });
+                      } else {
+
+                        // the other methods for plane and calendar data
+                        fetch(baseUrl + 'plane-maintenance/', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            PlaneSN: planeSN,
+                            MDS: mds,
+                            Narrative: narrative,
+                            CrntTime: currentTime,
+                            TimeRemain: timeRemaining,
+                            DueTime: dueTime,
+                            Freq: frequency,
+                            Type: type,
+                            JST: justification,
+                            TFrame: timeFrame,
+                            E_F: engineFlight,
+                            title: title
+                          })
+                        })
+                          .then(response => response.json())
+                          .then(data => {
+                            // Extract the ID from the response
+                            const id = data.PlaneMaintenanceID;
+                            console.log(id);
+                            // Second POST request using the ID from the first response
+                            return fetch(baseUrl + 'calendar/', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify({
+                                PartMaintenanceID: '0',
+                                PlaneMaintenanceID: id,
+                                GeoLoc: location,
+                                FHours: flightHours,
+                                EHours: engineHours,
+                                title: title,
+                                MDS: mds,
+                                JulianDate: julianDate,
+                                end: end,
+                                start: start,
+                                TailNumber: planeTailNum,
+                                ResourceID: resourceId
+                              })
+                            });
+                          })
+                          .then(response => {
+                            if (response.ok) {
+                              calendar.refetchEvents();
+                              console.log('Second POST request succeeded');
+                            } else {
+                              console.error('Second POST request failed');
+                            }
+                          })
+                          .catch(error => {
+                            console.error('Error:', error);
+                          });
+                      }
+                    });
+                }
+                else {
+                  let tailNumberGet = selectedOption.textContent;
+                  let resourceNum = selectedOption.value;
+
+
+                  // the other methods for parts and calendar data
+                  if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
+                    // First POST request
+                    fetch(baseUrl + 'part-maintenance/', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        PlaneSN: partPlaneSN,
+                        MDS: partMDS,
+                        EQP_ID: equipmentID,
+                        PartSN: partSerialNumber,
+                        PartNum: partNumber,
+                        Narrative: partNarrative,
+                        WUC_LCN: wucLcn,
+                        CatNum: catNumber,
+                        CrntTime: partCurrentTime,
+                        TimeRemain: partTimeRemaining,
+                        DueTime: partDueTime,
+                        DueDate: partDueDate,
+                        Freq: partFrequency,
+                        Type: partType,
+                        JST: partJustification,
+                        TFrame: partTimeFrame,
+                        E_F: partEngineFlight,
+                        title: title
+                      })
+                    })
+                      .then(response => response.json())
+                      .then(data => {
+                        console.log(data);
+                        // Extract the ID from the response
+                        const id = data.PartMaintenanceID;
+                        console.log(id);
+                        // Second POST request using the ID from the first response
+                        return fetch(baseUrl + 'calendar/', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            PartMaintenanceID: id,
+                            PlaneMaintenanceID: '0',
+                            GeoLoc: location,
+                            FHours: flightHours,
+                            EHours: engineHours,
+                            title: title,
+                            MDS: partMDS,
+                            JulianDate: julianDate,
+                            end: end,
+                            start: start,
+                            TailNumber: tailNumberGet,
+                            ResourceID: resourceNum
+                          })
+                        });
+                      })
+                      .then(response => {
+                        if (response.ok) {
+                          calendar.refetchEvents();
+                          console.log('Second POST request succeeded');
+                        } else {
+                          console.error('Second POST request failed');
+                        }
+                      })
+                      .catch(error => {
+                        console.error('Error:', error);
+                      });
+                  } else {
+
+                    // the other methods for plane and calendar data
+                    fetch(baseUrl + 'plane-maintenance/', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        PlaneSN: planeSN,
+                        MDS: mds,
+                        Narrative: narrative,
+                        CrntTime: currentTime,
+                        TimeRemain: timeRemaining,
+                        DueTime: dueTime,
+                        Freq: frequency,
+                        Type: type,
+                        JST: justification,
+                        TFrame: timeFrame,
+                        E_F: engineFlight,
+                        title: title
+                      })
+                    })
+                      .then(response => response.json())
+                      .then(data => {
+                        // Extract the ID from the response
+                        const id = data.PlaneMaintenanceID;
+                        console.log(id);
+                        // Second POST request using the ID from the first response
+                        return fetch(baseUrl + 'calendar/', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            PartMaintenanceID: '0',
+                            PlaneMaintenanceID: id,
+                            GeoLoc: location,
+                            FHours: flightHours,
+                            EHours: engineHours,
+                            title: title,
+                            MDS: mds,
+                            JulianDate: julianDate,
+                            end: end,
+                            start: start,
+                            TailNumber: tailNumberGet,
+                            ResourceID: resourceNum
+                          })
+                        });
+                      })
+                      .then(response => {
+                        if (response.ok) {
+                          calendar.refetchEvents();
+                          console.log('Second POST request succeeded');
+                        } else {
+                          console.error('Second POST request failed');
+                        }
+                      })
+                      .catch(error => {
+                        console.error('Error:', error);
+                      });
+                  }
+
                 }
 
               }
-
             }
 
           }
@@ -600,6 +687,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var updatedFreq = document.getElementById('Freq').value;
             var updatedType = document.getElementById('Type').value;
             var updatedTFrame = document.getElementById('TFrame').value;
+            const inputIds = ['eventTitleInput', 'eventStartInput', 'eventEndInput', 'Narrative', 'TimeRemain', 'Freq', 'Type', 'TFrame'];
 
 
             //search variables
@@ -609,251 +697,300 @@ document.addEventListener('DOMContentLoaded', function () {
             let eqp = event.extendedProps.maintenance.EQP_ID;
             let partsn = event.extendedProps.maintenance.PartSN;
             let partnum = event.extendedProps.maintenance.PartNum;
+            let isAnyInputEmpty = false;
 
-            if (event.extendedProps.PartMaintenanceID == 0) {
+            for (const id of inputIds) {
+              const input = document.getElementById(id);
+              const value = input.value.trim();
+              if (value === "") {
+                // If the input is empty, add the red border
+                input.style.borderColor = "red";
+                isAnyInputEmpty = true;
+              } else {
+                // If the input is not empty, remove the red border
+                input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
+              }
+            }
 
-              // Use Swal to confirm before submitting
+            if (isAnyInputEmpty) {
+
               Swal.fire({
-                title: "Updating Data!",
-                text: "Are you sure you want to submit these changes?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonText: "Yes",
-                cancelButtonText: "Cancel"
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  console.log("title:" + event.title + " start:" + event.start.toISOString().substring(0, 10) + " new start:" + updatedStart);
-                  if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
-                    fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
-                      method: 'PATCH',
-                      headers: {
-                        'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                        title: updatedTitle,
-                        start: updatedStart,
-                        end: updatedEnd
-                      })
-                    })
-                      .then(function (response) {
-                        // Check if the update was successful
-                        if (response.ok) {
-                          event.title = updatedTitle;
-                          event.start = updatedStart;
-                          event.end = updatedEnd;
-                          console.log('Event updated in the database.');
-                        } else {
-                          console.error('Failed to update event in the database.');
-                        }
-                      })
-                      .catch(function (error) {
-                        console.error('Error updating event:', error);
-                      });
-                  }
-
-                  fetch(baseUrl + 'plane-maintenance/' + planeSN + '/' + mds + '/' + jst + '/', {
-                    method: 'PATCH',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      Narrative: updatedNarrative,
-                      TimeRemain: updatedTR,
-                      Freq: updatedFreq,
-                      Type: updatedType,
-                      TFrame: updatedTFrame
-                    })
-                  })
-                    .then(response => {
-                      if (response.ok) {
-                        //updates the calendar with the updated data from the server
-                        calendar.refetchEvents();
-                        // removes the editfrom data from being displayed
-                        editForm.style.display = 'none';
-
-                        //updates the title, start and end.
-                        var updatedStarts = new Date(updatedStart);
-                        var updatedEnds = new Date(updatedEnd);
-                        updatedStarts.setDate(updatedStarts.getDate() + 1);
-                        updatedEnds.setDate(updatedEnds.getDate() + 1);
-                        var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
-                        let stringStart = updatedStarts.toLocaleString('en-US', options);
-                        let stringEnd = updatedEnds.toLocaleString('en-US', options);
-
-                        //update it to the current calendar view
-                        event.extendedProps.maintenance.Narrative = updatedNarrative;
-                        event.extendedProps.maintenance.TimeRemain = updatedTR;
-                        event.extendedProps.maintenance.Freq = updatedFreq;
-                        event.extendedProps.maintenance.Type = updatedType;
-                        event.extendedProps.maintenance.TFrame = updatedTFrame;
-                        event.title = updatedTitle;
-
-                        //set the new title
-                        document.getElementById('eventTitle').innerHTML = updatedTitle;
-                        //set the new text displyed to the current data.
-                        document.getElementById('eventMaintenance').innerHTML =
-                          'Start: ' + stringStart + '<br>' +
-                          'End: ' + stringEnd + '<br>' +
-                          'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
-                          'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
-                          'Narrative: ' + updatedNarrative + '<br>' +
-                          'Time Remaining: ' + updatedTR + '<br>' +
-                          'Frequency: ' + updatedFreq + '<br>' +
-                          'Type: ' + updatedType + '<br>' +
-                          'Justification: ' + event.extendedProps.maintenance.JST + '<br>' +
-                          'Time Frame: ' + updatedTFrame;
-
-                        // Show the original content
-                        document.getElementById('eventTitle').style.display = 'block';
-                        document.getElementById('eventMaintenance').style.display = 'block';
-                        closeButton.style.display = 'block';
-                        editButton.style.display = 'block';
-                      } else {
-                        throw new Error('API call failed');
-                      }
-                    })
-                    .catch(error => {
-                      Swal.fire({
-                        title: "Error",
-                        text: "Failed to submit location: " + error.message,
-                        icon: "error",
-                        confirmButtonText: "OK"
-                      });
-                    });
-                }
+                icon: 'error',
+                title: 'Error',
+                text: "One or many of the input fields was left blank.",
               });
-
             } else {
-              // other updated variables
-              var updatedEQP = document.getElementById('EQP').value;
-              var updatedPartSN = document.getElementById('PartSN').value;
-              var updatedPartNum = document.getElementById('PartNum').value;
-              var updatedJST = document.getElementById('JST').value;
-              var updatedWUC = document.getElementById('WUC').value;
+              if (event.extendedProps.PartMaintenanceID == 0) {
 
-              //PlaneSN, MDS, EQP_ID, PartSN and PartNum
-              // Use Swal to confirm before submitting
-              Swal.fire({
-                title: "Updating Data!",
-                text: "Are you sure you want to submit these changes?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonText: "Yes",
-                cancelButtonText: "Cancel"
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
-                    fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
+                // Use Swal to confirm before submitting
+                Swal.fire({
+                  title: "Updating Data!",
+                  text: "Are you sure you want to submit these changes?",
+                  icon: "question",
+                  showCancelButton: true,
+                  confirmButtonText: "Yes",
+                  cancelButtonText: "Cancel"
+                }).then((result) => {
+                  if (result.isConfirmed) {
+
+                    if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
+                      fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
+                        method: 'PATCH',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          title: updatedTitle,
+                          start: updatedStart,
+                          end: updatedEnd
+                        })
+                      })
+                        .then(function (response) {
+                          // Check if the update was successful
+                          if (response.ok) {
+                            event.title = updatedTitle;
+                            event.start = updatedStart;
+                            event.end = updatedEnd;
+                            console.log('Event updated in the database.');
+                          } else {
+                            console.error('Failed to update event in the database.');
+                          }
+                        })
+                        .catch(function (error) {
+                          console.error('Error updating event:', error);
+                        });
+                    }
+
+                    fetch(baseUrl + 'plane-maintenance/' + planeSN + '/' + mds + '/' + jst + '/', {
                       method: 'PATCH',
                       headers: {
                         'Content-Type': 'application/json'
                       },
                       body: JSON.stringify({
-                        title: updatedTitle,
-                        start: updatedStart,
-                        end: updatedEnd
+                        Narrative: updatedNarrative,
+                        TimeRemain: updatedTR,
+                        Freq: updatedFreq,
+                        Type: updatedType,
+                        TFrame: updatedTFrame
                       })
                     })
-                      .then(function (response) {
-                        // Check if the update was successful
+                      .then(response => {
                         if (response.ok) {
+                          //updates the calendar with the updated data from the server
+                          calendar.refetchEvents();
+                          // removes the editfrom data from being displayed
+                          editForm.style.display = 'none';
+
+                          //updates the title, start and end.
+                          var updatedStarts = new Date(updatedStart);
+                          var updatedEnds = new Date(updatedEnd);
+                          updatedStarts.setDate(updatedStarts.getDate() + 1);
+                          updatedEnds.setDate(updatedEnds.getDate() + 1);
+                          var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+                          let stringStart = updatedStarts.toLocaleString('en-US', options);
+                          let stringEnd = updatedEnds.toLocaleString('en-US', options);
+
+                          //update it to the current calendar view
+                          event.extendedProps.maintenance.Narrative = updatedNarrative;
+                          event.extendedProps.maintenance.TimeRemain = updatedTR;
+                          event.extendedProps.maintenance.Freq = updatedFreq;
+                          event.extendedProps.maintenance.Type = updatedType;
+                          event.extendedProps.maintenance.TFrame = updatedTFrame;
                           event.title = updatedTitle;
-                          event.start = updatedStart;
-                          event.end = updatedEnd;
-                          console.log('Event updated in the database.');
+
+                          //set the new title
+                          document.getElementById('eventTitle').innerHTML = updatedTitle;
+                          //set the new text displyed to the current data.
+                          document.getElementById('eventMaintenance').innerHTML =
+                            'Start: ' + stringStart + '<br>' +
+                            'End: ' + stringEnd + '<br>' +
+                            'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
+                            'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
+                            'Narrative: ' + updatedNarrative + '<br>' +
+                            'Time Remaining: ' + updatedTR + '<br>' +
+                            'Frequency: ' + updatedFreq + '<br>' +
+                            'Type: ' + updatedType + '<br>' +
+                            'Justification: ' + event.extendedProps.maintenance.JST + '<br>' +
+                            'Time Frame: ' + updatedTFrame;
+
+                          // Show the original content
+                          document.getElementById('eventTitle').style.display = 'block';
+                          document.getElementById('eventMaintenance').style.display = 'block';
+                          closeButton.style.display = 'block';
+                          editButton.style.display = 'block';
                         } else {
-                          console.error('Failed to update event in the database.');
+                          throw new Error('API call failed');
                         }
                       })
-                      .catch(function (error) {
-                        console.error('Error updating event:', error);
+                      .catch(error => {
+                        Swal.fire({
+                          title: "Error",
+                          text: "Failed to submit location: " + error.message,
+                          icon: "error",
+                          confirmButtonText: "OK"
+                        });
                       });
                   }
-                  fetch(baseUrl + 'part-maintenance/' + planeSN + '/' + mds + '/' + eqp + '/' + partsn + '/' + partnum + '/', {
-                    method: 'PATCH',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      Narrative: updatedNarrative,
-                      TimeRemain: updatedTR,
-                      Freq: updatedFreq,
-                      Type: updatedType,
-                      TFrame: updatedTFrame,
-                      EQP_ID: updatedEQP,
-                      PartSN: updatedPartSN,
-                      PartNum: updatedPartNum,
-                      JST: updatedJST,
-                      WUC_LCN: updatedWUC
-                    })
-                  })
-                    .then(response => {
-                      if (response.ok) {
-                        //updates the calendar with the updated data from the server
-                        calendar.refetchEvents();
-                        // removes the editfrom data from being displayed
-                        editForm.style.display = 'none';
+                });
 
-                        //updates the title, start and end.
-                        var updatedStarts = new Date(updatedStart);
-                        var updatedEnds = new Date(updatedEnd);
-                        updatedStarts.setDate(updatedStarts.getDate() + 1);
-                        updatedEnds.setDate(updatedEnds.getDate() + 1);
-                        var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
-                        let stringStart = updatedStarts.toLocaleString('en-US', options);
-                        let stringEnd = updatedEnds.toLocaleString('en-US', options);
+              } else {
 
-                        //update it to the current calendar view
-                        event.extendedProps.maintenance.Narrative = updatedNarrative;
-                        event.extendedProps.maintenance.TimeRemain = updatedTR;
-                        event.extendedProps.maintenance.Freq = updatedFreq;
-                        event.extendedProps.maintenance.Type = updatedType;
-                        event.extendedProps.maintenance.TFrame = updatedTFrame;
-                        event.extendedProps.maintenance.EQP_ID = updatedEQP;
-                        event.extendedProps.maintenance.PartSN = updatedPartSN;
-                        event.extendedProps.maintenance.PartNum = updatedPartNum;
-                        event.extendedProps.maintenance.JST = updatedJST;
-                        event.extendedProps.maintenance.WUC_LCN = updatedWUC;
-                        event.title = updatedTitle;
+                // other updated variables
+                var updatedEQP = document.getElementById('EQP').value;
+                var updatedPartSN = document.getElementById('PartSN').value;
+                var updatedPartNum = document.getElementById('PartNum').value;
+                var updatedJST = document.getElementById('JST').value;
+                var updatedWUC = document.getElementById('WUC').value;
 
-                        //set the new title
-                        document.getElementById('eventTitle').innerHTML = updatedTitle;
-                        //set the new text displyed to the current data.
-                        document.getElementById('eventMaintenance').innerHTML =
-                          'Start: ' + stringStart + '<br>' +
-                          'End: ' + stringEnd + '<br>' +
-                          'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
-                          'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
-                          'Narrative: ' + updatedNarrative + '<br>' +
-                          'Time Remaining: ' + updatedTR + '<br>' +
-                          'Frequency: ' + updatedFreq + '<br>' +
-                          'Type: ' + updatedType + '<br>' +
-                          'Justification: ' + updatedJST + '<br>' +
-                          'Time Frame: ' + updatedTFrame + '<br>' +
-                          'Equipment ID: ' + updatedEQP + '<br>' +
-                          'Part Serial Number: ' + updatedPartSN + '<br>' +
-                          'Part Number: ' + updatedPartNum + '<br>' +
-                          'Work Unit Code/ Logistics Control Number: ' + updatedWUC;
+                const listIds = ['EQP', 'PartSN', 'PartNum', 'JST', 'WUC'];
 
-                        // Show the original content
-                        document.getElementById('eventTitle').style.display = 'block';
-                        document.getElementById('eventMaintenance').style.display = 'block';
-                        closeButton.style.display = 'block';
-                        editButton.style.display = 'block';
-                      } else {
-                        throw new Error('API call failed');
-                      }
-                    })
-                    .catch(error => {
-                      Swal.fire({
-                        title: "Error",
-                        text: "Failed to submit location: " + error.message,
-                        icon: "error",
-                        confirmButtonText: "OK"
-                      });
-                    });
+                let checkInput = false;
+                for (const ids of listIds) {
+                  const input = document.getElementById(ids);
+                  const value = input.value.trim();
+                  if (value === "") {
+                    // If the input is empty, add the red border
+                    input.style.borderColor = "red";
+                    checkInput = true;
+                  } else {
+                    // If the input is not empty, remove the red border
+                    input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
+                  }
                 }
-              });
+
+                if (checkInput) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: "One or many of the input fields was left blank.",
+                  });
+
+                } else {
+                  //PlaneSN, MDS, EQP_ID, PartSN and PartNum
+                  // Use Swal to confirm before submitting
+                  Swal.fire({
+                    title: "Updating Data!",
+                    text: "Are you sure you want to submit these changes?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "Cancel"
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
+                        fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
+                          method: 'PATCH',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            title: updatedTitle,
+                            start: updatedStart,
+                            end: updatedEnd
+                          })
+                        })
+                          .then(function (response) {
+                            // Check if the update was successful
+                            if (response.ok) {
+                              event.title = updatedTitle;
+                              event.start = updatedStart;
+                              event.end = updatedEnd;
+                              console.log('Event updated in the database.');
+                            } else {
+                              console.error('Failed to update event in the database.');
+                            }
+                          })
+                          .catch(function (error) {
+                            console.error('Error updating event:', error);
+                          });
+                      }
+                      fetch(baseUrl + 'part-maintenance/' + planeSN + '/' + mds + '/' + eqp + '/' + partsn + '/' + partnum + '/', {
+                        method: 'PATCH',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          Narrative: updatedNarrative,
+                          TimeRemain: updatedTR,
+                          Freq: updatedFreq,
+                          Type: updatedType,
+                          TFrame: updatedTFrame,
+                          EQP_ID: updatedEQP,
+                          PartSN: updatedPartSN,
+                          PartNum: updatedPartNum,
+                          JST: updatedJST,
+                          WUC_LCN: updatedWUC
+                        })
+                      })
+                        .then(response => {
+                          if (response.ok) {
+                            //updates the calendar with the updated data from the server
+                            calendar.refetchEvents();
+                            // removes the editfrom data from being displayed
+                            editForm.style.display = 'none';
+
+                            //updates the title, start and end.
+                            var updatedStarts = new Date(updatedStart);
+                            var updatedEnds = new Date(updatedEnd);
+                            updatedStarts.setDate(updatedStarts.getDate() + 1);
+                            updatedEnds.setDate(updatedEnds.getDate() + 1);
+                            var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+                            let stringStart = updatedStarts.toLocaleString('en-US', options);
+                            let stringEnd = updatedEnds.toLocaleString('en-US', options);
+
+                            //update it to the current calendar view
+                            event.extendedProps.maintenance.Narrative = updatedNarrative;
+                            event.extendedProps.maintenance.TimeRemain = updatedTR;
+                            event.extendedProps.maintenance.Freq = updatedFreq;
+                            event.extendedProps.maintenance.Type = updatedType;
+                            event.extendedProps.maintenance.TFrame = updatedTFrame;
+                            event.extendedProps.maintenance.EQP_ID = updatedEQP;
+                            event.extendedProps.maintenance.PartSN = updatedPartSN;
+                            event.extendedProps.maintenance.PartNum = updatedPartNum;
+                            event.extendedProps.maintenance.JST = updatedJST;
+                            event.extendedProps.maintenance.WUC_LCN = updatedWUC;
+                            event.title = updatedTitle;
+
+                            //set the new title
+                            document.getElementById('eventTitle').innerHTML = updatedTitle;
+                            //set the new text displyed to the current data.
+                            document.getElementById('eventMaintenance').innerHTML =
+                              'Start: ' + stringStart + '<br>' +
+                              'End: ' + stringEnd + '<br>' +
+                              'Plane Serial Number: ' + event.extendedProps.maintenance.PlaneSN + '<br>' +
+                              'MDS: ' + event.extendedProps.maintenance.MDS + '<br>' +
+                              'Narrative: ' + updatedNarrative + '<br>' +
+                              'Time Remaining: ' + updatedTR + '<br>' +
+                              'Frequency: ' + updatedFreq + '<br>' +
+                              'Type: ' + updatedType + '<br>' +
+                              'Justification: ' + updatedJST + '<br>' +
+                              'Time Frame: ' + updatedTFrame + '<br>' +
+                              'Equipment ID: ' + updatedEQP + '<br>' +
+                              'Part Serial Number: ' + updatedPartSN + '<br>' +
+                              'Part Number: ' + updatedPartNum + '<br>' +
+                              'Work Unit Code/ Logistics Control Number: ' + updatedWUC;
+
+                            // Show the original content
+                            document.getElementById('eventTitle').style.display = 'block';
+                            document.getElementById('eventMaintenance').style.display = 'block';
+                            closeButton.style.display = 'block';
+                            editButton.style.display = 'block';
+                          } else {
+                            throw new Error('API call failed');
+                          }
+                        })
+                        .catch(error => {
+                          Swal.fire({
+                            title: "Error",
+                            text: "Failed to submit location: " + error.message,
+                            icon: "error",
+                            confirmButtonText: "OK"
+                          });
+                        });
+                    }
+                  });
+                }
+              }
             }
           }
           // Handle cancel button click

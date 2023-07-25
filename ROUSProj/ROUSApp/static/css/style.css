@@ -46,6 +46,10 @@
     border-radius: 4px;
 }
 
+.nav-links a:hover {
+    cursor: pointer;
+}
+
 .nav-links a.current {
     background-color: #ffffff;
     color: #000000;
@@ -110,6 +114,13 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.boxcontent {
+    flex: 1;
+    display: flex;
+    background-color: #242435;
+}
+
 
 .inputbut {
     font-size: 20px;
@@ -353,5 +364,46 @@ input[type="text"] {
 }
 
 .clicked-event {
+    border: 3px solid black;
+}
+
+.tbl-container {
+    max-width: fit-content;
+    max-height: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tbl-fixed {
+    overflow-x: scroll;
+    overflow-y: scroll;
+    height: fit-content;
+    max-height: 70vh;
+    margin-top: 40px;
+}
+
+#ScheduleTable {
+    border-collapse: condense;
+    min-width: max-content;
+}
+
+.MaintenanceData,
+.PlaneHead {
+    border: 1px solid #cccccc;
+    background: white;
+    padding: 8px;
+}
+
+#TailNumberHead {
+    position: sticky;
+    top: 0px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 16px;
+}
+
+.MaintenanceData:hover {
+    background: #3492eb;
     border: 3px solid black;
 }
