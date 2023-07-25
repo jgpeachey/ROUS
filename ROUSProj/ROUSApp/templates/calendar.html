@@ -18,6 +18,7 @@
     <!-- CSS File -->
     {% load static %}
     <link rel="stylesheet" type="text/css" href="ROUSApp/static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="ROUSApp/static/css/select.css">
     <!-- Full Calendar  -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
@@ -80,69 +81,110 @@
     <!-- creates a new event -->
     <div class="modal-fade" id="createModal">
         <div class="modal-struct">
-            <p>Title: <input type="text" id="titleInput" placeholder="Title"></p>
-            <p>Start: <input type="date" id="startInput" placeholder="Start Date"></p>
-            <p>End: <input type="date" id="endInput" placeholder="Event End"></p>
-            <p>Julian Date: <input type="text" id="julianInput" placeholder="Julian Date"></p>
-            <p>Engine Hours: <input type="text" id="engineHoursInput" placeholder="Engine Hours"></p>
-            <p>Flight Hours: <input type="text" id="flightHoursInput" placeholder="Flight Hours"></p>
+            <h3>Add Event</h3>
+            <P><span class="red-asterisk">* Required</span></P>
+            <p><span class="red-asterisk">*</span> Title: <input type="text" id="titleInput" placeholder="Title"></p>
+            <p><span class="red-asterisk">*</span> Start: <input type="date" id="startInput" placeholder="Start Date">
+            </p>
+            <p><span class="red-asterisk">*</span> End: <input type="date" id="endInput" placeholder="Event End"></p>
+            <p><span class="red-asterisk">*</span> Julian Date: <input type="text" id="julianInput"
+                    placeholder="Julian Date"></p>
+            <p><span class="red-asterisk">*</span> Engine Hours: <input type="text" id="engineHoursInput"
+                    placeholder="Engine Hours"></p>
+            <p><span class="red-asterisk">*</span> Flight Hours: <input type="text" id="flightHoursInput"
+                    placeholder="Flight Hours"></p>
 
-            <p>Tail Number:
+            <p class="addboldP">Select 'Other' if Tail Number Not found.</p>
+            <p><span class="red-asterisk">*</span> Tail Number:
+
                 <select id="eventDropdown" name="eventType" onchange="toggleOtherInputLabel()" required>
                     <option value="" selected disabled hidden>Choose here</option>
                     <option value="other">Other</option>
                 </select>
+
             </p>
 
             <div id="otherInputLabel" class="hidden">
                 <h3>Plane Data</h3>
-                <p>Plane Serial Number: <input type="text" id="currentplaneSN" placeholder="planeSN"></p>
-                <p>MDS: <input type="text" id="currentMDS" placeholder="MDS"></p>
-                <p>Tail Number: <input type="text" id="currentTail" placeholder="Tail Number"></p>
+                <p><span class="red-asterisk">*</span> Plane Serial Number: <input type="text" id="currentplaneSN"
+                        placeholder="planeSN"></p>
+                <p><span class="red-asterisk">*</span> MDS: <input type="text" id="currentMDS" placeholder="MDS"></p>
+                <p><span class="red-asterisk">*</span> Tail Number: <input type="text" id="currentTail"
+                        placeholder="Tail Number"></p>
             </div>
 
+            <p class="addboldP">Only select one a Plane or Part Maintenance.</p>
             <p>
-                <button id="planeButton" class="collapsible">Plane Maintenance</button>
+                <button id="planeButton" class="collapsible"><span class="red-asterisk">*</span> Plane
+                    Maintenance</button>
             </p>
             <div id="planeContent" class="contentCollapse">
-                <p>Plane Serial Number: <input type="text" id="planeSNInput" placeholder="planeSN"></p>
-                <p>MDS: <input type="text" id="mdsInput" placeholder="MDS"></p>
-                <p>Narrative: <input type="text" id="narrativeInput" placeholder="Narrative"></p>
-                <p>Current Time: <input type="text" id="currentTimeInput" placeholder="Current Time"></p>
-                <p>Time Remaining: <input type="text" id="timeRemainingInput" placeholder="Time Remaining"></p>
-                <p>Due Time: <input type="text" id="dueTimeInput" placeholder="Due Time"></p>
-                <p>Frequency: <input type="text" id="frequencyInput" placeholder="Frequency"></p>
-                <p>Type: <input type="text" id="typeInput" placeholder="Type"></p>
-                <p>Justification: <input type="text" id="justificationInput" placeholder="Justification"></p>
-                <p>Time Frame: <input type="text" id="timeFrameInput" placeholder="Time Frame"></p>
-                <p>Engine or Flight: <input type="text" id="engineFlightInput" placeholder="Engine or Flight"></p>
+                <h3>Plane Maintenance</h3>
+                <p><span class="red-asterisk">*</span> Plane Serial Number: <input type="text" id="planeSNInput"
+                        placeholder="planeSN"></p>
+                <p><span class="red-asterisk">*</span> MDS: <input type="text" id="mdsInput" placeholder="MDS"></p>
+                <p><span class="red-asterisk">*</span> Narrative:
+                </p>
+                <textarea type="text" id="narrativeInput" placeholder="Narrative" rows="5" cols="55"></textarea>
+                <p><span class="red-asterisk">*</span> Current Time: <input type="text" id="currentTimeInput"
+                        placeholder="Current Time"></p>
+                <p><span class="red-asterisk">*</span> Time Remaining: <input type="text" id="timeRemainingInput"
+                        placeholder="Time Remaining"></p>
+                <p><span class="red-asterisk">*</span> Due Time: <input type="text" id="dueTimeInput"
+                        placeholder="Due Time"></p>
+                <p><span class="red-asterisk">*</span> Frequency: <input type="text" id="frequencyInput"
+                        placeholder="Frequency"></p>
+                <p><span class="red-asterisk">*</span> Type: <input type="text" id="typeInput" placeholder="Type"></p>
+                <p><span class="red-asterisk">*</span> Justification: <input type="text" id="justificationInput"
+                        placeholder="Justification"></p>
+                <p><span class="red-asterisk">*</span> Time Frame: <input type="text" id="timeFrameInput"
+                        placeholder="Time Frame"></p>
+                <p><span class="red-asterisk">*</span> Engine or Flight: <input type="text" id="engineFlightInput"
+                        placeholder="Engine or Flight"></p>
 
             </div>
             <p>
-                <button id="partButton" class="collapsible">Part Maintenance</button>
+                <button id="partButton" class="collapsible"><span class="red-asterisk">*</span> Part
+                    Maintenance</button>
             </p>
             <div id="partContent" class="contentCollapse">
-                <p>Plane Serial Number: <input type="text" id="partPlaneSNInput" placeholder="planeSN"></p>
-                <p>MDS: <input type="text" id="partMDSInput" placeholder="MDS"></p>
-                <p>Equipment ID: <input type="text" id="equipmentIDInput" placeholder="Equipment ID"></p>
-                <p>Part Serial Number: <input type="text" id="partSerialNumberInput" placeholder="Part Serial Number">
+                <h3>Part Maintenance</h3>
+                <p><span class="red-asterisk">*</span> Plane Serial Number: <input type="text" id="partPlaneSNInput"
+                        placeholder="planeSN"></p>
+                <p><span class="red-asterisk">*</span> MDS: <input type="text" id="partMDSInput" placeholder="MDS"></p>
+                <p><span class="red-asterisk">*</span> Equipment ID: <input type="text" id="equipmentIDInput"
+                        placeholder="Equipment ID"></p>
+                <p><span class="red-asterisk">*</span> Part Serial Number: <input type="text" id="partSerialNumberInput"
+                        placeholder="Part Serial Number">
                 </p>
-                <p>Part Number: <input type="text" id="partNumberInput" placeholder="Part Serial Number"></p>
-                <p>Narrative: <input type="text" id="partNarrativeInput" placeholder="Narrative"></p>
-                <p>Work Unit Code/ Logistics Control Number: <input type="text" id="wucLcnInput" placeholder="WUC LCN">
+                <p><span class="red-asterisk">*</span> Part Number: <input type="text" id="partNumberInput"
+                        placeholder="Part Serial Number"></p>
+                <p><span class="red-asterisk">*</span> Narrative: </p>
+                <textarea type="text" id="partNarrativeInput" placeholder="Narrative" rows="5" cols="55"></textarea>
+                <p><span class="red-asterisk">*</span> Work Unit Code/ Logistics Control Number: <input type="text"
+                        id="wucLcnInput" placeholder="WUC LCN">
                 </p>
-                <p>Cat Number: <input type="text" id="catNumberInput" placeholder="Cat Number"></p>
-                <p>Current Time: <input type="text" id="partCurrentTimeInput" placeholder="Current Time"></p>
-                <p>Time Remaining: <input type="text" id="partTimeRemainingInput" placeholder="Time Remaining"></p>
-                <p>Due Time: <input type="text" id="partDueTimeInput" placeholder="Due Time"></p>
-                <p>Frequency: <input type="text" id="partFrequencyInput" placeholder="Frequency"></p>
-                <p>Type: <input type="text" id="partTypeInput" placeholder="Type"></p>
-                <p>Justification: <input type="text" id="partJustificationInput" placeholder="Justification"></p>
-                <p>Time Frame: <input type="text" id="partTimeFrameInput" placeholder="Time Frame"></p>
-                <p>Engine or Flight: <input type="text" id="partEngineFlightInput" placeholder="Engine or Flight"></p>
+                <p><span class="red-asterisk">*</span> Cat Number: <input type="text" id="catNumberInput"
+                        placeholder="Cat Number"></p>
+                <p><span class="red-asterisk">*</span> Current Time: <input type="text" id="partCurrentTimeInput"
+                        placeholder="Current Time"></p>
+                <p><span class="red-asterisk">*</span> Time Remaining: <input type="text" id="partTimeRemainingInput"
+                        placeholder="Time Remaining"></p>
+                <p><span class="red-asterisk">*</span> Due Time: <input type="text" id="partDueTimeInput"
+                        placeholder="Due Time"></p>
+                <p><span class="red-asterisk">*</span> Frequency: <input type="text" id="partFrequencyInput"
+                        placeholder="Frequency"></p>
+                <p><span class="red-asterisk">*</span> Type: <input type="text" id="partTypeInput" placeholder="Type">
+                </p>
+                <p><span class="red-asterisk">*</span> Justification: <input type="text" id="partJustificationInput"
+                        placeholder="Justification"></p>
+                <p><span class="red-asterisk">*</span> Time Frame: <input type="text" id="partTimeFrameInput"
+                        placeholder="Time Frame"></p>
+                <p><span class="red-asterisk">*</span> Engine or Flight: <input type="text" id="partEngineFlightInput"
+                        placeholder="Engine or Flight"></p>
             </div>
             <button class="buttonSaveCal" id="buttonSaveC">Save</button>
-            <button id="cancelout">Cancel</button>
+            <button class="buttonCancle" id="cancelout">Cancel</button>
         </div>
     </div>
 
@@ -154,7 +196,7 @@
             <p id="eventStart"></p>
             <p id="eventEnd"></p>
             <p id="eventMaintenance"></p>
-            <button id="editButton">Edit</button>
+            <button class="buttonSaveCal" id="editButton">Edit</button>
             <div id="editForm" style="display: none;">
                 <div>
                     <p>Title: <input type="text" id="eventTitleInput" placeholder="Event Title"></p>
@@ -166,8 +208,8 @@
                     <p>End: <input type="date" id="eventEndInput" placeholder="Event End"></p>
                 </div>
                 <div id="eventMaintenanceInput"></div>
-                <button id="saveButton">Save</button>
-                <button id="cancelButton">Cancel</button>
+                <button class="buttonSaveCal" id="saveButton">Save</button>
+                <button class="buttonCancle" id="cancelButton">Cancel</button>
             </div>
         </div>
     </div>

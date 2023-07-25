@@ -310,7 +310,7 @@ input[type="text"] {
     border-radius: 3px;
 }
 
-.buttonSaveCal button {
+.buttonSaveCal {
     padding: 8px 12px;
     background-color: #4CAF50;
     color: white;
@@ -319,11 +319,29 @@ input[type="text"] {
     cursor: pointer;
 }
 
+.buttonCancle {
+    padding: 8px 12px;
+    background-color: rgb(255, 44, 44);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.red-asterisk {
+    color: red;
+}
+
+.addboldP {
+    font-weight: bold;
+}
+
 .collapsible {
     cursor: pointer;
     border: none;
     outline: none;
     text-align: left;
+    padding: 8px 12px;
 }
 
 .collapsible::after {
