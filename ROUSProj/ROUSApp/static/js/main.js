@@ -114,7 +114,6 @@ document.addEventListener('DOMContentLoaded', function () {
               var partCurrentTime = document.getElementById('partCurrentTimeInput').value;
               var partTimeRemaining = document.getElementById('partTimeRemainingInput').value;
               var partDueTime = document.getElementById('partDueTimeInput').value;
-              var partDueDate = document.getElementById('partDueDateInput').value;
               var partFrequency = document.getElementById('partFrequencyInput').value;
               var partType = document.getElementById('partTypeInput').value;
               var partJustification = document.getElementById('partJustificationInput').value;
@@ -139,16 +138,26 @@ document.addEventListener('DOMContentLoaded', function () {
               // grabs tailnumber data
               const dropdown = document.getElementById('eventDropdown');
               const selectedOption = dropdown.options[dropdown.selectedIndex];
+              console.log(document.getElementById('eventDropdown').value);
 
-              const basicInputIds = ['titleInput', 'startInput', 'endInput', 'julianInput', 'engineHoursInput', 'flightHoursInput'];
+              // grabs the id for input section.
+              const planeContent = document.getElementById('planeContent');
+              const partContent = document.getElementById('partContent');
+
+              // check if is open for plane or part content
+              const isOpenPlane = planeContent.style.display === 'block';
+              const isOpenPart = partContent.style.display === 'block';
+
+
+              const basicInputIds = ['titleInput', 'startInput', 'endInput', 'julianInput', 'engineHoursInput', 'flightHoursInput', 'eventDropdown'];
               const planeInputIds = ['currentplaneSN', 'currentMDS', 'currentTail'];
-              const partsInputIds = ['partPlaneSNInput', 'partMDSInput', 'equipmentIDInput', 'partSerialNumberInput', 'partNumberInput', 'partNarrativeInput', 'wucLcnInput', 'catNumberInput', 'partCurrentTimeInput', 'partTimeRemainingInput', 'partDueTimeInput', 'partDueDateInput', 'partFrequencyInput', 'partTypeInput', 'partJustificationInput', 'partTimeFrameInput', 'partEngineFlightInput'];
+              const partsInputIds = ['partPlaneSNInput', 'partMDSInput', 'equipmentIDInput', 'partSerialNumberInput', 'partNumberInput', 'partNarrativeInput', 'wucLcnInput', 'partCurrentTimeInput', 'partTimeRemainingInput', 'partDueTimeInput', 'partFrequencyInput', 'partTypeInput', 'partJustificationInput', 'partTimeFrameInput', 'partEngineFlightInput'];
               const maintInputIds = ['planeSNInput', 'mdsInput', 'narrativeInput', 'currentTimeInput', 'timeRemainingInput', 'dueTimeInput', 'frequencyInput', 'typeInput', 'justificationInput', 'timeFrameInput', 'engineFlightInput'];
               let isAnyInputEmpty = false;
 
               if (selectedOption.value === "other") {
-                if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
-                  const completeID = basicInputIds + planeInputIds + partsInputIds;
+                if (isOpenPart) {
+                  const completeID = [...basicInputIds, ...planeInputIds, ...partsInputIds];
                   console.log(completeID);
                   for (const id of completeID) {
                     const input = document.getElementById(id);
@@ -164,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   }
                 }
                 else {
-                  const completeID = basicInputIds + planeInputIds + maintInputIds;
+                  const completeID = [...basicInputIds, ...planeInputIds, ...maintInputIds];
                   console.log(completeID);
                   for (const id of completeID) {
                     const input = document.getElementById(id);
@@ -181,12 +190,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
               }
               else {
-                if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
-                  const completeID = basicInputIds + partsInputIds;
+                if (isOpenPart) {
+                  const completeID = [...basicInputIds, ...partsInputIds];
                   console.log(completeID);
                   for (const id of completeID) {
                     const input = document.getElementById(id);
-                    if (input === null) continue;
                     const value = input.value.trim();
                     if (value === "") {
                       // If the input is empty, add the red border
@@ -199,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   }
                 }
                 else {
-                  const completeID = basicInputIds + maintInputIds;
+                  const completeID = [...basicInputIds, ...maintInputIds];
                   console.log(completeID);
                   for (const id of completeID) {
                     const input = document.getElementById(id);
@@ -215,7 +223,6 @@ document.addEventListener('DOMContentLoaded', function () {
                   }
                 }
               }
-
 
               if (isAnyInputEmpty) {
                 Swal.fire({
@@ -273,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       const resourceId = data.resourceId;
 
                       // the other methods for parts and calendar data
-                      if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
+                      if (isOpenPart) {
 
                         // First POST request
                         fetch(baseUrl + 'part-maintenance/', {
@@ -293,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             CrntTime: partCurrentTime,
                             TimeRemain: partTimeRemaining,
                             DueTime: partDueTime,
-                            DueDate: partDueDate,
+
                             Freq: partFrequency,
                             Type: partType,
                             JST: partJustification,
@@ -410,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                   // the other methods for parts and calendar data
-                  if (typeof document.getElementById('catNumberInput').value !== 'undefined') {
+                  if (isOpenPart) {
                     // First POST request
                     fetch(baseUrl + 'part-maintenance/', {
                       method: 'POST',
@@ -429,7 +436,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         CrntTime: partCurrentTime,
                         TimeRemain: partTimeRemaining,
                         DueTime: partDueTime,
-                        DueDate: partDueDate,
                         Freq: partFrequency,
                         Type: partType,
                         JST: partJustification,
