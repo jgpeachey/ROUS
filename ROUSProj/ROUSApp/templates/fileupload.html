@@ -41,16 +41,16 @@
 
             <div class="message-container">
                 <p class="message-text">Please only insert Excel documents</p>
+                <div class="input-container">
+                    <label for="excel_file" class="custom-file-upload">
+                        Choose an Excel file
+                        <input type="file" id="excel_file" name="excel_file" accept=".xlsx, .xls">
+                    </label>
+                    <span id="file_label">No File Selected</span>
+                    <input class="inputbut" id="import_button" type="submit" value="Import" onclick="postExcel()">
+                </div>
             </div>
-            <div class="input-container">
-                <label for="excel_file" class="custom-file-upload">
-                    Choose an Excel file
-                    <input type="file" id="excel_file" name="excel_file" accept=".xlsx, .xls">
-                </label>
-                <span id="file_label">No File Selected</span>
-                <input class="inputbut" id="import_button" type="submit" value="Import" onclick="postExcel()">
-<!--                <button class="inputbut" onclick="importExcel()">Import</button> &lt;!&ndash;type="submit"&ndash;&gt;-->
-            </div>
+
     </div>
 
     <script>
