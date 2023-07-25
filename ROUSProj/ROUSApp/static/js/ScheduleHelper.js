@@ -199,7 +199,7 @@ function createEvent(cellData) {
             fetch('plane-data/' + cellData.TailNumber + '/')
                 .then(response => response.json())
                 .then(pdata => {
-                    fetch(baseUrl + 'calendar/', {
+                    fetch('calendar/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -226,7 +226,7 @@ function createEvent(cellData) {
             fetch('plane-data/' + cellData.TailNumber + '/')
                 .then(response => response.json())
                 .then(pdata => {
-                    fetch(baseUrl + 'calendar/', {
+                    fetch('calendar/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
