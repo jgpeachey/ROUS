@@ -1,5 +1,4 @@
 console.log('loaded');
-let base = 'http://127.0.0.1:8000/';
 
 // remove loading screen
 document.getElementById('loading-screen').style.display = 'none';
@@ -28,7 +27,7 @@ async function postExcel() {
 
     // Make a get request for location and if it doesn't return anything, make the location with a post request
     let newGeoLoc = true;
-    const response = await fetch(base + 'loc/');
+    const response = await fetch('loc/');
     const data = await response.json();
 
     // Iterate over the data and see if GeoLoc already exists
@@ -41,7 +40,7 @@ async function postExcel() {
 
     // If GeoLoc doesn't exist, POST new GeoLoc
     if (newGeoLoc) {
-      await fetch(base + 'loc/', {
+      await fetch('loc/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -53,9 +52,9 @@ async function postExcel() {
     // Get Each Object that needs to be imported
     for (const obj of importObjects) {
       // Post Plane Data
-      const planeResponse = await fetch(base + 'plane-data/' + obj.PlaneSN + '/' + obj.MDS + '/');
+      const planeResponse = await fetch('plane-data/' + obj.PlaneSN + '/' + obj.MDS + '/');
       if (!planeResponse.ok) {
-        await fetch(base + 'plane-data/', {
+        await fetch('plane-data/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -77,7 +76,7 @@ async function postExcel() {
 
       // POST resource
       try {
-        const rResponse = await fetch(base + 'resource/' + obj.TailNumber + '/' + obj.GeoLoc + '/');
+        const rResponse = await fetch('resource/' + obj.TailNumber + '/' + obj.GeoLoc + '/');
         const rData = await rResponse.json();
 
         if (rResponse.ok) {
@@ -87,7 +86,7 @@ async function postExcel() {
           const end = endD.getFullYear() + '-' + (endD.getMonth() + 1) + '-' + endD.getDate();
 
           if (obj.Maintenance.toUpperCase() === 'PART') {
-            const partResponse = await fetch(base + 'part-maintenance/', {
+            const partResponse = await fetch('part-maintenance/', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -114,7 +113,7 @@ async function postExcel() {
             });
             const partData = await partResponse.json();
             const id = partData.PartMaintenanceID;
-            const calendarResponse = await fetch(base + 'calendar/', {
+            const calendarResponse = await fetch('calendar/', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -140,7 +139,7 @@ async function postExcel() {
               console.error('Second POST request failed');
             }
           } else if (obj.Maintenance.toUpperCase() === 'PLANE') {
-            const planeMaintenanceResponse = await fetch(base + 'plane-maintenance/', {
+            const planeMaintenanceResponse = await fetch('plane-maintenance/', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -162,7 +161,7 @@ async function postExcel() {
             });
             const planeMaintenanceData = await planeMaintenanceResponse.json();
             const id = planeMaintenanceData.PlaneMaintenanceID;
-            const calendarResponse = await fetch(base + 'calendar/', {
+            const calendarResponse = await fetch('calendar/', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -189,7 +188,7 @@ async function postExcel() {
             }
           }
         } else {
-          const resourceResponse = await fetch(base + 'resource/', {
+          const resourceResponse = await fetch('resource/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -211,7 +210,7 @@ async function postExcel() {
             const due = dueD.getFullYear() + '-' + (dueD.getMonth() + 1) + '-' + dueD.getDate();
 
             if (obj.Maintenance.toUpperCase() === 'PART') {
-              const partResponse = await fetch(base + 'part-maintenance/', {
+              const partResponse = await fetch('part-maintenance/', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'
@@ -238,7 +237,7 @@ async function postExcel() {
               });
               const partData = await partResponse.json();
               const id = partData.PartMaintenanceID;
-              const calendarResponse = await fetch(base + 'calendar/', {
+              const calendarResponse = await fetch('calendar/', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'
@@ -264,7 +263,7 @@ async function postExcel() {
                 console.error('Second POST request failed');
               }
             } else if (obj.Maintenance.toUpperCase() === 'PLANE') {
-              const planeMaintenanceResponse = await fetch(base + 'plane-maintenance/', {
+              const planeMaintenanceResponse = await fetch('plane-maintenance/', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'
@@ -286,7 +285,7 @@ async function postExcel() {
               });
               const planeMaintenanceData = await planeMaintenanceResponse.json();
               const id = planeMaintenanceData.PlaneMaintenanceID;
-              const calendarResponse = await fetch(base + 'calendar/', {
+              const calendarResponse = await fetch('calendar/', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'

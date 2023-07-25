@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   if (result.isConfirmed) {
                     if (selectedOption.value === "other") {
 
-                      fetch(baseUrl + 'plane-data/', {
+                      fetch('plane-data/', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           console.error('Error:', error);
                         });
                       // post for resource
-                      fetch(baseUrl + 'resource/', {
+                      fetch('resource/', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           if (isOpenPart) {
 
                             // First POST request
-                            fetch(baseUrl + 'part-maintenance/', {
+                            fetch('part-maintenance/', {
                               method: 'POST',
                               headers: {
                                 'Content-Type': 'application/json'
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 const id = data.PartMaintenanceID;
                                 console.log(id);
                                 // Second POST request using the ID from the first response
-                                return fetch(baseUrl + 'calendar/', {
+                                return fetch('calendar/', {
                                   method: 'POST',
                                   headers: {
                                     'Content-Type': 'application/json'
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           } else {
 
                             // the other methods for plane and calendar data
-                            fetch(baseUrl + 'plane-maintenance/', {
+                            fetch('plane-maintenance/', {
                               method: 'POST',
                               headers: {
                                 'Content-Type': 'application/json'
@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 const id = data.PlaneMaintenanceID;
                                 console.log(id);
                                 // Second POST request using the ID from the first response
-                                return fetch(baseUrl + 'calendar/', {
+                                return fetch('calendar/', {
                                   method: 'POST',
                                   headers: {
                                     'Content-Type': 'application/json'
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       // the other methods for parts and calendar data
                       if (isOpenPart) {
                         // First POST request
-                        fetch(baseUrl + 'part-maintenance/', {
+                        fetch('part-maintenance/', {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json'
@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const id = data.PartMaintenanceID;
                             console.log(id);
                             // Second POST request using the ID from the first response
-                            return fetch(baseUrl + 'calendar/', {
+                            return fetch('calendar/', {
                               method: 'POST',
                               headers: {
                                 'Content-Type': 'application/json'
@@ -498,7 +498,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           });
                       } else {
                         // the other methods for plane and calendar data
-                        fetch(baseUrl + 'plane-maintenance/', {
+                        fetch('plane-maintenance/', {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json'
@@ -525,7 +525,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const id = data.PlaneMaintenanceID;
                             console.log(id);
                             // Second POST request using the ID from the first response
-                            return fetch(baseUrl + 'calendar/', {
+                            return fetch('calendar/', {
                               method: 'POST',
                               headers: {
                                 'Content-Type': 'application/json'
@@ -757,7 +757,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   if (result.isConfirmed) {
 
                     if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
-                      fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
+                      fetch('calendar/' + event.extendedProps.CalendarID + '/', {
                         method: 'PATCH',
                         headers: {
                           'Content-Type': 'application/json'
@@ -784,7 +784,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     }
 
-                    fetch(baseUrl + 'plane-maintenance/' + planeSN + '/' + mds + '/' + jst + '/', {
+                    fetch('plane-maintenance/' + planeSN + '/' + mds + '/' + jst + '/', {
                       method: 'PATCH',
                       headers: {
                         'Content-Type': 'application/json'
@@ -881,7 +881,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     input.style.borderColor = ""; // This will reset the border color to the default or remove it completely
                   }
                 }
-                
+
                 if (checkInput) {
                   Swal.fire({
                     icon: 'error',
@@ -902,7 +902,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   }).then((result) => {
                     if (result.isConfirmed) {
                       if (updatedTitle != event.title || updatedStart != event.start.toISOString().substring(0, 10) || updatedEnd != event.end.toISOString().substring(0, 10)) {
-                        fetch(baseUrl + 'calendar/' + event.extendedProps.CalendarID + '/', {
+                        fetch('calendar/' + event.extendedProps.CalendarID + '/', {
                           method: 'PATCH',
                           headers: {
                             'Content-Type': 'application/json'
@@ -929,7 +929,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           });
 
                       }
-                      fetch(baseUrl + 'part-maintenance/' + planeSN + '/' + mds + '/' + eqp + '/' + partsn + '/' + partnum + '/', {
+                      fetch('part-maintenance/' + planeSN + '/' + mds + '/' + eqp + '/' + partsn + '/' + partnum + '/', {
                         method: 'PATCH',
                         headers: {
                           'Content-Type': 'application/json'

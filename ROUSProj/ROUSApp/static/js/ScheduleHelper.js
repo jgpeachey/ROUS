@@ -1,6 +1,5 @@
 //import { passgeoloc } from './main.js'
 
-let base = 'http://127.0.0.1:8000/';
 const urlParams = new URLSearchParams(window.location.search);
 const selectedGeoLoc = urlParams.get('geoloc');
 
@@ -57,7 +56,7 @@ function loadTableHead(tailNums) {
 
 // uses GET api call to get all planes from selected GeoLoc
 async function getTailNums(selectedGeoLoc) {
-    return fetch(base + 'resource/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
+    return fetch('resource/geoloc/' + encodeURIComponent(selectedGeoLoc) + '/')
         .then(response => response.json())
         .then(data => {
             return data;
@@ -139,10 +138,10 @@ async function loadTableData(planeMap, partMap, tailNums) {
 
 // uses GET api call to get all plane maintenances from selected plane
 async function getPlaneMaintenances(TailNumber) {
-    return fetch(base + 'plane-data/' + TailNumber + '/')
+    return fetch('plane-data/' + TailNumber + '/')
         .then(response => response.json())
         .then(pdata => {
-            return fetch(base + 'plane-maintenance/' + pdata.PlaneSN + '/' + pdata.MDS + '/')
+            return fetch('plane-maintenance/' + pdata.PlaneSN + '/' + pdata.MDS + '/')
                 .then(response => response.json())
                 .then(data => {
                     return data;
@@ -154,10 +153,10 @@ async function getPlaneMaintenances(TailNumber) {
 
 // uses GET api call to get all part maintenances from selected plane
 async function getPartMaintenances(TailNumber) {
-    return fetch(base + 'plane-data/' + TailNumber + '/')
+    return fetch('plane-data/' + TailNumber + '/')
         .then(response => response.json())
         .then(pdata => {
-            return fetch(base + 'part-maintenance/' + pdata.PlaneSN + '/' + pdata.MDS + '/')
+            return fetch('part-maintenance/' + pdata.PlaneSN + '/' + pdata.MDS + '/')
                 .then(response => response.json())
                 .then(data => {
                     return data;
@@ -197,58 +196,58 @@ function createEvent(cellData) {
         var eventFHours = document.getElementById('flightHoursInput').value;
 
         if (cellData.MaintenanceType == 'plane') {
-            fetch(base + 'plane-data/' + cellData.TailNumber + '/')
-            .then(response => response.json())
-            .then(pdata => {
-                fetch(baseUrl + 'calendar/', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      PartMaintenanceID: cellData.MaintenanceID,
-                      PlaneMaintenanceID: '0',
-                      GeoLoc: selectedGeoLoc,
-                      FHours: eventFHours,
-                      EHours: eventEHours,
-                      title: eventTitle,
-                      MDS: pdata.MDS,
-                      JulianDate: eventJulian,
-                      end: eventEnd,
-                      start: eventStart,
-                      TailNumber: cellData.TailNumber,
-                      ResourceID: cellData.ResourceID
-                    })
-                });
-            })
-            .catch(error => console.warn(error));
+            fetch('plane-data/' + cellData.TailNumber + '/')
+                .then(response => response.json())
+                .then(pdata => {
+                    fetch(baseUrl + 'calendar/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            PartMaintenanceID: cellData.MaintenanceID,
+                            PlaneMaintenanceID: '0',
+                            GeoLoc: selectedGeoLoc,
+                            FHours: eventFHours,
+                            EHours: eventEHours,
+                            title: eventTitle,
+                            MDS: pdata.MDS,
+                            JulianDate: eventJulian,
+                            end: eventEnd,
+                            start: eventStart,
+                            TailNumber: cellData.TailNumber,
+                            ResourceID: cellData.ResourceID
+                        })
+                    });
+                })
+                .catch(error => console.warn(error));
         }
         else if (cellData.MaintenanceType == 'part') {
-            fetch(base + 'plane-data/' + cellData.TailNumber + '/')
-            .then(response => response.json())
-            .then(pdata => {
-                fetch(baseUrl + 'calendar/', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      PartMaintenanceID: '0',
-                      PlaneMaintenanceID: cellData.MaintenanceID,
-                      GeoLoc: selectedGeoLoc,
-                      FHours: eventFHours,
-                      EHours: eventEHours,
-                      title: eventTitle,
-                      MDS: pdata.MDS,
-                      JulianDate: eventJulian,
-                      end: eventEnd,
-                      start: eventStart,
-                      TailNumber: cellData.TailNumber,
-                      ResourceID: cellData.ResourceID
-                    })
-                });
-            })
-            .catch(error => console.warn(error));
+            fetch('plane-data/' + cellData.TailNumber + '/')
+                .then(response => response.json())
+                .then(pdata => {
+                    fetch(baseUrl + 'calendar/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            PartMaintenanceID: '0',
+                            PlaneMaintenanceID: cellData.MaintenanceID,
+                            GeoLoc: selectedGeoLoc,
+                            FHours: eventFHours,
+                            EHours: eventEHours,
+                            title: eventTitle,
+                            MDS: pdata.MDS,
+                            JulianDate: eventJulian,
+                            end: eventEnd,
+                            start: eventStart,
+                            TailNumber: cellData.TailNumber,
+                            ResourceID: cellData.ResourceID
+                        })
+                    });
+                })
+                .catch(error => console.warn(error));
         }
 
         modal.style.display = 'none';
