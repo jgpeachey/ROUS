@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
               var timeFrame = document.getElementById('timeFrameInput').value;
               var engineFlight = document.getElementById('engineFlightInput').value;
 
-
+              // grabs location information
               var location = encodeURIComponent(selectedGeoLoc);
 
               // grabs tailnumber data
@@ -339,6 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           .then(response => {
                             if (response.ok) {
                               calendar.refetchEvents();
+                              modal.style.display = 'none';
                               console.log('Second POST request succeeded');
                             } else {
                               console.error('Second POST request failed');
@@ -400,6 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
                           .then(response => {
                             if (response.ok) {
                               calendar.refetchEvents();
+                              modal.style.display = 'none';
                               console.log('Second POST request succeeded');
                             } else {
                               console.error('Second POST request failed');
@@ -475,6 +477,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       .then(response => {
                         if (response.ok) {
                           calendar.refetchEvents();
+                          modal.style.display = 'none';
                           console.log('Second POST request succeeded');
                         } else {
                           console.error('Second POST request failed');
@@ -536,6 +539,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       .then(response => {
                         if (response.ok) {
                           calendar.refetchEvents();
+                          modal.style.display = 'none';
                           console.log('Second POST request succeeded');
                         } else {
                           console.error('Second POST request failed');
@@ -695,7 +699,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var updatedTFrame = document.getElementById('TFrame').value;
             const inputIds = ['eventTitleInput', 'eventStartInput', 'eventEndInput', 'Narrative', 'TimeRemain', 'Freq', 'Type', 'TFrame'];
 
-
             //search variables
             let planeSN = event.extendedProps.maintenance.PlaneSN;
             let mds = event.extendedProps.maintenance.MDS;
@@ -703,6 +706,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let eqp = event.extendedProps.maintenance.EQP_ID;
             let partsn = event.extendedProps.maintenance.PartSN;
             let partnum = event.extendedProps.maintenance.PartNum;
+
             let isAnyInputEmpty = false;
 
             for (const id of inputIds) {
